@@ -23,7 +23,7 @@ git clone https://github.com/00j5y/campusgo.git
 cd campusgo
 ```
 
-### 5- Exécuter la commande
+### 4- Exécuter la commande
 ```bash
 npm install
 ```
