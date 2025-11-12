@@ -2,6 +2,7 @@
 
 - [📋 Exigence](#-exigence)
 - [✨ Récupération du projet](#-récupération-du-projet)
+- [▶️ Lancer le projet](#-lancer-le-projet)
 
 <h2 align="center">📋 Exigence</h2>
 
@@ -22,7 +23,13 @@ git clone https://github.com/00j5y/campusgo.git
 cd campusgo
 ```
 
-### 5- Lancer un CMD et exécuter la commande
+### 5- Exécuter la commande
+```bash
+npm install
+```
+<h2 align="center">▶️ Lancer le projet</h2>
+
+### Ouvrir un CMD dans le dossier du projet et éxecuter la commande
 ```bash
 npm run dev
 ```
