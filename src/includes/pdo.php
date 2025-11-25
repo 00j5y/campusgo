@@ -3,7 +3,7 @@ $user = "root";
 $mdp = "1234";
 $host = "localhost";
 $port = "3306";
-$dbname = "r301";
+$dbname = "campusgo";
 
 try {
     $pdo = new PDO(
