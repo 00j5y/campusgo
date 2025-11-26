@@ -13,13 +13,164 @@
       <!-- Navbar -->
       <load src="src/components/navbar.html"/>
 
-      <section class="bg-linear-to-br from-vert-principale/50 via-beige-second/50 to-beige-principale/50">
-          <div>
-            <div class="pt-24 pl-24">
-              <h3 class="text-vert-principale bg-vert-principale/25 py-1 px-2">
-                🎓 Pour la communauté de l'IUT d'Amiens</h3>
+      <section class="relative bg-linear-to-br from-vert-principale/20 via-beige-second/50 to-beige-principale/50 pt-12 pb-20 lg:pt-20 lg:pb-28 overflow-hidden">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+                <div class="max-w-2xl">
+                    <div class="inline-flex items-center gap-2 bg-vert-principale/20 px-4 py-1.5 rounded-full mb-6">
+                        <span class="text-vert-principale text-sm font-semibold">
+                            🎓 Pour la communauté IUT d'Amiens
+                        </span>
+                    </div>
+
+                    <h1 class="text-4xl lg:text-5xl font-semibold text-noir leading-tight mb-6">
+                        Voyagez <br class="hidden lg:block"/> ensemble vers <br class="hidden lg:block"/> l'IUT d'Amiens
+                    </h1>
+
+                    <p class="text-lg text-gris1 mb-8 leading-relaxed max-w-lg">
+                        Campus'Go est la plateforme de covoiturage dédiée aux étudiants, enseignants et personnel de l'IUT d'Amiens. Partagez vos trajets, réduisez vos coûts et contribuez à un campus plus écologique.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row gap-4 mb-12">
+                        <a href="" class="inline-flex justify-center items-center gap-2 bg-vert-principale hover:bg-vert-principal-h text-white px-6 py-3.5 rounded-lg font-medium transition-colors shadow-sm">
+                            Rechercher un Trajet
+                            <img src="images/accueil/icones/fleche-droite.png" alt="Fleche pointant vers la droite blanche" class="size-6 pt-0.5">
+                        </a>
+                        <a href="#" class="inline-flex justify-center items-center bg-white hover:white/20 text-gris1 hover:text-vert-principale px-6 py-3.5 rounded-lg font-medium transition-colors ">
+                            Proposer un Trajet
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-6 pt-8 border-t border-vert-principale/20">
+                        <div>
+                            <div class="text-3xl font-bold text-vert-principale">250+</div>
+                            <div class="text-gris1 text-sm mt-1">Membres actifs</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-bold text-vert-principale">500+</div>
+                            <div class="text-gris1 text-sm mt-1">Trajets partagés</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-bold text-vert-principale">2.5T</div>
+                            <div class="text-gris1 text-sm mt-1">CO₂ économisé</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative w-full flex justify-end items-center pl-4 lg:pl-0 transition-transform duration-500 ease-in-out hover:scale-105">
+                  <div class="relative w-full lg:w-[95%] h-[350px] sm:h-[450px] lg:h-[550px] rounded-3xl lg:rounded-[50px] overflow-hidden shadow-2xl">
+                      <img src="images/accueil/voiture.png" alt="Étudiants en covoiturage" class="w-full h-full object-cover">   
+                  </div>
+                  <div class="absolute bottom-8 left-8 lg:p-b-16 xl:left-12 z-30 bg-white p-4 pr-8 rounded-2xl shadow-xl flex items-center gap-4 animate-fade-in-up max-w-[280px]">
+                      <div class="w-12 h-12 rounded-full bg-vert-second flex items-center justify-center">
+                          <img src="images/accueil/icones/feuille.png" alt="icon" class="size-5.5">
+                      </div>
+                      <div>
+                          <p class="text-sm text-gris1">Économie moyenne</p>
+                          <p class="text-xl font-bold text-gray-900">45€/mois</p>
+                      </div>
+                  </div>
+              </div>
             </div>
-          </div>
-      </section>
+        </div>
+    </section>
+
+    <section class="py-16 lg:py-24 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+
+            <div class="text-center mb-16">
+                <h2 class="text-lg font-semibold text-noir mb-2">Comment ça marche ?</h2>
+                <p class="text-2xl lg:text-3xl text-gris1 font-medium">Trois étapes simples pour commencer votre covoiturage</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <div class="border border-gray-200 rounded-2xl p-8 flex flex-col items-center text-center hover:shadow-lg transition-shadow duration-300">
+                    <div class="w-20 h-20 bg-vert-second text-vert-principale rounded-full flex items-center justify-center text-3xl font-bold mb-6">
+                        1
+                    </div>
+                    <h3 class="text-xl font-bold text-noir mb-4">Inscrivez-vous</h3>
+                    <p class="text-gris1 leading-relaxed">
+                        Créez votre compte avec votre email IUT pour rejoindre la communauté Campus'Go.
+                    </p>
+                </div>
+
+                <div class="border border-gray-200 rounded-2xl p-8 flex flex-col items-center text-center hover:shadow-lg transition-shadow duration-300">
+                    <div class="w-20 h-20 bg-vert-second text-vert-principale rounded-full flex items-center justify-center text-3xl font-bold mb-6">
+                        2
+                    </div>
+                    <h3 class="text-xl font-bold text-noir mb-4">Trouvez ou proposez</h3>
+                    <p class="text-gris1 leading-relaxed">
+                        Recherchez un trajet correspondant à vos besoins ou proposez le vôtre en quelques clics.
+                    </p>
+                </div>
+
+                <div class="border border-gray-200 rounded-2xl p-8 flex flex-col items-center text-center hover:shadow-lg transition-shadow duration-300">
+                    <div class="w-20 h-20 bg-vert-second text-vert-principale rounded-full flex items-center justify-center text-3xl font-bold mb-6">
+                        3
+                    </div>
+                    <h3 class="text-xl font-bold text-noir mb-4">Voyagez ensemble</h3>
+                    <p class="text-gris1 leading-relaxed">
+                        Partagez le trajet avec d'autres membres de l'IUT et profitez d'un voyage convivial.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 lg:py-24 bg-beige-principale">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center mb-16">
+                <h2 class="text-lg font-semibold text-noir mb-2">Pourquoi choisir Campus'Go ?</h2>
+                <p class="text-2xl lg:text-3xl text-gris1 font-medium">Des avantages pour vous et pour la planète</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <div class="bg-white border border-beige-second/50 rounded-2xl p-6 flex flex-col items-center text-center h-full hover:-translate-y-1 transition-transform duration-300 shadow-sm">
+                    <div class="w-16 h-16 bg-vert-second text-vert-principale rounded-full flex items-center justify-center mb-6">
+                        <img src="images/accueil/icones/cochon-economie.png" alt="icon" class="size-7">
+                    </div>
+                    <h3 class="text-lg font-bold text-noir mb-3">Économies</h3>
+                    <p class="text-sm text-gris1 leading-relaxed">
+                        Partagez les frais de carburant et réduisez vos dépenses de transport jusqu'à 50%.
+                    </p>
+                </div>
+
+                <div class="bg-white border border-beige-second/50 rounded-2xl p-6 flex flex-col items-center text-center h-full hover:-translate-y-1 transition-transform duration-300 shadow-sm">
+                    <div class="w-16 h-16 bg-vert-second text-vert-principale rounded-full flex items-center justify-center mb-6">
+                        <img src="images/accueil/icones/feuille.png" alt="icon" class="size-5.5">
+                    </div>
+                    <h3 class="text-lg font-bold text-noir mb-3">Écologie</h3>
+                    <p class="text-sm text-gris1 leading-relaxed">
+                        Réduisez votre empreinte carbone et contribuez à un campus plus vert et durable.
+                    </p>
+                </div>
+
+                <div class="bg-white border border-beige-second/50 rounded-2xl p-6 flex flex-col items-center text-center h-full hover:-translate-y-1 transition-transform duration-300 shadow-sm">
+                    <div class="w-16 h-16 bg-vert-second text-vert-principale rounded-full flex items-center justify-center mb-6">
+                        <img src="images/accueil/icones/bouclier-securite.png" alt="icon" class="size-7">
+                    </div>
+                    <h3 class="text-lg font-bold text-noir mb-3">Sécurité</h3>
+                    <p class="text-sm text-gris1 leading-relaxed">
+                        Voyagez en toute confiance avec des membres vérifiés de la communauté IUT.
+                    </p>
+                </div>
+
+                <div class="bg-white border border-beige-second/50 rounded-2xl p-6 flex flex-col items-center text-center h-full hover:-translate-y-1 transition-transform duration-300 shadow-sm">
+                    <div class="w-16 h-16 bg-vert-second text-vert-principale rounded-full flex items-center justify-center mb-6">
+                        <img src="images/accueil/icones/personne-convivialite.png" alt="icon" class="size-7">
+                    </div>
+                    <h3 class="text-lg font-bold text-noir mb-3">Convivialité</h3>
+                    <p class="text-sm text-gris1 leading-relaxed">
+                        Rencontrez d'autres étudiants, enseignants et créez des liens sur la route.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
   </body>
 </html>
