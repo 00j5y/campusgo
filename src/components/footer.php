@@ -5,7 +5,7 @@
             
             <div class="lg:col-span-5">
                 <div class="flex shrink-0 items-center cursor-pointer">
-                    <img class="h-12 w-auto" src="images/logo/logo.png" alt="Campus Go Logo">
+                    <img class="h-12 w-auto" src="public/images/logo/logo.png" alt="Campus Go Logo">
                     <div class="ml-3 flex items-baseline text-2xl font-semibold font-sans">
                         <span class="text-vert-principale">Campus</span>
                         <span class="text-beige-second">'Go</span>
@@ -31,16 +31,16 @@
                 <h3 class="text-noir font-semibold text-lg mb-6">Contact</h3>
                 
                 <a href="mailto:contact@campusgo.fr" class="flex items-center gap-3 text-gris1 hover:text-vert-principale transition-colors mb-6">
-                    <img src="/images/footer/logo-email.png" class="size-5 mt-1">
+                    <img src="./public/images/footer/logo-email.png" class="size-5 mt-1">
                     contact@campusgo.fr
                 </a>
 
                 <div class="flex gap-4">
-                    <a href="https://instagram.com/campusgo" class="text-gris1 hover:text-vert-principale transition-colors">
-                        <img src="/images/footer/logo-ig.png" class="size-5 mt-1">
+                    <a href="https://instagram.com/campusgo" class="text-gris1 hover:text-vert-principale transition-colors" target="_blank">
+                        <img src="./public/images/footer/logo-ig.png" class="size-5 mt-1">
                     </a>
-                    <a href="https://x.com/campusgo" class="text-gris1 hover:text-vert-principale transition-colors">
-                        <img src="/images/footer/logo-x.png" class="size-5 mt-1">
+                    <a href="https://x.com/campusgo" class="text-gris1 hover:text-vert-principale transition-colors" target="_blank">
+                        <img src="./public/images/footer/logo-x.png" class="size-5 mt-1">
                     </a>
                 </div>
             </div>

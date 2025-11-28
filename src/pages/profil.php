@@ -10,7 +10,7 @@
   </head>
 
   <body>
-      <load src="src/components/navbar.html"/>
+      
   </body>
 
 </html>
