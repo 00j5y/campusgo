@@ -29,7 +29,14 @@ npm install
 ```
 <h2 align="center">▶️ Lancer le projet</h2>
 
-### Ouvrir un CMD dans le dossier du projet et éxecuter la commande
+### 1- Mettre le dossier du projet dans le root de Laragon
+
+### 3- Mettre les info de BD dans /src/includes/pdo.php
 ```bash
-npm run dev
+$user = "";
+$mdp = "";
+$host = "";
+$port = "";
+$dbname = "";
 ```
+### 3- Lancer le serveur Laragon et cliquer sur Web

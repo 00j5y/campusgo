@@ -3,15 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="/src/style.css" rel="stylesheet">
+    <link href="./src/style.css" rel="stylesheet">
     <title>Campus'GO</title>
-    <link rel="stylesheet" href="styles.css">
     <link rel="shortcut icon" href="/images/logo/logo.png" type="image/x-icon">
   </head>
 
   <body>
       <!-- Navbar -->
-      <load src="src/components/navbar.html"/>
+      <?php include __DIR__ . '/src/components/navbar.php'; ?>
 
       <!-- Section Présentation -->
       <section class="relative bg-linear-to-br from-vert-principale/20 via-beige-second/50 to-beige-principale/50 pt-12 pb-20 lg:pt-20 lg:pb-28 overflow-hidden">
@@ -35,7 +34,7 @@
                     <div class="flex flex-col sm:flex-row gap-4 mb-12">
                         <a href="#" class="inline-flex justify-center items-center gap-2 bg-vert-principale hover:bg-vert-principal-h text-white px-6 py-3.5 rounded-lg font-medium transition-colors shadow-sm">
                             Rechercher un Trajet
-                            <img src="images/accueil/icones/fleche-droite.png" alt="Fleche pointant vers la droite blanche" class="size-6 pt-0.5">
+                            <img src="./public/images/accueil/icones/fleche-droite.png" alt="Fleche pointant vers la droite blanche" class="size-6 pt-0.5">
                         </a>
                         <a href="#" class="inline-flex justify-center items-center bg-white hover:white/20 text-gris1 hover:text-vert-principale px-6 py-3.5 rounded-lg font-medium transition-colors ">
                             Proposer un Trajet
@@ -60,11 +59,11 @@
 
                 <div class="relative w-full flex justify-end items-center pl-4 lg:pl-0 transition-transform duration-500 ease-in-out hover:scale-105">
                   <div class="relative w-full lg:w-[95%] h-[350px] sm:h-[450px] lg:h-[550px] rounded-3xl lg:rounded-[50px] overflow-hidden shadow-2xl">
-                      <img src="images/accueil/voiture.png" alt="Étudiants en covoiturage" class="w-full h-full object-cover">   
+                      <img src="./public/images/accueil/voiture.png" alt="Étudiants en covoiturage" class="w-full h-full object-cover">   
                   </div>
                   <div class="absolute bottom-8 left-8 lg:p-b-16 xl:left-12 z-30 bg-white p-4 pr-8 rounded-2xl shadow-xl flex items-center gap-4 animate-fade-in-up max-w-[280px]">
                       <div class="w-12 h-12 rounded-full bg-vert-second flex items-center justify-center">
-                          <img src="images/accueil/icones/feuille.png" alt="icon" class="size-5.5">
+                          <img src="./public/images/accueil/icones/feuille.png" alt="icon" class="size-5.5">
                       </div>
                       <div>
                           <p class="text-sm text-gris1">Économie moyenne</p>
@@ -134,7 +133,7 @@
                 
                 <div class="bg-white border border-beige-second/50 rounded-2xl p-6 flex flex-col items-center text-center h-full hover:-translate-y-1 transition-transform duration-300 shadow-sm">
                     <div class="w-16 h-16 bg-vert-second text-vert-principale rounded-full flex items-center justify-center mb-6">
-                        <img src="images/accueil/icones/cochon-economie.png" alt="icon" class="size-7">
+                        <img src="./public/images/accueil/icones/cochon-economie.png" alt="icon" class="size-7">
                     </div>
                     <h3 class="text-lg font-bold text-noir mb-3">Économies</h3>
                     <p class="text-sm text-gris1 leading-relaxed">
@@ -144,7 +143,7 @@
 
                 <div class="bg-white border border-beige-second/50 rounded-2xl p-6 flex flex-col items-center text-center h-full hover:-translate-y-1 transition-transform duration-300 shadow-sm">
                     <div class="w-16 h-16 bg-vert-second text-vert-principale rounded-full flex items-center justify-center mb-6">
-                        <img src="images/accueil/icones/feuille.png" alt="icon" class="size-5.5">
+                        <img src="./public/images/accueil/icones/feuille.png" alt="icon" class="size-5.5">
                     </div>
                     <h3 class="text-lg font-bold text-noir mb-3">Écologie</h3>
                     <p class="text-sm text-gris1 leading-relaxed">
@@ -154,7 +153,7 @@
 
                 <div class="bg-white border border-beige-second/50 rounded-2xl p-6 flex flex-col items-center text-center h-full hover:-translate-y-1 transition-transform duration-300 shadow-sm">
                     <div class="w-16 h-16 bg-vert-second text-vert-principale rounded-full flex items-center justify-center mb-6">
-                        <img src="images/accueil/icones/bouclier-securite-vert.png" alt="icon" class="size-7">
+                        <img src="./public/images/accueil/icones/bouclier-securite-vert.png" alt="icon" class="size-7">
                     </div>
                     <h3 class="text-lg font-bold text-noir mb-3">Sécurité</h3>
                     <p class="text-sm text-gris1 leading-relaxed">
@@ -164,7 +163,7 @@
 
                 <div class="bg-white border border-beige-second/50 rounded-2xl p-6 flex flex-col items-center text-center h-full hover:-translate-y-1 transition-transform duration-300 shadow-sm">
                     <div class="w-16 h-16 bg-vert-second text-vert-principale rounded-full flex items-center justify-center mb-6">
-                        <img src="images/accueil/icones/personne-convivialite-vert.png" alt="icon" class="size-7">
+                        <img src="./public/images/accueil/icones/personne-convivialite-vert.png" alt="icon" class="size-7">
                     </div>
                     <h3 class="text-lg font-bold text-noir mb-3">Convivialité</h3>
                     <p class="text-sm text-gris1 leading-relaxed">
@@ -183,7 +182,7 @@
                 
                 <div class="w-full lg:w-1/2 flex justify-center lg:justify-end">
                     <div class="relative rounded-3xl overflow-hidden shadow-2xl max-w-md">
-                        <img src="images/accueil/telephone.png" alt="Application Campus'Go sur mobile" class="w-full h-auto object-cover hover:scale-105 transition-transform duration-700">
+                        <img src="./public/images/accueil/telephone.png" alt="Application Campus'Go sur mobile" class="w-full h-auto object-cover hover:scale-105 transition-transform duration-700">
                     </div>
                 </div>
 
@@ -198,7 +197,7 @@
                         
                         <div class="flex gap-4">
                             <div class="mt-1">
-                                <img src="/images/accueil/icones/valider.png" class="size-5">
+                                <img src="./public/images/accueil/icones/valider.png" class="size-5">
                             </div>
                             <div>
                                 <h3 class="font-bold text-noir">Recherche intelligente</h3>
@@ -208,7 +207,7 @@
 
                         <div class="flex gap-4">
                             <div class="mt-1">
-                                <img src="/images/accueil/icones/valider.png" class="size-5">
+                                <img src="./public/images/accueil/icones/valider.png" class="size-5">
                             </div>
                             <div>
                                 <h3 class="font-bold text-noir">Système de notation</h3>
@@ -218,7 +217,7 @@
 
                         <div class="flex gap-4">
                             <div class="mt-1">
-                                <img src="/images/accueil/icones/valider.png" class="size-5">
+                                <img src="./public/images/accueil/icones/valider.png" class="size-5">
                             </div>
                             <div>
                                 <h3 class="font-bold text-noir">Notifications instantanées</h3>
@@ -228,7 +227,7 @@
 
                         <div class="flex gap-4">
                             <div class="mt-1">
-                                <img src="/images/accueil/icones/valider.png" class="size-5">
+                                <img src="./public/images/accueil/icones/valider.png" class="size-5">
                             </div>
                             <div>
                                 <h3 class="font-bold text-noir">Flexible et simple</h3>
@@ -261,7 +260,7 @@
                             
                             <div class="flex gap-4 items-start">
                                 <div class="w-10 h-10 rounded-full bg-vert-principale flex items-center justify-center shrink-0 text-white">
-                                    <img src="images/accueil/icones/personne-convivialite-blanc.png" alt="Icone Convivialité" class="size-5">
+                                    <img src="./public/images/accueil/icones/personne-convivialite-blanc.png" alt="Icone Convivialité" class="size-5">
                                 </div>
                                 <div>
                                     <h3 class="font-bold text-noir">Communauté IUT exclusive</h3>
@@ -271,7 +270,7 @@
 
                             <div class="flex gap-4 items-start">
                                 <div class="w-10 h-10 rounded-full bg-vert-principale flex items-center justify-center shrink-0 text-white">
-                                    <img src="images/accueil/icones/bouclier-securite-blanc.png" alt="Icone Bouclier" class="size-5">
+                                    <img src="./public/images/accueil/icones/bouclier-securite-blanc.png" alt="Icone Bouclier" class="size-5">
                                 </div>
                                 <div>
                                     <h3 class="font-bold text-noir">Profils vérifiés</h3>
@@ -281,7 +280,7 @@
 
                             <div class="flex gap-4 items-start">
                                 <div class="w-10 h-10 rounded-full bg-vert-principale flex items-center justify-center shrink-0 text-white">
-                                    <img src="images/accueil/icones/voiture-blanc.png" alt="Icone Voiture" class="size-5">
+                                    <img src="./public/images/accueil/icones/voiture-blanc.png" alt="Icone Voiture" class="size-5">
                                 </div>
                                 <div>
                                     <h3 class="font-bold text-noir">Support dédié</h3>
@@ -295,7 +294,7 @@
 
                 <div class="w-full lg:w-6/12 flex justify-center lg:justify-end">
                     <div class="relative rounded-3xl overflow-hidden shadow-2xl max-w-lg w-full">
-                        <img src="images/accueil/etudiant.png" alt="Groupe étudiants" class="w-full h-auto object-cover hover:scale-105 transition-transform duration-700">
+                        <img src="./public/images/accueil/etudiant.png" alt="Groupe étudiants" class="w-full h-auto object-cover hover:scale-105 transition-transform duration-700">
                     </div>
                 </div>
 
@@ -320,7 +319,7 @@
                     <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
                         <a href="#" class="inline-flex justify-center items-center gap-2 bg-vert-principale hover:bg-vert-principal-h text-white px-8 py-3.5 rounded-lg font-medium transition-colors shadow-sm">
                             Commencer maintenant
-                            <img src="images/accueil/icones/fleche-droite.png" alt="Fleche pointant vers la droite blanche" class="size-6 pt-0.5">
+                            <img src="./public/images/accueil/icones/fleche-droite.png" alt="Fleche pointant vers la droite blanche" class="size-6 pt-0.5">
                         </a>
                         
                         <a href="#" class="inline-flex justify-center items-center bg-white text-noir px-8 py-3.5 rounded-lg font-medium transition-colors shadow-sm">
@@ -334,7 +333,7 @@
     </section>
 
     <!-- Footer -->
-    <load src="src/components/footer.html"/>
+    <?php include __DIR__ . '/src/components/footer.php'; ?>
 
   </body>
 </html>
