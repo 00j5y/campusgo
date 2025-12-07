@@ -21,9 +21,11 @@
             <div class="lg:col-span-3">
                 <h3 class="text-noir font-semibold text-lg mb-6">Liens Utiles</h3>
                 <ul class="space-y-4">
-                    <li><a href="index.html/#howitworks" class="text-gris1 hover:text-vert-principale transition-colors">Comment ça marche ?</a></li>
-                    <li><a href="index.html/#plateforme" class="text-gris1 hover:text-vert-principale transition-colors">Notre plateforme</a></li>
-                    <li><a href="index.html/#communaute" class="text-gris1 hover:text-vert-principale transition-colors">Notre communauté</a></li>
+                    <li><a href="{{ url('/') }}" class="text-gris1 hover:text-vert-principale transition-colors">Accueil</a></li>
+                    <li><a href="#" class="text-gris1 hover:text-vert-principale transition-colors">Rechercher</a></li>
+                    <li><a href="#" class="text-gris1 hover:text-vert-principale transition-colors">Mes Trajets</a></li>
+                    <li><a href="#" class="text-gris1 hover:text-vert-principale transition-colors">Profil</a></li>
+                    <li><a href="#" class="text-gris1 hover:text-vert-principale transition-colors">Proposer un Trajet</a></li>
                 </ul>
             </div>
 
