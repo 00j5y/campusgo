@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@source "../views/**/*.blade.php";
+@source "../js/**/*.js";
+
+@theme {
+    --color-vert-principale: #2E7D32;
+    --color-vert-principal-h: #016630;
+    --color-vert-second: #EBF2EB;
+    --color-beige-principale: #F3EDE3;
+    --color-beige-second: #C3AB79;
+    --color-noir: #333333;
+    --color-gris1: #4C4C4C;
+    --color-gris2: #ABAAAB;
+    --color-rouge: #E7000B;
+}
