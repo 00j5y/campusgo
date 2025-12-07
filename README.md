@@ -9,6 +9,7 @@
 
 - NodeJS (https://nodejs.org/dist/v24.11.1/node-v24.11.1-x64.msi)
 - PHP (https://windows.php.net/download/)
+- Composer (https://getcomposer.org/download/)
 
 <h2 align="center">✨ Récupération du projet</h2>
 
