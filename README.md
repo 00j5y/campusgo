@@ -36,7 +36,12 @@ npm install
 composer install
 ```
 
-### 6- Mettre les info de DB dans le .env
+### 6- Migrer la BD de Laragon dans le projet Laravel
+```bash
+php artisan migrate
+```
+
+### 7- Mettre les info de DB dans le .env
 ```bash
 DB_CONNECTION=mysql
 DB_HOST=
