@@ -1,3 +1,4 @@
+<img src="https://imgur.com/eeOyqG5.jpeg" alt="CampusGo">
 <h2 align="center">🔍 Sommaire</h2>
 
 - [📋 Exigence](#-exigence)
@@ -7,6 +8,8 @@
 <h2 align="center">📋 Exigence</h2>
 
 - NodeJS (https://nodejs.org/dist/v24.11.1/node-v24.11.1-x64.msi)
+- PHP (https://windows.php.net/download/)
+- Composer (https://getcomposer.org/download/)
 
 <h2 align="center">✨ Récupération du projet</h2>
 
@@ -23,20 +26,41 @@ git clone https://github.com/00j5y/campusgo.git
 cd campusgo
 ```
 
-### 4- Exécuter la commande
+### 4- Exécuter la commande pour avoir les dépendances front-end
 ```bash
 npm install
 ```
+
+### 5- Exécuter la commande pour avoir les dépendances PHP
+```bash
+composer install
+```
+
+### 6- Migrer la BD de Laragon dans le projet Laravel
+```bash
+php artisan migrate
+```
+
+### 7- Mettre les info de DB dans le .env
+```bash
+DB_CONNECTION=mysql
+DB_HOST=
+DB_PORT=
+DB_DATABASE=
+DB_USERNAME=
+DB_PASSWORD=
+```
+
 <h2 align="center">▶️ Lancer le projet</h2>
 
-### 1- Mettre le dossier du projet dans le root de Laragon
-
-### 3- Mettre les info de BD dans /src/includes/pdo.php
+### 1- Lancer Vite
 ```bash
-$user = "";
-$mdp = "";
-$host = "";
-$port = "";
-$dbname = "";
+npm run dev
 ```
-### 3- Lancer le serveur Laragon et cliquer sur Web
+
+### 2- Lancer Laravel
+```bash
+php artist serve
+```
+
+### 3- Lancer 127.0.0.1:8000 dans son navigateur
