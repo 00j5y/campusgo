@@ -3,15 +3,17 @@
         <div class="flex justify-between items-center h-20">
 
             <div class="flex shrink-0 items-center cursor-pointer">
-                <img class="h-12 w-auto" src="{{ asset('images/logo/logo.png') }}" alt="Campus Go Logo">
-                <div class="ml-3 flex items-baseline text-2xl font-semibold font-sans">
-                    <span class="text-vert-principale">Campus</span>
-                    <span class="text-beige-second">'Go</span>
-                </div>
+                <a href="{{ url('/') }}" class="flex shrink-0 items-center cursor-pointer">
+                    <img class="h-12 w-auto" src="{{ asset('images/logo/logo.png') }}" alt="Campus Go Logo">
+                    <div class="ml-3 flex items-baseline text-2xl font-semibold font-sans">
+                        <span class="text-vert-principale">Campus</span>
+                        <span class="text-beige-second">'Go</span>
+                    </div>
+                </a>
             </div>
 
             <nav class="hidden lg:flex space-x-8 items-center">
-                <a href="#" class="flex items-center text-gris1 font-semibold hover:text-vert-principale transition">
+                <a href="{{ url('/') }}" class="flex items-center text-gris1 font-semibold hover:text-vert-principale transition">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                     Accueil
                 </a>
