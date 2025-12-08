@@ -9,6 +9,10 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+
+    protected $table = 'UTILISATEUR'; 
+    
+    protected $primaryKey = 'ID_Utilisateur';
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
@@ -44,5 +48,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function vehicules()
+    {
+        return $this->hasMany(Vehicule::class, 'ID_Utilisateur', 'ID_Utilisateur');
+    }
+
+    public function preference()
+    {
+        return $this->hasOne(Preference::class, 'ID_Utilisateur', 'ID_Utilisateur');
     }
 }

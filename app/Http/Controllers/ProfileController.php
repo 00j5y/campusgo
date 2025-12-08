@@ -57,4 +57,16 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function show(Request $request): View
+    {
+        // On récupère l'utilisateur connecté
+        // Et on "charge" (load) ses relations définies dans le modèle User
+        $user = $request->user()->load(['vehicule', 'preference']);
+
+        dd($user);
+        /*return view('profile.show', [
+            'user' => $user,
+        ]);*/
+    }
 }
