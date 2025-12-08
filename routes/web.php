@@ -16,7 +16,9 @@ Route::fallback(function () {
 
 // Page de connexion
 Route::get('/connexion', [AuthController::class, 'login'])->name('auth.login');
+Route::post('/connexion', [AuthController::class, 'doLogin'])->name('auth.login');
 
+/*
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -26,5 +28,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+*/
 
 require __DIR__.'/auth.php';
