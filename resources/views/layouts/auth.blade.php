@@ -25,16 +25,25 @@
                     <h1 class="text-4xl font-bold mb-6">Bienvenue sur Campus'Go</h1>
                     <p class="text-lg mb-8">La plateforme de covoiturage dédiée à la communauté de l'IUT d'Amiens.</p>
                     <ul class="font-medium">
-                        <li class="flex items-center mb-2">✓ Réservé aux membres de l'IUT d'Amiens</li>
-                        <li class="flex items-center mb-2">✓ Profils vérifiés et sécurisés</li>
-                        <li class="flex items-center">✓ Économisez jusqu'à 50% sur vos trajets</li>
+                        <li class="flex items-center">
+                            <img class="size-5 mr-2" src="{{ asset('images/accueil/icones/valider.png') }}">
+                            Réservé aux membres de l'IUT d'Amiens
+                        </li>
+                        <li class="flex items-center">
+                            <img class="size-5 mr-2" src="{{ asset('images/accueil/icones/valider.png') }}">
+                            Profils vérifiés et sécurisés
+                        </li>
+                        <li class="flex items-center">
+                            <img class="size-5 mr-2" src="{{ asset('images/accueil/icones/valider.png') }}">
+                            Économisez jusqu'à 50% sur vos trajets
+                        </li>
                     </ul>
                 </div>
 
                 <div class="flex items-center space-x-12 font-bold border-t border-white/20 pt-8">
-                    <div><span class="block text-3xl">250+</span><span class="text-sm">Membres</span></div>
-                    <div><span class="block text-3xl">500+</span><span class="text-sm">Trajets</span></div>
-                    <div><span class="block text-3xl">2.5T</span><span class="text-sm">CO₂</span></div>
+                    <div><span class="block text-3xl">250+</span><span class="text-sm">Membres actifs</span></div>
+                    <div><span class="block text-3xl">500+</span><span class="text-sm">Trajets partagés</span></div>
+                    <div><span class="block text-3xl">2.5T</span><span class="text-sm">CO₂ économisé</span></div>
                 </div>
             </div>
         </div>

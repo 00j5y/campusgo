@@ -23,7 +23,7 @@
             <div class="flex gap-4">
                 <div class="w-1/2">
                     <label class="block text-sm font-medium text-noir mb-1">Prénom</label>
-                    <input type="text" name="firstname" value="{{ old('firstname') }}" required autofocus
+                    <input type="text" name="firstname" value="{{ old('firstname') }}" required
                            class="w-full px-4 py-3 rounded-md bg-gray-50 border border-gray-200 focus:border-vert-principale focus:ring-vert-principale outline-none text-sm">
                     @error('firstname') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>

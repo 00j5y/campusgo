@@ -13,11 +13,11 @@ class AuthController extends Controller
     // Affichage de la page d'authentification
     public function index()
     {
-        return view('auth.login');
+        return view('auth.connexion');
     }
 
     // Tentative de connexion
-    public function login(Request $request)
+    public function connexion(Request $request)
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
@@ -54,7 +54,7 @@ class AuthController extends Controller
         ]);
 
         // Connexion automatique
-        Auth::login($user);
+        Auth::connexion($user);
 
         // Retour sur la page d'accueil
         return redirect('/');

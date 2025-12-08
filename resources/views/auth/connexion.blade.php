@@ -34,16 +34,6 @@
                 @error('password') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
             </div>
 
-            <div class="flex items-center justify-between text-sm">
-                <label class="flex items-center text-noir">
-                    <input type="checkbox" name="remember" class="rounded border-gray-300 text-vert-principale focus:ring-vert-principale">
-                    <span class="ml-2">Se souvenir de moi</span>
-                </label>
-                @if (Route::has('password.request'))
-                    <a href="{{ route('password.request') }}" class="text-vert-principale hover:underline font-medium">Mot de passe oublié ?</a>
-                @endif
-            </div>
-
             <button type="submit" class="w-full bg-vert-principale hover:bg-green-800 text-white font-bold py-3 px-4 rounded-md transition duration-300 flex items-center justify-center">
                 Se connecter
             </button>
