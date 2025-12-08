@@ -5,7 +5,7 @@
             
             <div class="lg:col-span-5">
                 <div class="flex shrink-0 items-center cursor-pointer">
-                    <img class="h-12 w-auto" src="{{ asset('images/logo/logo.png') }}" alt="Campus Go Logo">
+                    <img class="h-12 w-auto" src="{{ asset('favicon.ico') }}" alt="Campus Go Logo">
                     <div class="ml-3 flex items-baseline text-2xl font-semibold font-sans">
                         <span class="text-vert-principale">Campus</span>
                         <span class="text-beige-second">'Go</span>
