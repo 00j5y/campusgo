@@ -1,15 +1,21 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
+// Page d'accueil
 Route::get('/', function () {
     return view('accueil');
 });
 
+// Erreur 404
 Route::fallback(function () {
     return view('errors.404');
 });
+
+// Page de connexion
+Route::get('/connexion', [AuthController::class, 'login'])->name('auth.login');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
