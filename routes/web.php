@@ -7,6 +7,10 @@ Route::get('/', function () {
     return view('accueil');
 });
 
+Route::get('/rechercher', function () {
+    return view('rechercher');
+})->name('rechercher');
+
 Route::fallback(function () {
     return view('errors.404');
 });
