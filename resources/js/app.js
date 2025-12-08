@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     compteurs.forEach(compteur => {
         const nombreFinal = parseInt(compteur.getAttribute('data-target'));
-        const dureeAnimation = 1500;
+        const dureeAnimation = 1000;
         let tempsDeDepart = null;
 
         function effetRalentissement(t) {
