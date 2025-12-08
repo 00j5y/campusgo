@@ -2,10 +2,9 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', function () {
-    return view('accueil');
-});
+Route::get('/', [HomeController::class, 'index'])->name('accueil');
 
 Route::fallback(function () {
     return view('errors.404');
