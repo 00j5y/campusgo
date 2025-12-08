@@ -6,7 +6,7 @@
     
     <title>@yield('title', "Campus'GO")</title>
     
-    <link rel="shortcut icon" href="{{ asset('images/logo/logo.png') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
