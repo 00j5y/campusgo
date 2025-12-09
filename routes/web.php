@@ -2,12 +2,11 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 // Page d'accueil
-Route::get('/', function () {
-    return view('accueil');
-});
+Route::get('/', [HomeController::class, 'accueil'])->name('accueil');
 
 // Erreur 404
 Route::fallback(function () {
