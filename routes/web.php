@@ -42,6 +42,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/parametres/securite', [ProfileController::class, 'editSecurity'])->name('profile.security');
     Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+
+    Route::get('/mes-avis', [App\Http\Controllers\ReviewController::class, 'index'])->name('reviews.index');
+    Route::get('/laisser-un-avis', [App\Http\Controllers\ReviewController::class, 'create'])->name('reviews.create');
 });
 
 Route::fallback(function () {
