@@ -115,24 +115,24 @@
                     </div>
                     <p class="text-sm text-gris1 mb-6">Informations sur votre véhicule pour les trajets en tant que conducteur</p>
 
-                    <div class="bg-gray-50 rounded-xl p-5 border border-gray-100 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <p class="text-xs text-gris1 uppercase tracking-wide">Marque et Modèle</p>
-                            <p class="font-semibold text-noir mt-1">Peugeot 208</p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-gris1 uppercase tracking-wide">Immatriculation</p>
-                            <p class="font-semibold text-noir mt-1">AB-123-CD</p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-gris1 uppercase tracking-wide">Couleur</p>
-                            <p class="font-semibold text-noir mt-1">Blanc</p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-gris1 uppercase tracking-wide">Nombre de places</p>
-                            <p class="font-semibold text-noir mt-1">4 places</p>
-                        </div>
+                <div class="bg-gray-50 rounded-xl p-5 border border-gray-100 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-xs text-gris1 uppercase tracking-wide">Marque et Modèle</p>
+                        <p class="font-semibold text-noir mt-1">{{ $user->vehicule->Marque }} {{ $user->vehicule->Modele }}</p>
                     </div>
+                    <div>
+                        <p class="text-xs text-gris1 uppercase tracking-wide">Immatriculation</p>
+                        <p class="font-semibold text-noir mt-1">{{ $user->vehicule->Immatriculation }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gris1 uppercase tracking-wide">Couleur</p>
+                        <p class="font-semibold text-noir mt-1">{{ $user->vehicule->Couleur }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gris1 uppercase tracking-wide">Nombre de places</p>
+                        <p class="font-semibold text-noir mt-1">{{ $user->vehicule->NombrePlace }} places</p>
+                    </div>
+                </div>
                     
                     <button class="mt-4 flex items-center gap-1 text-sm font-medium text-vert-principale hover:text-vert-principal-h transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
@@ -158,7 +158,7 @@
                                 <p class="text-sm text-gris1">Autoriser les passagers avec des animaux de compagnie</p>
                             </div>
                             <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-                                <input type="checkbox" name="toggle" id="toggle1" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-gray-300 checked:right-0 checked:border-vert-principale"/>
+                                <input type="checkbox" disabled {{ $user->preference->Accepte_animaux ? 'checked' : '' }} class="toggle-checkbox ..." />
                                 <label for="toggle1" class="toggle-label block overflow-hidden h-5 rounded-full bg-gray-300 cursor-pointer"></label>
                             </div>
                         </div>
@@ -172,7 +172,7 @@
                                 <p class="text-sm text-gris1">Autoriser de fumer dans le véhicule</p>
                             </div>
                             <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-                                <input type="checkbox" name="toggle" id="toggle2" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-gray-300"/>
+                                <input type="checkbox" disabled {{ $user->preference->Accepte_fumeurs ? 'checked' : '' }} class="toggle-checkbox ..." />
                                 <label for="toggle2" class="toggle-label block overflow-hidden h-5 rounded-full bg-gray-300 cursor-pointer"></label>
                             </div>
                         </div>
