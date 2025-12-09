@@ -7,6 +7,10 @@ Route::get('/', function () {
     return view('accueil');
 });
 
+Route::get('/trajets/create', function () {
+    return view('trajets.create');
+})->name('trajets.create'); 
+
 Route::fallback(function () {
     return view('errors.404');
 });
