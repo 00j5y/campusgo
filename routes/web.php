@@ -39,6 +39,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/vehicule/{id}', [App\Http\Controllers\VehiculeController::class, 'destroy'])->name('vehicule.destroy');
 
     Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar');
+
+    Route::get('/parametres/securite', [ProfileController::class, 'editSecurity'])->name('profile.security');
+    Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
 });
 
 Route::fallback(function () {

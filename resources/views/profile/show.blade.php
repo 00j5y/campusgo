@@ -285,8 +285,7 @@
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                     <h3 class="font-bold text-noir mb-4">Sécurité</h3>
                     <div class="space-y-3">
-                        <a href="#" class="block text-gris1 hover:text-vert-principale transition-colors flex justify-between">
-                            Changer le mot de passe
+                        <a href="{{ route('profile.security') }}" class="block text-gris1 hover:text-vert-principale transition-colors flex justify-between">                            Changer le mot de passe
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                         </a>
                         <hr class="border-gray-100">
