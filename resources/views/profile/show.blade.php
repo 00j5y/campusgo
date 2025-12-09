@@ -84,23 +84,24 @@
                         <a href="{{ route('profile.edit') }}" class="text-sm font-semibold text-vert-principale hover:text-vert-principal-h hover:underline">Modifier</a>
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <p class="text-sm text-gris1 mb-1">Prénom</p>
-                            <p class="font-medium text-noir">{{ explode(' ', $user->name)[0] }}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gris1 mb-1">Nom</p>
-                            <p class="font-medium text-noir">{{ explode(' ', $user->name)[1] ?? '' }}</p>
-                        </div>
-                        <div class="md:col-span-2">
-                            <p class="text-sm text-gris1 mb-1">Email</p>
-                            <p class="font-medium text-noir">{{ $user->email }}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gris1 mb-1">Téléphone</p>
-                            <p class="font-medium text-noir italic text-gray-400">Non renseigné</p>
-                        </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="text-sm text-gris1 mb-1">Prénom</p>
+                        <p class="font-medium text-noir">{{ $user->firstname }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gris1 mb-1">Nom</p>
+                        <p class="font-medium text-noir">{{ $user->lastname }}</p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <p class="text-sm text-gris1 mb-1">Email</p>
+                        <p class="font-medium text-noir">{{ $user->email }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gris1 mb-1">Téléphone</p>
+                        <p class="font-medium text-noir {{ $user->phone ? '' : 'italic text-gray-400' }}">
+                            {{ $user->phone ?? 'Non renseigné' }}
+                        </p>
                     </div>
                 </div>
 
@@ -115,25 +116,41 @@
                     </div>
                     <p class="text-sm text-gris1 mb-6">Informations sur votre véhicule pour les trajets en tant que conducteur</p>
 
-                <div class="bg-gray-50 rounded-xl p-5 border border-gray-100 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <p class="text-xs text-gris1 uppercase tracking-wide">Marque et Modèle</p>
-                        <p class="font-semibold text-noir mt-1">{{ $user->vehicule->Marque }} {{ $user->vehicule->Modele }}</p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gris1 uppercase tracking-wide">Immatriculation</p>
-                        <p class="font-semibold text-noir mt-1">{{ $user->vehicule->Immatriculation }}</p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gris1 uppercase tracking-wide">Couleur</p>
-                        <p class="font-semibold text-noir mt-1">{{ $user->vehicule->Couleur }}</p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gris1 uppercase tracking-wide">Nombre de places</p>
-                        <p class="font-semibold text-noir mt-1">{{ $user->vehicule->NombrePlace }} places</p>
-                    </div>
+                <div class="space-y-4"> @forelse($user->vehicules as $vehicule)
+                        <div class="bg-gray-50 rounded-xl p-5 border border-gray-100 grid grid-cols-1 sm:grid-cols-2 gap-4 relative group hover:border-vert-principale/50 transition-colors">
+                            
+                            <div class="absolute -top-3 -right-3 hidden group-hover:flex w-6 h-6 bg-vert-principale text-white rounded-full items-center justify-center text-xs font-bold shadow-sm">
+                                {{ $loop->iteration }}
+                            </div>
+
+                            <div>
+                                <p class="text-xs text-gris1 uppercase tracking-wide">Marque et Modèle</p>
+                                <p class="font-semibold text-noir mt-1">{{ $vehicule->Marque }} {{ $vehicule->Modele }}</p>
+                            </div>
+                            
+                            <div>
+                                <p class="text-xs text-gris1 uppercase tracking-wide">Immatriculation</p>
+                                <p class="font-semibold text-noir mt-1">{{ $vehicule->Immatriculation }}</p>
+                            </div>
+                            
+                            <div>
+                                <p class="text-xs text-gris1 uppercase tracking-wide">Couleur</p>
+                                <p class="font-semibold text-noir mt-1">{{ $vehicule->Couleur }}</p>
+                            </div>
+                            
+                            <div>
+                                <p class="text-xs text-gris1 uppercase tracking-wide">Nombre de places</p>
+                                <p class="font-semibold text-noir mt-1">{{ $vehicule->NombrePlace }} places</p>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="bg-gray-50 rounded-xl p-8 border border-dashed border-gray-300 text-center">
+                            <p class="text-gris1 italic">Aucun véhicule enregistré pour le moment.</p>
+                        </div>
+                    @endforelse
+
                 </div>
-                    
+                                    
                     <button class="mt-4 flex items-center gap-1 text-sm font-medium text-vert-principale hover:text-vert-principal-h transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
                         Ajouter un autre véhicule
@@ -148,49 +165,56 @@
                         Préférences de Covoiturage
                     </h2>
                     
-                    <div class="space-y-4">
-                        <div class="flex items-start gap-4 p-4 rounded-lg hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
-                            <div class="mt-1 text-vert-principale">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" /></svg>
+                <div class="space-y-6">
+                    
+                    <div class="flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-vert-principale/30 transition-colors bg-gray-50/50">
+                        <div class="flex items-center gap-4">
+                            <div class="mt-1 shrink-0 text-vert-principale">
+                                <img src="{{ asset('images/accueil/icones/patte.png') }}" alt="Animaux" class="size-6 object-contain">
                             </div>
-                            <div class="flex-1">
+                            <div>
                                 <h4 class="font-semibold text-noir">Accepter les animaux</h4>
-                                <p class="text-sm text-gris1">Autoriser les passagers avec des animaux de compagnie</p>
-                            </div>
-                            <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-                                <input type="checkbox" disabled {{ $user->preference->Accepte_animaux ? 'checked' : '' }} class="toggle-checkbox ..." />
-                                <label for="toggle1" class="toggle-label block overflow-hidden h-5 rounded-full bg-gray-300 cursor-pointer"></label>
+                                <p class="text-sm text-gris1">Autoriser les passagers avec des animaux</p>
                             </div>
                         </div>
+                        
+                        <div class="relative w-11 h-6 rounded-full transition-colors duration-200 ease-in-out {{ $user->preference?->Accepte_animaux ? 'bg-vert-principale' : 'bg-gray-300' }}">
+                            <div class="absolute top-1 left-1 bg-white w-4 h-4 rounded-full shadow-sm transition-transform duration-200 ease-in-out {{ $user->preference?->Accepte_animaux ? 'translate-x-5' : 'translate-x-0' }}"></div>
+                        </div>
+                    </div>
 
-                        <div class="flex items-start gap-4 p-4 rounded-lg hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
-                            <div class="mt-1 text-vert-principale">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" /></svg>
+                    <div class="flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-vert-principale/30 transition-colors bg-gray-50/50">
+                        <div class="flex items-center gap-4">
+                            <div class="mt-1 shrink-0 text-vert-principale">
+                                <img src="{{ asset('images/accueil/icones/cigarette.png') }}" alt="Fumeur" class="size-6 object-contain">
                             </div>
-                            <div class="flex-1">
+                            <div>
                                 <h4 class="font-semibold text-noir">Fumeur</h4>
                                 <p class="text-sm text-gris1">Autoriser de fumer dans le véhicule</p>
                             </div>
-                            <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-                                <input type="checkbox" disabled {{ $user->preference->Accepte_fumeurs ? 'checked' : '' }} class="toggle-checkbox ..." />
-                                <label for="toggle2" class="toggle-label block overflow-hidden h-5 rounded-full bg-gray-300 cursor-pointer"></label>
-                            </div>
                         </div>
+                        
+                        <div class="relative w-11 h-6 rounded-full transition-colors duration-200 ease-in-out {{ $user->preference?->Accepte_fumeurs ? 'bg-vert-principale' : 'bg-gray-300' }}">
+                            <div class="absolute top-1 left-1 bg-white w-4 h-4 rounded-full shadow-sm transition-transform duration-200 ease-in-out {{ $user->preference?->Accepte_fumeurs ? 'translate-x-5' : 'translate-x-0' }}"></div>
+                        </div>
+                    </div>
 
-                         <div class="flex items-start gap-4 p-4 rounded-lg hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
-                            <div class="mt-1 text-vert-principale">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" /></svg>
+                    <div class="flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-vert-principale/30 transition-colors bg-gray-50/50">
+                        <div class="flex items-center gap-4">
+                            <div class="mt-1 shrink-0 text-vert-principale">
+                                <img src="{{ asset('images/accueil/icones/musique.png') }}" alt="Musique" class="size-6 object-contain">
                             </div>
-                            <div class="flex-1">
+                            <div>
                                 <h4 class="font-semibold text-noir">Musique</h4>
                                 <p class="text-sm text-gris1">Écouter de la musique pendant le trajet</p>
                             </div>
-                             <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-                                <input type="checkbox" name="toggle" id="toggle3" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-gray-300 checked:right-0 checked:border-vert-principale"/>
-                                <label for="toggle3" class="toggle-label block overflow-hidden h-5 rounded-full bg-gray-300 cursor-pointer"></label>
-                            </div>
+                        </div>
+                        
+                        <div class="relative w-11 h-6 rounded-full transition-colors duration-200 ease-in-out {{ $user->preference?->Accepte_musique ? 'bg-vert-principale' : 'bg-gray-300' }}">
+                            <div class="absolute top-1 left-1 bg-white w-4 h-4 rounded-full shadow-sm transition-transform duration-200 ease-in-out {{ $user->preference?->Accepte_musique ? 'translate-x-5' : 'translate-x-0' }}"></div>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">

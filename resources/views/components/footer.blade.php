@@ -24,7 +24,7 @@
                     <li><a href="{{ url('/') }}" class="text-gris1 hover:text-vert-principale transition-colors">Accueil</a></li>
                     <li><a href="#" class="text-gris1 hover:text-vert-principale transition-colors">Rechercher</a></li>
                     <li><a href="#" class="text-gris1 hover:text-vert-principale transition-colors">Mes Trajets</a></li>
-                    <li><a href="#" class="text-gris1 hover:text-vert-principale transition-colors">Profil</a></li>
+                    <li><a href="{{ route('profile.show') }}" class="text-gris1 hover:text-vert-principale transition-colors">Profil</a></li>
                     <li><a href="#" class="text-gris1 hover:text-vert-principale transition-colors">Proposer un Trajet</a></li>
                 </ul>
             </div>

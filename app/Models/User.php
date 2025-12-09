@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Vehicule;
+use App\Models\Preference;
 
 class User extends Authenticatable
 {
@@ -25,7 +27,7 @@ class User extends Authenticatable
         'firstname',
         'lastname',
         'email',
-        'password',
+        'password'
     ];
 
     /**
@@ -51,7 +53,7 @@ class User extends Authenticatable
         ];
     }
 
-    /*public function vehicules()
+    public function vehicules()
     {
         return $this->hasMany(Vehicule::class, 'ID_Utilisateur', 'ID_Utilisateur');
     }
@@ -59,5 +61,5 @@ class User extends Authenticatable
     public function preference()
     {
         return $this->hasOne(Preference::class, 'ID_Utilisateur', 'ID_Utilisateur');
-    }*/
+    }
 }

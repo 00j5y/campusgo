@@ -58,40 +58,12 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
-    public function show(): View
+    public function show(Request $request): View
     {
-        // 1. L'Utilisateur
-        $user = new \stdClass();
-        $user->name = "Marie Dupont";
-        $user->Nom = "Dupont";
-        $user->Prenom = "Marie";
-        $user->email = "marie.dupont@etu.u-picardie.fr";
-        $user->Numero = "06 12 34 56 78";
-        $user->created_at = now();
-
-        // 2. Le Véhicule (Comme dans la table VEHICULE
-        $vehicule = new \stdClass();
-        $vehicule->Marque = "Peugeot";
-        $vehicule->Modele = "208";
-        $vehicule->Couleur = "Blanc";
-        $vehicule->Immatriculation = "AB-123-CD";
-        $vehicule->NombrePlace = 4;
-        
-        // On attache le véhicule à l'utilisateur
-        $user->vehicule = $vehicule; 
-
-        // 3. Les Préférences (Comme dans la table PREFERENCE
-        $preference = new \stdClass();
-        $preference->Accepte_animaux = true; // true = 1 dans la BDD
-        $preference->Accepte_fumeurs = false;
-        $preference->Accepte_musique = true;
-        $preference->Accepte_discussion = 3; // Echelle de 1 à 5
-        
-        // On attache les préférences
-        $user->preference = $preference;
+        $user = $request->user()->load(['vehicules', 'preference']);
 
         return view('profile.show', [
             'user' => $user,
-        ]);
+    ]);
     }
 }

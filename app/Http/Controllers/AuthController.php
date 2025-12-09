@@ -26,7 +26,11 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended('/');
+            
+            // CORRECTION 1 : Redirection intelligente
+            // Si l'utilisateur voulait aller sur /mon-profil, il y retourne.
+            // Sinon, il va sur /mon-profil par défaut.
+            return redirect()->intended(route('profile.show'));
         }
 
         return back()->withErrors([
@@ -53,11 +57,17 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // Connexion automatique
-        Auth::connexion($user);
+        // CORRECTION 2 : La méthode s'appelle login(), pas connexion()
+        Auth::login($user);
 
-        // Retour sur la page d'accueil
-        return redirect('/');
+        // CORRECTION 3 : Retour direct sur le profil après inscription
+        return redirect()->route('profile.show');
+    }
+
+    // Affichage de la page d'inscription
+    public function create()
+    {
+        return view('auth.inscription');
     }
 
     // Déconnexion
