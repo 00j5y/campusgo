@@ -36,29 +36,27 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    // Tentative d'inscription
+// Tentative d'inscription
     public function register(Request $request)
     {
-        // Information
+        // 1. On valide les champs reçus du formulaire (Noms en ANGLAIS comme dans la vue)
         $request->validate([
             'firstname' => ['required', 'string', 'max:255'],
-            'lastname' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'lastname'  => ['required', 'string', 'max:255'],
+            'email'     => ['required', 'string', 'email', 'max:255', 'unique:utilisateur'],
+            'password'  => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // Création de l'utilisateur
+        // 2. On crée l'utilisateur en faisant la traduction Anglais -> Français
         $user = User::create([
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'prenom' => $request->firstname, // Le formulaire envoie 'firstname', on le met dans 'prenom'
+            'nom'    => $request->lastname,  // idem
+            'email'  => $request->email,
+            'mdp'    => Hash::make($request->password), // On hash le 'password' et on le met dans 'mdp'
         ]);
 
-        // CORRECTION 2 : La méthode s'appelle login(), pas connexion()
         Auth::login($user);
 
-        // CORRECTION 3 : Retour direct sur le profil après inscription
         return redirect()->route('profile.show');
     }
 
