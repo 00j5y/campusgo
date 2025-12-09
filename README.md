@@ -60,7 +60,7 @@ npm run dev
 
 ### 2- Lancer Laravel
 ```bash
-php artist serve
+php artisan serve
 ```
 
 ### 3- Lancer 127.0.0.1:8000 dans son navigateur
