@@ -12,7 +12,7 @@
     <form method="POST" action="">
     @csrf
 
-    <!-- Réutiliser un trajet précédent -->
+    <!-- Réutiliser le trajet précédent -->
    <div class="bg-[#fcfaf8] border border-beige-second/50 rounded-lg mb-8 p-6">
     
         <div class="flex justify-between items-center mb-2">
@@ -22,7 +22,7 @@
                     <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
                     <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                 </svg>
-                Réutiliser un trajet précédent
+                Réutiliser le trajet précédent
             </h2>
             
             <svg class="w-5 h-5 text-gris1 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
@@ -85,7 +85,7 @@
                     Lieu de Départ
                 </label>
                 <input type="text" name="lieu_depart" id="lieu_depart" placeholder="Entrez votre adresse de départ" 
-                class="w-full border border-gray-300 rounded-md shadow-sm p-3 focus:ring-vert-principale focus:border-vert-principale" required>
+                class="w-full border border-gray-300 rounded-md shadow-sm p-3 " required>
                 <p class="text-xs text-gris1 mt-1">Exemple : 15 Rue des Étudiants, Amiens</p>
             </div>
 
@@ -97,7 +97,7 @@
                     <svg class="w-4 h-4 mr-1 text-vert-principale" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg>
                     Lieu d'Arrivée
                 </label>
-                <input type="text" name="lieu_arrivee" id="lieu_arrivee" value="IUT Amiens, Avenue des Facultés" readonly class="w-full border border-gray-300 bg-gray-100 rounded-md shadow-sm p-3 focus:ring-vert-principale focus:border-vert-principale" required>
+                <input type="text" name="lieu_arrivee" id="lieu_arrivee" value="IUT Amiens, Avenue des Facultés" class="w-full border rounded-md shadow-sm p-3 border-gray-300" required>
             </div>
 
 
@@ -109,7 +109,7 @@
                         <svg class="w-4 h-4 mr-1 text-vert-principale" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                         Date
                     </label>
-                    <input type="date" name="date_depart" id="date_depart" class="w-full border border-gray-300 rounded-md shadow-sm p-3 focus:ring-vert-principale focus:border-vert-principale" required>
+                    <input type="date" name="date_depart" id="date_depart" class="w-full border border-gray-300 rounded-md shadow-sm p-3 " required>
                 </div>
 
                 <!-- Heure de Départ -->
@@ -119,7 +119,7 @@
                         <svg class="w-4 h-4 mr-1 text-vert-principale" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         Heure de Départ
                     </label>
-                    <input type="time" name="heure_depart" id="heure_depart" class="w-full border border-gray-300 rounded-md shadow-sm p-3 focus:ring-vert-principale focus:border-vert-principale" required>
+                    <input type="time" name="heure_depart" id="heure_depart" class="w-full border border-gray-300 rounded-md shadow-sm p-3 " required>
                 </div>
             </div>
 
@@ -131,11 +131,15 @@
                     <svg class="w-4 h-4 mr-1 text-vert-principale" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-5a3 3 0 00-3-3H9a3 3 0 00-3 3v5H1V7a3 3 0 013-3h16a3 3 0 013 3v13H17zM12 11a4 4 0 100-8 4 4 0 000 8z"></path></svg>
                     Nombre de Places Disponibles
                 </label>
-                <select name="places_disponibles" id="places_disponibles" class="w-full border border-gray-300 rounded-md shadow-sm p-3 focus:ring-vert-principale focus:border-vert-principale" required>
+                <select name="places_disponibles" id="places_disponibles" class="w-full border border-gray-300 rounded-md shadow-sm p-3 " required>
                     <option value="" disabled selected>Sélectionnez le nombre de place</option>
-                    @for ($i = 1; $i <= 8; $i++)
-                        <option value="{{ $i }}">{{ $i }} places</option>
-                    @endfor
+                    <option value="1">1 place</option>
+                    <option value="2">2 places</option>
+                    <option value="3">3 places</option>
+                    <option value="4">4 places</option>
+                    <option value="5">5 places</option>
+                    <option value="6">6 places</option>
+                    <option value="7">7 places</option>
                 </select>
             </div>
 
@@ -144,15 +148,16 @@
             <div>
                 <div>
                 <label for="voiture" class="block text-sm font-medium text-noir mb-1 flex items-center">
-                    <!-- Icone voiture --><svg width="20" height="20" viewBox="0 0 64 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-vert-principale">
-                <path d="M6 18L9 12C10 10 12 8 15 8H32C34.5 8 36.5 9 38 10.5C40 12.5 42 14.5 46 14.5H52C53.7 14.5 55 15.8 55 17.5V19C55 19.6 54.6 20 54 20H51C51 22.8 48.8 25 46 25C43.2 25 41 22.8 41 20H23C23 22.8 20.8 25 18 25C15.2 25 13 22.8 13 20H8C7.4 20 7 19.6 7 19V18H6Z"
+                    <!-- Icone voiture -->
+                     <svg class="w-4 h-4 mr-1 text-vert-principale" fill="none" stroke="currentColor" viewBox="0 0 64 28" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 18L9 12C10 10 12 8 15 8H32C34.5 8 36.5 9 38 10.5C40 12.5 42 14.5 46 14.5H52C53.7 14.5 55 15.8 55 17.5V19C55 19.6 54.6 20 54 20H51C51 22.8 48.8 25 46 25C43.2 25 41 22.8 41 20H23C23 22.8 20.8 25 18 25C15.2 25 13 22.8 13 20H8C7.4 20 7 19.6 7 19V18H6Z"
                     stroke="currentColor" stroke-width="3" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
-                <circle cx="18" cy="20" r="4" stroke="currentColor" stroke-width="3" fill="none"/>
-                <circle cx="46" cy="20" r="4" stroke="currentColor" stroke-width="3" fill="none"/>
-            </svg>
+                    <circle cx="18" cy="20" r="4" stroke="currentColor" stroke-width="3" fill="none"/>
+                    <circle cx="46" cy="20" r="4" stroke="currentColor" stroke-width="3" fill="none"/>
+                    </svg>
                     Véhicule
                 </label>
-                <textarea name="voiture" id="voiture" rows="1" placeholder="Décrivez votre véhicule" class="w-full border border-gray-300 rounded-md shadow-sm p-3 focus:ring-vert-principale focus:border-vert-principale"></textarea>
+                <textarea name="voiture" id="voiture" rows="1" placeholder="Décrivez votre véhicule" class="w-full border border-gray-300 rounded-md shadow-sm p-3 " required></textarea>
             </div>
             
             <!-- Message aux passagers -->
@@ -177,9 +182,9 @@
             <button type="submit" class="bg-vert-principale text-white px-15 py-2 rounded-md font-medium hover:bg-vert-principal-h transition shadow-sm cursor-pointer">
                 Publier le Trajet
             </button>
-            <button type="button" class="bg-white text-gris1 px-6 py-2 rounded-md font-medium hover:bg-gray-50 transition shadow-sm cursor-pointer">
+            <a href="{{ url('/') }}" class="bg-white text-gris1 px-6 py-2 rounded-md font-medium hover:bg-gray-50 transition shadow-sm cursor-pointer">
                 Annuler
-            </button>
+            </a>
         </div>
     </div>
 </main>
