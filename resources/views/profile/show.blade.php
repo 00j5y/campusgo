@@ -5,6 +5,14 @@
 @section('content')
 <div class="bg-gray-50 min-h-screen py-12">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+
+    @if (session('status') === 'profile-updated')
+    <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" 
+         class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+        <strong class="font-bold">Succès !</strong>
+        <span class="block sm:inline">Votre profil a été mis à jour.</span>
+    </div>
+    @endif
         
         <div class="mb-10">
             <h1 class="text-3xl font-bold text-noir">Mon Profil</h1>
@@ -106,21 +114,33 @@
                 </div>
 
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
-                    <div class="flex justify-between items-center mb-2">
+                    <div class="flex justify-between items-center mb-6">
                         <h2 class="text-xl font-bold text-noir flex items-center gap-2">
-                            <span class="w-8 h-8 rounded-full bg-beige-principale flex items-center justify-center text-noir">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> </span>
+                            <span class="w-10 h-10 rounded-full bg-beige-principale flex items-center justify-center">
+                                <img src="{{ asset('images/accueil/icones/voiture.png') }}" class="size-6">
+                            </span>
                             Mon Véhicule
                         </h2>
-                        <a href="#" class="text-sm font-semibold text-vert-principale hover:text-vert-principal-h hover:underline">Modifier</a>
+                        <a href="{{ route('vehicule.create') }}" class="text-sm bg-vert-principale text-white px-3 py-1.5 rounded-lg hover:bg-vert-principal-h transition flex items-center gap-1">
+                            <span>+</span> Ajouter
+                        </a>
                     </div>
                     <p class="text-sm text-gris1 mb-6">Informations sur votre véhicule pour les trajets en tant que conducteur</p>
 
-                <div class="space-y-4"> @forelse($user->vehicules as $vehicule)
+                    <div class="space-y-4">
+                    @forelse($user->vehicules as $vehicule)
                         <div class="bg-gray-50 rounded-xl p-5 border border-gray-100 grid grid-cols-1 sm:grid-cols-2 gap-4 relative group hover:border-vert-principale/50 transition-colors">
-                            
-                            <div class="absolute -top-3 -right-3 hidden group-hover:flex w-6 h-6 bg-vert-principale text-white rounded-full items-center justify-center text-xs font-bold shadow-sm">
-                                {{ $loop->iteration }}
+
+                            <div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                                <form action="{{ route('vehicule.destroy', $vehicule->ID_Vehicule) }}" method="POST" onsubmit="return confirm('Voulez-vous vraiment supprimer ce véhicule ?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-400 hover:text-red-600 p-1.5 bg-white rounded-full shadow-sm hover:shadow-md transition-all" title="Supprimer le véhicule">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </form>
                             </div>
 
                             <div>
@@ -142,19 +162,26 @@
                                 <p class="text-xs text-gris1 uppercase tracking-wide">Nombre de places</p>
                                 <p class="font-semibold text-noir mt-1">{{ $vehicule->NombrePlace }} places</p>
                             </div>
-                        </div>
-                    @empty
+
+                        </div> @empty
                         <div class="bg-gray-50 rounded-xl p-8 border border-dashed border-gray-300 text-center">
                             <p class="text-gris1 italic">Aucun véhicule enregistré pour le moment.</p>
                         </div>
                     @endforelse
-
                 </div>
-                                    
-                    <button class="mt-4 flex items-center gap-1 text-sm font-medium text-vert-principale hover:text-vert-principal-h transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-                        Ajouter un autre véhicule
-                    </button>
+
+                <div class="mt-4">
+                    <a href="{{ route('vehicule.create') }}" class="flex items-center gap-1 text-sm font-medium text-vert-principale hover:text-vert-principal-h transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+
+                        @if($user->vehicules->count() > 0)
+                            Ajouter un autre véhicule
+                        @else
+                            Ajouter un véhicule
+                        @endif
+                    </a>
                 </div>
 
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
@@ -165,57 +192,78 @@
                         Préférences de Covoiturage
                     </h2>
                     
-                <div class="space-y-6">
+            <div class="space-y-6">
+                
+                <div class="flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-vert-principale/30 transition-colors bg-gray-50/50">
+                    <div class="flex items-center gap-4">
+                        <div class="mt-1 shrink-0 text-vert-principale">
+                            <img src="{{ asset('images/accueil/icones/patte.png') }}" alt="Animaux" class="size-6 object-contain">
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-noir">Accepter les animaux</h4>
+                            <p class="text-sm text-gris1">Autoriser les animaux de compagnie</p>
+                        </div>
+                    </div>
                     
-                    <div class="flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-vert-principale/30 transition-colors bg-gray-50/50">
-                        <div class="flex items-center gap-4">
-                            <div class="mt-1 shrink-0 text-vert-principale">
-                                <img src="{{ asset('images/accueil/icones/patte.png') }}" alt="Animaux" class="size-6 object-contain">
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-noir">Accepter les animaux</h4>
-                                <p class="text-sm text-gris1">Autoriser les passagers avec des animaux</p>
-                            </div>
-                        </div>
+                    <form action="{{ route('preference.toggle') }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <input type="hidden" name="field" value="Accepte_animaux">
                         
-                        <div class="relative w-11 h-6 rounded-full transition-colors duration-200 ease-in-out {{ $user->preference?->Accepte_animaux ? 'bg-vert-principale' : 'bg-gray-300' }}">
-                            <div class="absolute top-1 left-1 bg-white w-4 h-4 rounded-full shadow-sm transition-transform duration-200 ease-in-out {{ $user->preference?->Accepte_animaux ? 'translate-x-5' : 'translate-x-0' }}"></div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-vert-principale/30 transition-colors bg-gray-50/50">
-                        <div class="flex items-center gap-4">
-                            <div class="mt-1 shrink-0 text-vert-principale">
-                                <img src="{{ asset('images/accueil/icones/cigarette.png') }}" alt="Fumeur" class="size-6 object-contain">
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-noir">Fumeur</h4>
-                                <p class="text-sm text-gris1">Autoriser de fumer dans le véhicule</p>
-                            </div>
-                        </div>
-                        
-                        <div class="relative w-11 h-6 rounded-full transition-colors duration-200 ease-in-out {{ $user->preference?->Accepte_fumeurs ? 'bg-vert-principale' : 'bg-gray-300' }}">
-                            <div class="absolute top-1 left-1 bg-white w-4 h-4 rounded-full shadow-sm transition-transform duration-200 ease-in-out {{ $user->preference?->Accepte_fumeurs ? 'translate-x-5' : 'translate-x-0' }}"></div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-vert-principale/30 transition-colors bg-gray-50/50">
-                        <div class="flex items-center gap-4">
-                            <div class="mt-1 shrink-0 text-vert-principale">
-                                <img src="{{ asset('images/accueil/icones/musique.png') }}" alt="Musique" class="size-6 object-contain">
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-noir">Musique</h4>
-                                <p class="text-sm text-gris1">Écouter de la musique pendant le trajet</p>
-                            </div>
-                        </div>
-                        
-                        <div class="relative w-11 h-6 rounded-full transition-colors duration-200 ease-in-out {{ $user->preference?->Accepte_musique ? 'bg-vert-principale' : 'bg-gray-300' }}">
-                            <div class="absolute top-1 left-1 bg-white w-4 h-4 rounded-full shadow-sm transition-transform duration-200 ease-in-out {{ $user->preference?->Accepte_musique ? 'translate-x-5' : 'translate-x-0' }}"></div>
-                        </div>
-                    </div>
-
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" onchange="this.form.submit()" class="sr-only peer" 
+                                {{ $user->preference?->Accepte_animaux ? 'checked' : '' }}>
+                            
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-vert-principale/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vert-principale"></div>
+                        </label>
+                    </form>
                 </div>
+
+                <div class="flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-vert-principale/30 transition-colors bg-gray-50/50">
+                    <div class="flex items-center gap-4">
+                        <div class="mt-1 shrink-0 text-vert-principale">
+                            <img src="{{ asset('images/accueil/icones/cigarette.png') }}" alt="Fumeur" class="size-6 object-contain">
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-noir">Fumeur</h4>
+                            <p class="text-sm text-gris1">Autoriser de fumer dans le véhicule</p>
+                        </div>
+                    </div>
+                    
+                    <form action="{{ route('preference.toggle') }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <input type="hidden" name="field" value="Accepte_fumeurs"> <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" onchange="this.form.submit()" class="sr-only peer" 
+                                {{ $user->preference?->Accepte_fumeurs ? 'checked' : '' }}>
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vert-principale"></div>
+                        </label>
+                    </form>
+                </div>
+
+                <div class="flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-vert-principale/30 transition-colors bg-gray-50/50">
+                    <div class="flex items-center gap-4">
+                        <div class="mt-1 shrink-0 text-vert-principale">
+                            <img src="{{ asset('images/accueil/icones/musique.png') }}" alt="Musique" class="size-6 object-contain">
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-noir">Musique</h4>
+                            <p class="text-sm text-gris1">Écouter de la musique pendant le trajet</p>
+                        </div>
+                    </div>
+                    
+                    <form action="{{ route('preference.toggle') }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <input type="hidden" name="field" value="Accepte_musique"> <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" onchange="this.form.submit()" class="sr-only peer" 
+                                {{ $user->preference?->Accepte_musique ? 'checked' : '' }}>
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vert-principale"></div>
+                        </label>
+                    </form>
+                </div>
+
+            </div>
 
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                     <h3 class="font-bold text-noir mb-4">Sécurité</h3>

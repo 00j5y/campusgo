@@ -28,10 +28,15 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->group(function () {
     Route::get('/mon-profil', [ProfileController::class, 'show'])->name('profile.show');
-    
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/mon-profil/modifier', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/mon-profil', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/mon-profil', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/vehicule/ajouter', [App\Http\Controllers\VehiculeController::class, 'create'])->name('vehicule.create');
+    Route::patch('/profil/preference/toggle', [ProfileController::class, 'togglePreference'])->name('preference.toggle');
+
+    Route::post('/vehicule', [App\Http\Controllers\VehiculeController::class, 'store'])->name('vehicule.store');
+    Route::delete('/vehicule/{id}', [App\Http\Controllers\VehiculeController::class, 'destroy'])->name('vehicule.destroy');
 });
 
 Route::fallback(function () {
