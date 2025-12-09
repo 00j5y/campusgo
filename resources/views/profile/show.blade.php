@@ -24,16 +24,33 @@
             <div class="lg:col-span-1 space-y-6">
                 
                 <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 flex flex-col items-center text-center">
-                    <div class="relative mb-4">
-                        <div class="w-24 h-24 bg-vert-principale/10 text-vert-principale rounded-full flex items-center justify-center text-3xl font-bold">
-                            {{ substr($user->name, 0, 2) }}
-                        </div>
-                        <button class="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-md border border-gray-100 hover:bg-gray-50 transition-colors" title="Modifier la photo">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gris1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                        </button>
+                    <div class="relative mb-4 group">
+                        <form action="{{ route('profile.avatar') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            
+                            <label for="avatar_upload_show" class="cursor-pointer block relative">
+                                <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-beige-principale flex items-center justify-center group-hover:opacity-75 transition-opacity">
+                                    @if($user->Photo)
+                                        <img src="{{ asset('storage/' . $user->Photo) }}" alt="Avatar" class="w-full h-full object-cover">
+                                    @else
+                                        <img src="{{ asset('images/accueil/icones/personne-convivialite-vert.png') }}" alt="Avatar par défaut" class="w-10 h-10 object-contain">
+                                    @endif
+                                </div>
+
+                                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span class="bg-black/50 text-white text-xs py-1 px-2 rounded-full">Modifier</span>
+                                </div>
+                            </label>
+
+                            <label for="avatar_upload_show" class="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-md border border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer" title="Modifier la photo">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gris1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </label>
+
+                            <input type="file" id="avatar_upload_show" name="Photo" class="hidden" accept="image/*" onchange="this.form.submit()">
+                        </form>
                     </div>
                     
                     <h2 class="text-xl font-bold text-noir">{{ $user->name }}</h2>

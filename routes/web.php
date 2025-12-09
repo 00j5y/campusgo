@@ -37,6 +37,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/vehicule', [App\Http\Controllers\VehiculeController::class, 'store'])->name('vehicule.store');
     Route::delete('/vehicule/{id}', [App\Http\Controllers\VehiculeController::class, 'destroy'])->name('vehicule.destroy');
+
+    Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar');
 });
 
 Route::fallback(function () {

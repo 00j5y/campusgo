@@ -27,10 +27,8 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
             
-            // CORRECTION 1 : Redirection intelligente
-            // Si l'utilisateur voulait aller sur /mon-profil, il y retourne.
-            // Sinon, il va sur /mon-profil par défaut.
-            return redirect()->intended(route('profile.show'));
+
+            return redirect()->intended(route('accueil'));
         }
 
         return back()->withErrors([
