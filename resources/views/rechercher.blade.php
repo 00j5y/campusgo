@@ -5,7 +5,9 @@
 @section('content')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://npmcdn.com/flatpickr/dist/themes/airbnb.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.9.4/mapbox-gl.css" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <main class="bg-beige-principale min-h-screen py-12">
@@ -15,7 +17,7 @@
                 <h1 class="text-2xl md:text-3xl font-semibold text-gris1 mb-2">
                     Bonjour ! Où voulez-vous partir aujourd'hui ?
                 </h1>
-                <p class="text-gris1/70">Trouvez un covoiturage en quelques clics.</p>
+                <p class="text-gris1/70">Trouvez un covoiturage vers l'IUT d'Amiens.</p>
             </div>
 
             <div class="bg-white rounded-3xl shadow-xl p-6 md:p-8 max-w-4xl mx-auto">
@@ -28,7 +30,6 @@
                             <i class="fa-solid fa-location-dot absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 z-10"></i>
                             <input type="text" id="depart" placeholder="Ex: 15 rue de la République, Amiens" 
                                 class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:border-vert-principale transition">
-                            
                             <ul id="liste-depart" class="absolute w-full bg-white border border-gray-200 rounded-xl mt-1 max-h-60 overflow-y-auto shadow-lg z-50 hidden"></ul>
                         </div>
                     </div>
@@ -37,9 +38,8 @@
                         <label class="block text-sm font-bold text-gris1 mb-2">Arrivée</label>
                         <div class="relative">
                             <i class="fa-solid fa-location-crosshairs absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 z-10"></i>
-                            <input type="text" id="arrivee" placeholder="Ex: IUT Amiens, Avenue des Facultés" 
+                            <input type="text" id="arrivee" placeholder="Ex: IUT Amiens" 
                                 class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:border-vert-principale transition">
-                            
                             <ul id="liste-arrivee" class="absolute w-full bg-white border border-gray-200 rounded-xl mt-1 max-h-60 overflow-y-auto shadow-lg z-50 hidden"></ul>
                         </div>
                     </div>
@@ -65,8 +65,8 @@
                 </form>
 
                 <div class="mb-6">
-                    <h3 class="text-lg text-gris1 mb-4 text-center font-medium">Visualiser la carte</h3>
-                    <div id="map" class="h-80 w-full rounded-2xl border-4 border-[#C3AB79] z-0"></div>
+                    <h3 class="text-lg text-gris1 mb-4 text-center font-medium">Visualiser le trajet</h3>
+                    <div id="map" class="h-80 w-full rounded-2xl border-4 border-[#C3AB79] z-0 overflow-hidden"></div>
                 </div>
 
                 <button class="w-full bg-vert-principale hover:bg-vert-principal-h text-white font-bold py-4 rounded-xl transition shadow-md flex justify-center items-center gap-2">
@@ -78,22 +78,44 @@
         </div>
     </main>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.9.4/mapbox-gl.js"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/fr.js"></script>
 
     <script>
-        // 1. CARTE
-        var map = L.map('map').setView([49.894, 2.295], 12);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19, attribution: '© OpenStreetMap'
-        }).addTo(map);
+        // ---------------------------------------------------------
+        // 1. CONFIGURATION MAPBOX
+        // ---------------------------------------------------------
+        
+        // IMPORTANT : Remplace ceci par ta clé publique Mapbox (commence par pk.eyJ...)
+        mapboxgl.accessToken = 'pk.eyJ1IjoiZ2FieXNjb3RlIiwiYSI6ImNtaXlueXBycDBlMnIzZnM3NDF0aWZ4emIifQ.Kv51hN4zyQ9O2AZLlbSdZg'; 
 
-        // 2. CALENDRIER
+        const map = new mapboxgl.Map({
+            container: 'map', // ID de la div
+            style: 'mapbox://styles/mapbox/streets-v12', // Le style de la carte (Plan)
+            center: [2.295, 49.894], // Amiens [Longitude, Latitude]
+            zoom: 12
+        });
+
+        // Ajouter des contrôles de navigation (Zoom +/-)
+        map.addControl(new mapboxgl.NavigationControl());
+
+        // Ajouter un marqueur sur l'IUT
+        new mapboxgl.Marker({ color: "#2E7D32" }) // Couleur verte CampusGo
+            .setLngLat([2.275, 49.882]) // [Long, Lat]
+            .setPopup(new mapboxgl.Popup().setHTML("<b>IUT Amiens</b>"))
+            .addTo(map);
+
+        // ---------------------------------------------------------
+        // 2. CONFIGURATION CALENDRIER
+        // ---------------------------------------------------------
         flatpickr("#date", { locale: "fr", minDate: "today", dateFormat: "d/m/Y", disableMobile: "true" });
         flatpickr("#heure", { enableTime: true, noCalendar: true, dateFormat: "H:i", time_24hr: true, defaultDate: "08:00" });
 
-        // 3. FONCTION POUR GERER L'AUTOCOMPLETION (On l'écrit une fois, on l'utilise partout)
+        // ---------------------------------------------------------
+        // 3. AUTOCOMPLETION (Même code qu'avant, il marche avec tout)
+        // ---------------------------------------------------------
         function activerAutocomplete(idInput, idListe) {
             const input = document.getElementById(idInput);
             const liste = document.getElementById(idListe);
@@ -115,20 +137,15 @@
                                 li.onclick = () => { 
                                     input.value = f.properties.label; 
                                     liste.classList.add('hidden');
-                                    
-                                    // Petit bonus : Si c'est l'arrivée, on pourrait centrer la carte dessus plus tard !
                                 };
                                 liste.appendChild(li);
                             });
                         } else { liste.classList.add('hidden'); }
                     });
             });
-
-            // Cacher la liste si on clique ailleurs
             document.addEventListener('click', e => { if(e.target !== input) liste.classList.add('hidden'); });
         }
 
-        // On active l'autocomplétion sur les DEUX champs maintenant !
         activerAutocomplete('depart', 'liste-depart');
         activerAutocomplete('arrivee', 'liste-arrivee');
 
