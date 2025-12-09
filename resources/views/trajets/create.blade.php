@@ -3,14 +3,17 @@
 @section('title', 'Proposer un trajet - Campus\'GO')
 
 @section('content')
-<main>
+<main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 max-w-4xl">
     <header class="mb-10 mt-25 text-center">
         <h1 class="text-3xl font-semibold text-noir">Proposez votre covoiturage IUT</h1>
         <p class="mt-2 text-gris1">Remplissez les informations ci-dessous pour publier votre trajet</p>
     </header>
 
+    <form method="POST" action="">
+    @csrf
+
     <!-- Réutiliser un trajet précédent -->
-   <div class="bg-[#fcfaf8] border border-beige-second/50 rounded-lg mb-8 mx-25 p-6">
+   <div class="bg-[#fcfaf8] border border-beige-second/50 rounded-lg mb-8 p-6">
     
         <div class="flex justify-between items-center mb-2">
             <h2 class="text-lg font-semibold text-noir flex items-center">
@@ -67,7 +70,7 @@
     </div>
 
     <!-- Détail du trajet -->
-    <div class="bg-white border border-gray-200 rounded-lg mb-8 mx-25 p-6">
+    <div class="bg-white border border-gray-200 rounded-lg mb-8 p-6">
             <h2 class="text-lg font-semibold text-noir flex items-center">
                 Détails du Trajet
             </h2>
