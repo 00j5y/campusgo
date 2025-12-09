@@ -179,4 +179,18 @@ class ProfileController extends Controller
 
         return back()->with('status', 'password-updated');
     }
+
+    /**
+     * Affiche le profil public d'un autre utilisateur.
+     */
+    public function showPublic($id): View
+    {
+        // On récupère l'utilisateur demandé avec ses infos
+        // 'findOrFail' renvoie une erreur 404 si l'ID n'existe pas
+        $user = \App\Models\User::with(['vehicules', 'preference'])->findOrFail($id);
+
+        return view('profile.public', [
+            'user' => $user,
+        ]);
+    }
 }

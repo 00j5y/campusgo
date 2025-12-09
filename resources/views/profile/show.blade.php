@@ -61,6 +61,26 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                         <span class="text-vert-principale font-medium text-sm">12 trajets effectués</span> </div>
+                    </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="font-bold text-noir mb-4">Sécurité</h3>
+                    <div class="space-y-3">
+                        <a href="{{ route('profile.security') }}" class="block text-gris1 hover:text-vert-principale transition-colors flex justify-between">
+                            Changer le mot de passe
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                        </a>
+                        <hr class="border-gray-100">
+                        <a href="#" class="block text-gris1 hover:text-vert-principale transition-colors flex justify-between">
+                            Historique de connexion
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                        </a>
+                        <hr class="border-gray-100">
+                        <a href="#" class="block text-gris1 hover:text-vert-principale transition-colors flex justify-between">
+                            Paramètres de confidentialité
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                        </a>
+                    </div>
                 </div>
 
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -100,7 +120,7 @@
                 
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
                     <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold text-noir flex items-center gap-2">
+                        <h2 class="text-xl text-noir flex items-center gap-2">
                             <span class="w-8 h-8 rounded-full bg-beige-principale flex items-center justify-center text-noir">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
                             </span>
@@ -109,24 +129,26 @@
                         <a href="{{ route('profile.edit') }}" class="text-sm font-semibold text-vert-principale hover:text-vert-principal-h hover:underline">Modifier</a>
                     </div>
                     
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <p class="text-sm text-gris1 mb-1">Prénom</p>
-                        <p class="font-medium text-noir">{{ $user->firstname }}</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gris1 mb-1">Nom</p>
-                        <p class="font-medium text-noir">{{ $user->lastname }}</p>
-                    </div>
-                    <div class="md:col-span-2">
-                        <p class="text-sm text-gris1 mb-1">Email</p>
-                        <p class="font-medium text-noir">{{ $user->email }}</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gris1 mb-1">Téléphone</p>
-                        <p class="font-medium text-noir {{ $user->phone ? '' : 'italic text-gray-400' }}">
-                            {{ $user->phone ?? 'Non renseigné' }}
-                        </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="text-sm text-gris1 mb-1">Prénom</p>
+                            <p class="text-lg text-gray-900">{{ $user->firstname }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gris1 mb-1">Nom</p>
+                            <p class="text-lg text-gray-900">{{ $user->lastname }}</p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <p class="text-sm text-gris1 mb-1">Email</p>
+                            <p class="text-lg text-gray-900">{{ $user->email }}</p>
+                        </div>
+                        
+                        <div class="pb-2">
+                            <p class="text-sm text-gris1 mb-1">Téléphone</p>
+                            <p class="text-lg {{ $user->phone ? 'text-gray-900' : 'italic text-gray-400 font-normal' }}">
+                                {{ $user->phone ?? 'Non renseigné' }}
+                            </p>
+                        </div>
                     </div>
                 </div>
 
@@ -281,25 +303,6 @@
                 </div>
 
             </div>
-
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                    <h3 class="font-bold text-noir mb-4">Sécurité</h3>
-                    <div class="space-y-3">
-                        <a href="{{ route('profile.security') }}" class="block text-gris1 hover:text-vert-principale transition-colors flex justify-between">                            Changer le mot de passe
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                        </a>
-                        <hr class="border-gray-100">
-                        <a href="#" class="block text-gris1 hover:text-vert-principale transition-colors flex justify-between">
-                            Historique de connexion
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                        </a>
-                        <hr class="border-gray-100">
-                        <a href="#" class="block text-gris1 hover:text-vert-principale transition-colors flex justify-between">
-                            Paramètres de confidentialité
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                        </a>
-                    </div>
-                </div>
 
             </div>
         </div>
