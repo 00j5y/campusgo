@@ -53,9 +53,8 @@
                         </form>
                     </div>
                     
-                    <h2 class="text-xl font-bold text-noir">{{ $user->name }}</h2>
-                    <p class="text-sm text-gris1 mt-1">Membre depuis {{ $user->created_at->format('M Y') }}</p>
-                    
+                    <h2 class="text-xl font-bold text-noir">{{ $user->prenom }} {{ $user->nom }}</h2>
+                                        
                     <div class="mt-6 inline-flex items-center gap-2 bg-vert-principale/10 px-4 py-2 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-vert-principale" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />

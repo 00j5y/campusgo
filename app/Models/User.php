@@ -44,11 +44,10 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function getAuthPasswordName()
+    public function getAuthPassword()
     {
-        return 'mdp';
+        return $this->mdp;
     }
-
     /**
      * Get the attributes that should be cast.
      *
