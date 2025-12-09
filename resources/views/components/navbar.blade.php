@@ -1,9 +1,9 @@
-<header x-data="{ isOpen: false }" class="bg-white shadow-lg w-full relative z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<header x-data="{ isOpen: false }" class="bg-white shadow-lg relative">
+    <div class="mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-20">
 
-            <div class="flex shrink-0 items-center cursor-pointer">
-                <a href="{{ url('/') }}" class="flex shrink-0 items-center cursor-pointer">
+            <div class="flex shrink-0 items-center">
+                <a href="{{ url('/') }}" class="flex shrink-0 items-center">
                     <img class="h-12 w-auto" src="{{ asset('favicon.ico') }}" alt="Campus Go Logo">
                     <div class="ml-3 flex items-baseline text-2xl font-semibold font-sans">
                         <span class="text-vert-principale">Campus</span>
@@ -40,12 +40,29 @@
             </nav>
 
             <div class="hidden lg:flex items-center space-x-6">
-                <a href="#" class="bg-vert-principale text-white px-5 py-2 rounded-md font-medium hover:bg-vert-principal-h transition shadow-sm">
+                <a href="#" class="bg-vert-principale text-white px-5 py-2 rounded-md font-medium hover:bg-vert-principal-h transition shadow-sm whitespace-nowrap">
                     Proposer un Trajet
                 </a>
-                <button class="text-gris1 hover:text-rouge transition">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                </button>
+                @auth {{--  Si l'utilisateur est connecté --}}
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <a href="#" onclick="event.preventDefault(); this.closest('form').submit();" class="flex w-full items-center justify-center px-5 py-3 rounded-md font-medium text-gris1 hover:bg-gray-50 hover:text-rouge transition">
+                        <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                        Déconnexion
+                    </a>
+                </form>
+
+                @else
+                    {{-- Si l'utilisateur n'est pas connecté --}}
+                    <a href="{{ route('login') }}" class="flex w-full items-center justify-center px-5 py-3 rounded-md font-medium text-gris1 hover:bg-gray-50 hover:text-vert-principale transition">
+                        <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        Connexion
+                    </a>
+                @endauth
             </div>
 
             <div class="-mr-2 flex lg:hidden">
@@ -95,10 +112,26 @@
                 <a href="#" class="block w-full text-center bg-vert-principale text-white px-5 py-3 rounded-md font-medium hover:bg-vert-principal-h transition shadow-sm">
                     Proposer un Trajet
                 </a>
-                <button class="flex w-full items-center justify-center px-5 py-3 rounded-md font-medium text-gris1 hover:bg-gray-50 hover:text-rouge transition">
-                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                    Déconnexion
-                </button>
+                @auth {{--  Si l'utilisateur est connecté --}}
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <a href="#" onclick="event.preventDefault(); this.closest('form').submit();" class="flex w-full items-center justify-center px-5 py-3 rounded-md font-medium text-gris1 hover:bg-gray-50 hover:text-rouge transition">
+                        <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                        Déconnexion
+                    </a>
+                </form>
+
+                @else
+                    {{-- Si l'utilisateur n'est pas connecté --}}
+                    <a href="{{ route('login') }}" class="flex w-full items-center justify-center px-5 py-3 rounded-md font-medium text-gris1 hover:bg-gray-50 hover:text-vert-principale transition">
+                        <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        Connexion
+                    </a>
+                @endauth
             </div>
         </div>
     </div>

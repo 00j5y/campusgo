@@ -8,7 +8,7 @@ use App\Models\Trajet;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function accueil()
     {
         $usersCount = User::count();
         $trajetsCount = Trajet::count(); 
