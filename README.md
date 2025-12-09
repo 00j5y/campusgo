@@ -51,11 +51,6 @@ DB_USERNAME=
 DB_PASSWORD=
 ```
 
-### 7- Mettre file pour le cache dans le .env
-```bash
-CACHE_STORE=file
-```
-
 <h2 align="center">▶️ Lancer le projet</h2>
 
 ### 1- Lancer Vite
