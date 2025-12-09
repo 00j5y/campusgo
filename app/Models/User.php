@@ -72,13 +72,4 @@ class User extends Authenticatable
         return $this->hasOne(Preference::class, 'ID_Utilisateur', 'ID_Utilisateur');
     }
 
-    public function vehicules()
-    {
-        return $this->hasMany(Vehicule::class, 'ID_Utilisateur', 'ID_Utilisateur');
-    }
-
-    public function preference()
-    {
-        return $this->hasOne(Preference::class, 'ID_Utilisateur', 'ID_Utilisateur');
-    }
 }
