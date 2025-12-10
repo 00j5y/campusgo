@@ -36,29 +36,29 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-// Tentative d'inscription
     public function register(Request $request)
-    {
-        // 1. On valide les champs reçus du formulaire (Noms en ANGLAIS comme dans la vue)
-        $request->validate([
-            'firstname' => ['required', 'string', 'max:255'],
-            'lastname'  => ['required', 'string', 'max:255'],
-            'email'     => ['required', 'string', 'email', 'max:255', 'unique:utilisateur'],
-            'password'  => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        {
+            // 1. Validation (Noms du formulaire HTML en ANGLAIS)
+            $request->validate([
+                'firstname' => ['required', 'string', 'max:255'],
+                'lastname'  => ['required', 'string', 'max:255'],
+                // Vérifie l'unicité dans la table 'utilisateur'
+                'email'     => ['required', 'string', 'email', 'max:255', 'unique:utilisateur'],
+                'password'  => ['required', 'confirmed', Rules\Password::defaults()],
+            ]);
 
-        // 2. On crée l'utilisateur en faisant la traduction Anglais -> Français
-        $user = User::create([
-            'prenom' => $request->firstname, // Le formulaire envoie 'firstname', on le met dans 'prenom'
-            'nom'    => $request->lastname,  // idem
-            'email'  => $request->email,
-            'mdp'    => Hash::make($request->password), // On hash le 'password' et on le met dans 'mdp'
-        ]);
+            // 2. Création (Mapping vers la BDD en FRANÇAIS)
+            $user = User::create([
+                'prenom' => $request->firstname,
+                'nom'    => $request->lastname,
+                'email'  => $request->email,
+                'mdp'    => Hash::make($request->password),
+            ]);
 
-        Auth::login($user);
+            Auth::login($user);
 
-        return redirect()->route('profile.show');
-    }
+            return redirect()->route('profile.show');
+        }
 
     // Affichage de la page d'inscription
     public function create()

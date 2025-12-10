@@ -58,7 +58,7 @@
                         <div>
                             <label for="firstname" class="block text-sm text-gris1 mb-2">Prénom</label>
                             <input type="text" name="firstname" id="firstname" 
-                                value="{{ old('firstname', $user->firstname) }}" 
+                                value="{{ old('firstname', $user->prenom) }}" 
                                 class="w-full rounded-lg border-gray-300 focus:border-vert-principale focus:ring-vert-principale shadow-sm">
                             @error('firstname') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
@@ -66,7 +66,7 @@
                         <div>
                             <label for="lastname" class="block text-sm text-gris1 mb-2">Nom</label>
                             <input type="text" name="lastname" id="lastname" 
-                                value="{{ old('lastname', $user->lastname) }}" 
+                                value="{{ old('lastname', $user->nom) }}" 
                                 class="w-full rounded-lg border-gray-300 focus:border-vert-principale focus:ring-vert-principale shadow-sm">
                             @error('lastname') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
@@ -105,7 +105,7 @@
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="hidden" name="Accepte_animaux" value="0">
                                 <input type="checkbox" name="Accepte_animaux" value="1" class="sr-only peer" 
-                                    {{ old('Accepte_animaux', $user->preference?->Accepte_animaux) ? 'checked' : '' }}>
+                                    {{ old('Accepte_animaux', $user->preference?->accepte_animaux) ? 'checked' : '' }}>
                                 <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-vert-principale/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vert-principale"></div>
                             </label>
                         </div>
@@ -118,7 +118,7 @@
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="hidden" name="Accepte_fumeurs" value="0">
                                 <input type="checkbox" name="Accepte_fumeurs" value="1" class="sr-only peer"
-                                    {{ old("Accepte_fumeurs", $user->preference?->Accepte_fumeurs) ? 'checked' : '' }}>
+                                    {{ old("Accepte_fumeurs", $user->preference?->accepte_fumeurs) ? 'checked' : '' }}>
                                 <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-vert-principale/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vert-principale"></div>
                             </label>
                         </div>
@@ -131,7 +131,7 @@
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="hidden" name="Accepte_musique" value="0">
                                 <input type="checkbox" name="Accepte_musique" value="1" class="sr-only peer"
-                                    {{ old("Accepte_musique", $user->preference?->Accepte_musique) ? 'checked' : '' }}>
+                                    {{ old("Accepte_musique", $user->preference?->accepte_musique) ? 'checked' : '' }}>
                                 <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-vert-principale/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vert-principale"></div>
                             </label>
                         </div>

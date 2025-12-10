@@ -2,19 +2,27 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Preference extends Model
 {
-    protected $table = 'PREFERENCE'; // Singulier
-    protected $primaryKey = 'ID_Preference';
-    public $timestamps = false;
+    use HasFactory;
+
+    protected $table = 'preference'; // Nom de la table
+    
+    public $timestamps = false; // Pas de created_at/updated_at dans l'image
 
     protected $fillable = [
-        'Accepte_animaux',
-        'Accepte_fumeurs',
-        'Accepte_musique',
-        'Accepte_discussion',
-        'ID_Utilisateur'
+        'accepte_animaux',
+        'accepte_fumeurs',
+        'accepte_musique',
+        'accepte_discussion',
+        'id_utilisateur',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_utilisateur');
+    }
 }

@@ -21,51 +21,38 @@ class ProfileController extends Controller
     }
 
     public function update(Request $request): RedirectResponse
-    {
-        // 1. Validation
-        $validated = $request->validate([
-            'firstname' => ['required', 'string', 'max:255'],
-            'lastname'  => ['required', 'string', 'max:255'],
-            'phone'     => ['nullable', 'string', 'max:20'],
-            'Photo'     => ['nullable', 'image', 'max:2048'], 
-            'Accepte_animaux' => ['boolean'], 
-            'Accepte_fumeurs' => ['boolean'],
-            'Accepte_musique' => ['boolean'],
-        ]);
+        {
+            // Validation
+            $validated = $request->validate([
+                'firstname' => ['required', 'string', 'max:255'],
+                'lastname'  => ['required', 'string', 'max:255'],
+                'Accepte_animaux' => ['boolean'], // Noms des checkbox HTML
+                'Accepte_fumeurs' => ['boolean'],
+                'Accepte_musique' => ['boolean'],
+            ]);
 
-        $user = $request->user();
+            $user = $request->user();
 
-        // 2. Mise à jour des infos
-        $user->firstname = $validated['firstname'];
-        $user->lastname  = $validated['lastname'];
-        
-        $user->phone = $validated['phone'];
+            // 1. Mise à jour User
+            $user->prenom = $validated['firstname'];
+            $user->nom    = $validated['lastname'];
+            $user->save();
 
-        // 3. Gestion de la Photo
-        if ($request->hasFile('Photo')) {
-            if ($user->Photo) {
-                Storage::disk('public')->delete($user->Photo);
-            }
-            // Enregistrement
-            $path = $request->file('Photo')->store('avatars', 'public');
-            $user->Photo = $path;
+            // 2. Mise à jour Préférences (C'est ce bloc qu'il manquait !)
+            // On utilise updateOrCreate pour créer la ligne si elle n'existe pas encore
+            $user->preference()->updateOrCreate(
+                ['id_utilisateur' => $user->id], // Condition de recherche
+                [
+                    // Colonne BDD (minuscule) => Valeur Formulaire (Majuscule)
+                    'accepte_animaux'    => $request->Accepte_animaux,
+                    'accepte_fumeurs'    => $request->Accepte_fumeurs,
+                    'accepte_musique'    => $request->Accepte_musique,
+                    'accepte_discussion' => 1, // Valeur par défaut
+                ]
+            );
+
+            return redirect()->route('profile.show')->with('status', 'profile-updated');
         }
-
-        $user->save();
-
-        // 4. Préférences
-        $user->preference()->updateOrCreate(
-            ['ID_Utilisateur' => $user->id],
-            [
-                'Accepte_animaux'    => $request->Accepte_animaux,
-                'Accepte_fumeurs'    => $request->Accepte_fumeurs,
-                'Accepte_musique'    => $request->Accepte_musique,
-                'Accepte_discussion' => 3,
-            ]
-        );
-
-        return redirect()->route('profile.show')->with('status', 'profile-updated');
-    }
 
     /**
      * Delete the user's account.
@@ -106,7 +93,7 @@ class ProfileController extends Controller
     public function togglePreference(Request $request)
     {
         // 1. Sécurité : On n'autorise que ces 3 champs
-        $allowed = ['Accepte_animaux', 'Accepte_fumeurs', 'Accepte_musique'];
+        $allowed = ['accepte_animaux', 'accepte_fumeurs', 'accepte_musique'];
         $field = $request->input('field');
 
         if (!in_array($field, $allowed)) {
@@ -116,8 +103,8 @@ class ProfileController extends Controller
         $user = $request->user();
 
         $pref = $user->preference()->firstOrCreate(
-            ['ID_Utilisateur' => $user->id],
-            ['Accepte_discussion' => 3]
+            ['id_utilisateur' => $user->id],
+            ['accepte_discussion' => 1] // Valeur par défaut (1 ou 0 pour tinyint)
         );
 
         $pref->$field = ! $pref->$field;

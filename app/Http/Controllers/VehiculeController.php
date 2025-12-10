@@ -14,26 +14,29 @@ class VehiculeController extends Controller
         return view('vehicule.create');
     }
 
-    // SAUVEGARDER UN NOUVEAU VÉHICULE
-    public function store(Request $request)
+   public function store(Request $request)
     {
         // 1. Validation
         $request->validate([
-            'Marque' => 'required|string|max:20',
+            'Marque' => 'required|string|max:20', // Ici c'est le nom du champ HTML (Majuscule)
             'Modele' => 'required|string|max:20',
             'Couleur' => 'required|string|max:20',
-            'Immatriculation' => 'required|string|max:10', // Adapter selon ta BDD
+            'Immatriculation' => 'required|string|max:10',
             'NombrePlace' => 'required|integer|min:1|max:9',
         ]);
 
         // 2. Création
         $vehicule = new Vehicule();
-        $vehicule->Marque = $request->Marque;
-        $vehicule->Modele = $request->Modele;
-        $vehicule->Couleur = $request->Couleur;
-        $vehicule->Immatriculation = $request->Immatriculation;
-        $vehicule->NombrePlace = $request->NombrePlace;
-        $vehicule->ID_Utilisateur = Auth::id(); // On lie à l'utilisateur connecté
+        
+        // À GAUCHE : Nom de la colonne BDD (minuscule)
+        // À DROITE : Nom du champ Formulaire (Majuscule)
+        $vehicule->marque = $request->Marque;
+        $vehicule->modele = $request->Modele;
+        $vehicule->couleur = $request->Couleur;
+        $vehicule->immatriculation = $request->Immatriculation;
+        $vehicule->nombre_place = $request->NombrePlace; // Attention au _
+        
+        $vehicule->id_utilisateur = Auth::id(); // Clé étrangère en minuscule
 
         $vehicule->save();
 
@@ -41,17 +44,16 @@ class VehiculeController extends Controller
         return redirect()->route('profile.show')->with('status', 'vehicle-added');
     }
 
-    // SUPPRIMER UN VÉHICULE
     public function destroy($id)
-    {
-        // On cherche le véhicule, mais on vérifie bien qu'il appartient à l'utilisateur connecté !
-        // (Sécurité pour ne pas supprimer la voiture du voisin)
-        $vehicule = Vehicule::where('ID_Vehicule', $id)
-                            ->where('ID_Utilisateur', Auth::id())
-                            ->firstOrFail();
+        {
+            // On cherche le véhicule par son 'id' (nouvelle BDD)
+            // Et on vérifie toujours qu'il appartient à l'utilisateur (id_utilisateur)
+            $vehicule = Vehicule::where('id', $id) 
+                                ->where('id_utilisateur', Auth::id())
+                                ->firstOrFail();
 
-        $vehicule->delete();
+            $vehicule->delete();
 
-        return back()->with('status', 'vehicle-deleted');
-    }
+            return back()->with('status', 'vehicle-deleted');
+        }
 }

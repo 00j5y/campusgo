@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,64 +10,48 @@ use App\Models\Preference;
 
 class User extends Authenticatable
 {
-
-    //protected $table = 'UTILISATEUR'; 
-    
-    //protected $primaryKey = 'ID_Utilisateur';
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    // 1. Nom de la table dans la BDD
     protected $table = 'utilisateur';
 
     public $timestamps = false;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    // 2. Les colonnes modifiables (Français)
     protected $fillable = [
         'prenom',
         'nom',
         'email',
         'mdp',
+        'estAdmin',
+        // 'photo', // Décommente si tu ajoutes la colonne dans la BDD
+        // 'telephone', // Décommente si tu ajoutes la colonne
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
+    // 3. Cacher le mot de passe et le token pour la sécurité
     protected $hidden = [
         'mdp',
         'remember_token',
     ];
 
+    // 4. IMPORTANT : Dire à Laravel que le mot de passe s'appelle 'mdp'
     public function getAuthPassword()
     {
         return $this->mdp;
     }
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'mdp' => 'hashed',
-        ];
-    }
 
+    // --- RELATIONS ---
+
+    // Un utilisateur a plusieurs véhicules
     public function vehicules()
     {
-        return $this->hasMany(Vehicule::class, 'ID_Utilisateur', 'ID_Utilisateur');
+        // On précise la clé étrangère 'id_utilisateur'
+        return $this->hasMany(Vehicule::class, 'id_utilisateur');
     }
 
+    // Un utilisateur a une préférence
     public function preference()
     {
-        return $this->hasOne(Preference::class, 'ID_Utilisateur', 'ID_Utilisateur');
+        return $this->hasOne(Preference::class, 'id_utilisateur');
     }
-
 }
