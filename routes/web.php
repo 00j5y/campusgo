@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'accueil'])->name('accueil');
 
 Route::get('/proposer-trajet', [TrajetController::class, 'create'])->name('trajets.create');
-Route::post('/trajets', [TrajetController::class, 'store'])->name('trajets.store');
+Route::post('/proposer-trajets', [TrajetController::class, 'store'])->name('trajets.store');
 
 // Erreur 404
 Route::fallback(function () {

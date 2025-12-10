@@ -9,7 +9,7 @@
         <p class="mt-2 text-gris1">Remplissez les informations ci-dessous pour publier votre trajet</p>
     </header>
 
-    <form method="POST" action="">
+    <form method="POST" action="{{ route('trajets.store') }}">
     @csrf
 
     <!-- Réutiliser le trajet précédent -->
@@ -32,41 +32,49 @@
             Gagnez du temps en copiant les informations d'un trajet déjà effectué
         </p>
 
-        <div class="bg-white border border-gray-200 rounded-lg p-4 flex justify-between items-center">
-            
-            <div class="text-sm">
+        <!-- Si l'utilisateur n'a jamais créé de trajet -->
+        @isset($dernierTrajet)
+            <div class="bg-white border border-gray-200 rounded-lg p-4 flex justify-between items-center">
                 
-                <p class="font-medium flex items-start mb-1">
-                    <span class="text-vert-principale mr-1 mt-1">
-                        <!-- Icone Localisation -->
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg>
-                    </span>
-                    <span class="text-gris1 font-semibold mr-1">De:</span>
-                    15 Rue Victor Hugo, Amiens
-                </p>
-                
-                <p class="font-medium flex items-center mb-2 ml-5">
-                    <span class="text-gris1 font-semibold mr-1">À:</span> 
-                    IUT Amiens, Avenue des Facultés
-                </p>
+                <div class="text-sm">
+                    
+                    <p class="font-medium flex items-start mb-1">
+                        <span class="text-vert-principale mr-1 mt-1">
+                            <!-- Icone Localisation -->
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg>
+                        </span>
+                        <span class="text-gris1 font-semibold mr-1">De:</span>
+                        {{ $dernierTrajet->lieu_depart}}
+                    </p>
+                    
+                    <p class="font-medium flex items-center mb-2 ml-5">
+                        <span class="text-gris1 font-semibold mr-1">À:</span> 
+                        {{ $dernierTrajet->lieu_arrivee}}
+                    </p>
 
-                <div class="flex items-center text-xs text-gris1 mt-2">
+                    <div class="flex items-center text-xs text-gris1 mt-2">
+                        
+                        <!-- Icone Horloge -->
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="mr-4"> {{ \Carbon\Carbon::parse($dernierTrajet->heure_depart)->format('H:i') }} </span>
+                        
+                        <!-- Places -->
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-5a3 3 0 00-3-3H9a3 3 0 00-3 3v5H1V7a3 3 0 013-3h16a3 3 0 013 3v13H17zM12 11a4 4 0 100-8 4 4 0 000 8z"></path></svg>
+                        <span>{{ $dernierTrajet->place_disponible }}</span>
+                    </div>
                     
-                    <!-- Icone Horloge -->
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <span class="mr-4">08:00</span>
-                    
-                    <!-- Places -->
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-5a3 3 0 00-3-3H9a3 3 0 00-3 3v5H1V7a3 3 0 013-3h16a3 3 0 013 3v13H17zM12 11a4 4 0 100-8 4 4 0 000 8z"></path></svg>
-                    <span>3 places</span>
                 </div>
-                
-            </div>
-
             <button type="button" class="bg-vert-principale text-white px-4 py-2 rounded-md font-medium hover:bg-vert-principal-h transition shadow-sm flex items-center shrink-0 cursor-pointer">
             Utiliser
             </button>
             </div>
+        
+        @else
+            <div class="bg-white border border-gray-200 rounded-lg p-4 flex justify-between items-center">
+                <p class="text-sm text-semibold">Vous n'avez pas encore de trajet enregistré</p>
+            </div>
+        @endisset
+        
     </div>
 
     <!-- Détail du trajet -->
@@ -157,27 +165,41 @@
                     </svg>
                     Véhicule
                 </label>
-                <textarea name="voiture" id="voiture" rows="1" placeholder="Décrivez votre véhicule" class="w-full border border-gray-300 rounded-md shadow-sm p-3 " required></textarea>
+
+                <!-- Si l'utilisateur n'a pas de véhicule d'enregistré -->
+                @if ($vehicules->isEmpty()) <!-- REGARDER QUE POUR CELUI DE L'USER PAS TOUTE LA TABLE !!!!!! -->
+                    <div class="bg-red-100 border border-red-400 rounded-lg block text-sm text-red-700 italic text-center p-4 space-y-3">
+                        <p>Vous n'avez pas de véhicule enregistré</p>
+                        <a href="#" class="text-white font-medium bg-rouge border-red400 rounded-lg px-5 py-2 hover:bg-red-700">
+                        + Ajouter un véhicule
+                        </a>
+                    </div>
+                <!-- Sinon -->   
+                @else
+                    <select name="id_vehicule" id="vehicule_id" class="w-full border border-gray-300 rounded-md shadow-sm p-3 focus:ring-vert-principale focus:border-vert-principale focus:outline-none" required>
+                        <option value="" disabled selected>Sélectionnez votre véhicule</option>
+
+                        @foreach ($vehicules as $vehicule)
+                            <option value="{{ $vehicule->id }}">
+                            {{ $vehicule->marque }} {{ $vehicule->modele }} ({{ $vehicule->immatriculation }})
+                            </option>
+                        @endforeach
+                    </select>
+        
+                    <p class="text-xs text-gris1 mt-2 text-right">
+                    <a href="#" class="text-vert-principale hover:underline font-medium">+ Ajouter un autre véhicule</a>
+                @endif
             </div>
             
-            <!-- Message aux passagers -->
-            <div>
-                <label for="message" class="block text-sm font-medium text-noir mb-1 flex items-center">
-                    <!-- Icone Message -->
-                    <svg class="w-4 h-4 mr-1 text-vert-principale" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v7a2 2 0 01-2 2h-4l-4 4v-4z"></path></svg>
-                    Message aux Passagers (optionnel)
-                </label>
-                <textarea name="message" id="message" rows="3" placeholder="Ajoutez des informations supplémentaires : point de rendez-vous précis, préférences, etc." class="w-full border border-gray-300 rounded-md shadow-sm p-3 focus:ring-vert-principale focus:border-vert-principale"></textarea>
-            </div>
-        </div>
 
+        <!-- Récapitulatif -->
         <div class="bg-beige-second/50 border border-beige-second/50 rounded-lg p-4 mt-8">
             <h3 class="font-semibold text-noir mb-2">Récapitulatif</h3>
             <p class="text-sm text-gris1 mb-4">Vérifiez vos informations avant de publier votre trajet.</p>
             <p class="text-sm text-gris1 mb-4">Vous pourrez modifier ou annuler votre trajet depuis la page "Mes Trajets".</p>
         </div>
 
-        
+        <!-- Boutons -->
         <div class="flex justify-end gap-3 pt-6">
             <button type="submit" class="bg-vert-principale text-white px-15 py-2 rounded-md font-medium hover:bg-vert-principal-h transition shadow-sm cursor-pointer">
                 Publier le Trajet

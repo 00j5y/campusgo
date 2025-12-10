@@ -4,44 +4,75 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Trajet; 
 use App\Models\Vehicule;
-use App\Models\Utilisateur;
+use App\Models\User;
 
 class TrajetController extends Controller
 {
-    /**
-     * Affiche le formulaire de création de trajet. (Méthode appelée par la route GET)
-     */
+    //Récupération
     public function create()
     {
-        // 1. PROTECTION DÉSACTIVÉE TEMPORAIREMENT POUR LE DÉVELOPPEMENT
-        /*
+        //1.Si l'utilisateur n'est pas connecté, il est redirigé
         if (!Auth::check()) {
             return redirect()->route('login'); 
         }
-        */
 
-        // Initialisation des variables nécessaires à la vue
+        //Une fois l'utilisateur connecté , on récupère l'objet (Auth::user())
+        $user = Auth::user(); 
+
         $dernierTrajet = null;
-        $vehicules = collect(); 
+        $vehicules = collect();
 
-        // Si nous étions connectés, on essaierait de récupérer les données BDD
-        if (Auth::check()) {
-             $user = Auth::user();
-            try {
-                // Ces lignes dépendent des Modèles BDD (Trajet, Vehicule) et des relations existantes
-                $dernierTrajet = $user->trajets()->latest()->first(); 
-                $vehicules = $user->vehicules()->get(); 
-            } catch (\Exception $e) {
-                // Si les Modèles ne sont pas prêts (ce qui est le cas), on ignore l'erreur
-            }
+        try {
+            //On récupère le dernier trajet créé par l'utilisateur
+            $dernierTrajet = $user->trajets()->orderBy('id', 'desc')->first(); 
+
+            //Récupère tous les véhicules de l'utilisateur
+            $vehicules = $user->vehicules()->get(); 
         }
-        
-        // 2. Retourne la vue Blade et passe les variables.
-        // La vue se trouve dans 'resources/views/trajets/create.blade.php'
+        catch (\Exception $e) {
+
+        }
+
+        //2. Transmet les variables à la page "proposer-un-trajet" donc "resources/views/trajets/create.blade.php"
         return view('trajets.create', compact('dernierTrajet', 'vehicules'));
     }
 
-    // ... (la méthode store() reste inchangée pour le moment)
+    //Enregistrement
+    public function store(Request $request)
+    {
+        //1.Vérification de la connexion
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        // 2.Validation des données
+        $validatedData = $request->validate([
+            // Correspond au nouveau schéma BDD Trajet
+            'lieu_depart' => 'required|string|max:100',
+            'lieu_arrivee' => 'required|string|max:100',
+            'date_depart' => 'required|date|after_or_equal:today',
+            'heure_depart' => 'required|date_format:H:i',
+            'places_disponibles' => 'required|integer|min:1|max:7',
+            'id_vehicule' => 'required|exists:vehicule,id', // S'assure que l'ID existe dans la table 'vehicule'
+        ]);
+
+        // 3. Enregistrement du Trajet
+        $trajet = Trajet::create([
+            'id_utilisateur' => Auth::id(), // ID de l'utilisateur connecté
+            'id_vehicule' => $validatedData['id_vehicule'],
+            'lieu_depart' => $validatedData['lieu_depart'],
+            'lieu_arrivee' => $validatedData['lieu_arrivee'],
+            'date_depart' => $validatedData['date_depart'],
+            'heure_depart' => $validatedData['heure_depart'],
+            'place_disponible' => $validatedData['places_disponibles'],
+            'prix' => 0,
+            'heure_arrivee' => '00:00:00', 
+        ]);
+        
+        // 4.Redirection après publication
+        return redirect()->route('accueil')->with('success', 'Votre trajet a été publié avec succès!');
+    }
 }

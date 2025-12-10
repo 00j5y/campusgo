@@ -13,15 +13,15 @@ class Trajet extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'Lieu_Depart',
-        'Lieu_Arrivee',
-        'Date_',
-        'Heure_Depart',
-        'Heure_Arrivee',
-        'Place_Disponible',
-        'Prix',
-        'ID_Vehicule',
-        'ID_Utilisateur',
+        'lieu_depart',        
+        'lieu_arrivee',       
+        'date_depart',        
+        'heure_depart',
+        'heure_arrivee',
+        'place_disponible',  
+        'prix',
+        'id_vehicule',        
+        'id_utilisateur',
     ];
 
     protected $casts = [
@@ -31,4 +31,5 @@ class Trajet extends Model
         'Place_Disponible' => 'integer',
         'Prix' => 'integer',
     ];
+
 }
