@@ -26,7 +26,9 @@
                     </div>
                     
                     <h1 class="text-2xl font-bold text-noir">{{ $user->firstname }} {{ $user->lastname }}</h1>
-                    <p class="text-sm text-gris1 mt-1">Membre depuis {{ $user->created_at->format('M Y') }}</p>
+                        <p class="text-sm text-gris1 mt-1">
+                            Membre depuis {{ $user->created_at ? $user->created_at->format('M Y') : 'toujours' }}
+                        </p>
                     
                     <div class="mt-6 flex flex-wrap justify-center gap-2">
                         <span class="inline-flex items-center gap-1 bg-vert-principale/10 px-3 py-1 rounded-full text-vert-principale text-xs font-bold uppercase tracking-wide">

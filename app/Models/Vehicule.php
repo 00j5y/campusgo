@@ -2,26 +2,29 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Vehicule extends Model
 {
-    // On force le nom de la table (Singulier)
-    protected $table = 'VEHICULE';
-    
-    // On précise la clé primaire
-    protected $primaryKey = 'ID_Vehicule';
+    use HasFactory;
 
-    // On désactive les timestamps si la table n'a pas les colonnes created_at/updated_at
+    protected $table = 'vehicule'; // Nom de la table
+
+    // Pas de timestamps (created_at) dans ta table d'après l'image
     public $timestamps = false; 
 
-    // Les colonnes modifiables
     protected $fillable = [
-        'Marque',
-        'Modele',
-        'Couleur',
-        'NombrePlace',
-        'Immatriculation',
-        'ID_Utilisateur' // ou 'user_id' selon votre BDD
+        'marque',
+        'modele',
+        'couleur',
+        'nombre_place',
+        'immatriculation',
+        'id_utilisateur', // Clé étrangère
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_utilisateur');
+    }
 }

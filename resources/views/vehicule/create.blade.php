@@ -24,31 +24,42 @@
                     <div>
                         <label for="Marque" class="block text-sm text-gris1 mb-2">Marque</label>
                         <input type="text" name="Marque" id="Marque" placeholder="Ex: Peugeot"
-                            class="w-full rounded-lg border-gray-300 focus:border-vert-principale focus:ring-vert-principale shadow-sm">
+                            class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm">
                     </div>
 
                     <div>
                         <label for="Modele" class="block text-sm text-gris1 mb-2">Modèle</label>
                         <input type="text" name="Modele" id="Modele" placeholder="Ex: 208"
-                            class="w-full rounded-lg border-gray-300 focus:border-vert-principale focus:ring-vert-principale shadow-sm">
+                            class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm">
                     </div>
 
                     <div>
                         <label for="Couleur" class="block text-sm text-gris1 mb-2">Couleur</label>
                         <input type="text" name="Couleur" id="Couleur" placeholder="Ex: Blanc"
-                            class="w-full rounded-lg border-gray-300 focus:border-vert-principale focus:ring-vert-principale shadow-sm">
+                            class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm">
                     </div>
 
-                    <div>
-                        <label for="Immatriculation" class="block text-sm text-gris1 mb-2">Immatriculation</label>
-                        <input type="text" name="Immatriculation" id="Immatriculation" placeholder="AB-123-CD"
-                            class="w-full rounded-lg border-gray-300 focus:border-vert-principale focus:ring-vert-principale shadow-sm uppercase">
+                    <div class="mb-4">
+                        <label for="immatriculation" class="block text-sm font-medium text-gray-700 mb-1">
+                            Immatriculation
+                        </label>
+                        
+                        <input 
+                            type="text" name="immatriculation" id="immatriculation" value="{{ old('immatriculation') }}" placeholder="AB-123-CD" 
+                            class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm @error('immatriculation') border-red-500 focus:border-red-500 focus:ring-red-500 @enderror">
+                        @error('immatriculation')
+                            <p class="mt-1 text-sm text-red-600 font-medium">
+                                {{ $message }}
+                            </p>
+                        @enderror
+                        
+                        <p class="mt-1 text-xs text-gray-500">Format attendu : AA-123-AA</p>
                     </div>
 
                     <div class="md:col-span-2">
                         <label for="NombrePlace" class="block text-sm text-gris1 mb-2">Nombre de places disponibles</label>
                         <input type="number" name="NombrePlace" id="NombrePlace" min="1" max="9" value="3"
-                            class="w-full rounded-lg border-gray-300 focus:border-vert-principale focus:ring-vert-principale shadow-sm">
+                            class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm">
                         <p class="text-xs text-gray-400 mt-1">N'incluez pas la place du conducteur.</p>
                     </div>
                 </div>

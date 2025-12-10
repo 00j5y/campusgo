@@ -28,29 +28,34 @@
                         
                         <div class="relative w-24 h-24">
                             <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-beige-principale flex items-center justify-center">
-                                @if($user->Photo)
-                                    <img id="preview_image" src="{{ asset('storage/' . $user->Photo) }}" alt="Avatar" class="w-full h-full object-cover">
+                                @if($user->photo)
+                                    <img id="preview_image" src="{{ asset('storage/' . $user->photo) }}" alt="Avatar" class="w-full h-full object-cover">
                                 @else
                                     <img id="preview_image" src="{{ asset('images/accueil/icones/personne-convivialite-vert.png') }}" class="w-10 h-10 object-contain">
                                 @endif
                             </div>
 
                             <label for="photo_input" 
-                                   class="absolute bottom-0 right-0 bg-vert-principale text-white p-2 rounded-full cursor-pointer hover:bg-vert-principal-h transition shadow-md z-50 flex items-center justify-center">
+                                class="absolute bottom-0 right-0 bg-vert-principale text-white p-2 rounded-full cursor-pointer hover:bg-vert-principal-h transition shadow-md z-50 flex items-center justify-center"
+                                title="Changer la photo">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
                             </label>
                             
-                            <input type="file" name="Photo" id="photo_input" class="hidden" 
-                                   accept="image/*"
-                                   onchange="loadPreview(event)">
+                            <input type="file" name="photo" id="photo_input" class="hidden"
+                                accept="image/*"
+                                onchange="loadPreview(event)">
+                                @error('photo')
+                                    <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                                @enderror
                         </div>
 
                         <div>
                             <h2 class="text-xl font-bold text-noir">Photo de profil</h2>
-                            <p class="text-sm text-gris1">Cliquez sur la caméra pour changer</p>
+                            <p class="text-sm text-gris1">Cliquez sur la caméra pour changer.</p>
+                            <p class="text-xs text-gris1 mt-1">Formats : JPG, PNG. Max 2Mo.</p>
                         </div>
                     </div>
                     
@@ -58,16 +63,16 @@
                         <div>
                             <label for="firstname" class="block text-sm text-gris1 mb-2">Prénom</label>
                             <input type="text" name="firstname" id="firstname" 
-                                value="{{ old('firstname', $user->firstname) }}" 
-                                class="w-full rounded-lg border-gray-300 focus:border-vert-principale focus:ring-vert-principale shadow-sm">
+                                value="{{ old('firstname', $user->prenom) }}" 
+                                class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm">
                             @error('firstname') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
 
                         <div>
                             <label for="lastname" class="block text-sm text-gris1 mb-2">Nom</label>
                             <input type="text" name="lastname" id="lastname" 
-                                value="{{ old('lastname', $user->lastname) }}" 
-                                class="w-full rounded-lg border-gray-300 focus:border-vert-principale focus:ring-vert-principale shadow-sm">
+                                value="{{ old('lastname', $user->nom) }}" 
+                                class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm">
                             @error('lastname') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
 
@@ -75,14 +80,14 @@
                             <label for="email" class="block text-sm text-gris1 mb-2">Email Universitaire</label>
                             <input type="email" name="email" id="email" 
                                 value="{{ old('email', $user->email) }}" 
-                                class="w-full rounded-lg border-gray-300 focus:border-vert-principale focus:ring-vert-principale shadow-sm bg-gray-50 text-gray-500 cursor-not-allowed" readonly>
+                                class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm bg-gray-50 text-gray-500 cursor-not-allowed" readonly>
                         </div>
 
                         <div>
-                            <label for="phone" class="block text-sm text-gris1 mb-2">Téléphone</label>
-                            <input type="text" name="phone" id="phone" 
-                                value="{{ old('phone', $user->Numero ?? $user->phone) }}" 
-                                class="w-full rounded-lg border-gray-300 focus:border-vert-principale focus:ring-vert-principale shadow-sm"
+                            <label for="num_tel" class="block text-sm text-gris1 mb-2">Téléphone</label>
+                            <input type="text" name="num_tel" id="num_tel" 
+                                value="{{ old('num_tel', $user->num_tel) }}" 
+                                class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm"
                                 placeholder="06 12 34 56 78">
                         </div>
                     </div>
@@ -91,7 +96,7 @@
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
                     <h2 class="text-xl font-bold text-noir mb-6 flex items-center gap-2">
                          <span class="w-10 h-10 rounded-full bg-beige-principale flex items-center justify-center">
-                            <img src="{{ asset('images/accueil/icones/feuille.png') }}" class="size-6">
+                            <img src="{{ asset('images/accueil/icones/preference.png') }}" class="size-6">
                         </span>
                         Préférences de Covoiturage
                     </h2>
@@ -105,7 +110,7 @@
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="hidden" name="Accepte_animaux" value="0">
                                 <input type="checkbox" name="Accepte_animaux" value="1" class="sr-only peer" 
-                                    {{ old('Accepte_animaux', $user->preference?->Accepte_animaux) ? 'checked' : '' }}>
+                                    {{ old('Accepte_animaux', $user->preference?->accepte_animaux) ? 'checked' : '' }}>
                                 <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-vert-principale/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vert-principale"></div>
                             </label>
                         </div>
@@ -118,7 +123,7 @@
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="hidden" name="Accepte_fumeurs" value="0">
                                 <input type="checkbox" name="Accepte_fumeurs" value="1" class="sr-only peer"
-                                    {{ old("Accepte_fumeurs", $user->preference?->Accepte_fumeurs) ? 'checked' : '' }}>
+                                    {{ old("Accepte_fumeurs", $user->preference?->accepte_fumeurs) ? 'checked' : '' }}>
                                 <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-vert-principale/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vert-principale"></div>
                             </label>
                         </div>
@@ -131,7 +136,7 @@
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="hidden" name="Accepte_musique" value="0">
                                 <input type="checkbox" name="Accepte_musique" value="1" class="sr-only peer"
-                                    {{ old("Accepte_musique", $user->preference?->Accepte_musique) ? 'checked' : '' }}>
+                                    {{ old("Accepte_musique", $user->preference?->accepte_musique) ? 'checked' : '' }}>
                                 <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-vert-principale/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vert-principale"></div>
                             </label>
                         </div>
