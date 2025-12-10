@@ -24,8 +24,8 @@ class User extends Authenticatable
         'email',
         'mdp',
         'estAdmin',
-        // 'photo', // Décommente si tu ajoutes la colonne dans la BDD
-        // 'telephone', // Décommente si tu ajoutes la colonne
+        'photo',
+        'num_tel',
     ];
 
     // 3. Cacher le mot de passe et le token pour la sécurité

@@ -26,6 +26,8 @@ class ProfileController extends Controller
             $validated = $request->validate([
                 'firstname' => ['required', 'string', 'max:255'],
                 'lastname'  => ['required', 'string', 'max:255'],
+                'num_tel'   => ['nullable', 'string', 'max:10'],
+                'photo'     => ['nullable', 'image', 'max:2048'],
                 'Accepte_animaux' => ['boolean'], // Noms des checkbox HTML
                 'Accepte_fumeurs' => ['boolean'],
                 'Accepte_musique' => ['boolean'],
@@ -36,6 +38,18 @@ class ProfileController extends Controller
             // 1. Mise à jour User
             $user->prenom = $validated['firstname'];
             $user->nom    = $validated['lastname'];
+            $user->num_tel = $validated['num_tel'];
+
+            if ($request->hasFile('photo')) {
+                if ($user->photo) {
+                    Storage::disk('public')->delete($user->photo);
+                    }
+            
+            // Enregistrer la nouvelle
+            $path = $request->file('photo')->store('avatars', 'public');
+            $user->photo = $path;
+        }
+
             $user->save();
 
             // 2. Mise à jour Préférences (C'est ce bloc qu'il manquait !)

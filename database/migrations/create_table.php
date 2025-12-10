@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('prenom', 32);
             $table->string('nom', 32);
-            $table->string('email', 32)->unique();
+            $table->string('email', 100)->unique();
             $table->string('num_tel', 10)->nullable();
             $table->string('mdp');
             $table->boolean('est_admin')->default(false);
