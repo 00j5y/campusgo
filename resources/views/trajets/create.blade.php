@@ -107,6 +107,9 @@
                     Lieu d'Arrivée
                 </label>
                 <input type="text" name="lieu_arrivee" id="lieu_arrivee" value="IUT Amiens, Avenue des Facultés" class="w-full border rounded-md shadow-sm p-3 border-gray-300" required>
+                @error('lieu_arrivee')
+                <p class="text-red-500 text-xs italic mt-1">Le lieu de départ et le lieu d'arrivée ne peuvent pas être identiques</p>
+                @enderror
             </div>
 
 

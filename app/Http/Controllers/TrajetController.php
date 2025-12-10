@@ -51,7 +51,7 @@ class TrajetController extends Controller
         $validatedData = $request->validate([
             // Correspond au nouveau schéma BDD Trajet
             'lieu_depart' => 'required|string|max:100',
-            'lieu_arrivee' => 'required|string|max:100',
+            'lieu_arrivee' => 'required|string|max:100|different:lieu_depart',
             'date_depart' => 'required|date|after_or_equal:today',
             'heure_depart' => 'required|date_format:H:i',
             'places_disponibles' => 'required|integer|min:1|max:7',
