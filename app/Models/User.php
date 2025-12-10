@@ -12,18 +12,23 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    protected $table = 'utilisateur';
+
+    protected $primaryKey = 'id_utilisateur'; 
+    public $incrementing = true; //
+
+    public $timestamps = false;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
     protected $fillable = [
-        'firstname',
-        'lastname',
+        'prenom',
+        'nom',
         'email',
-        'phone',
-        'password',
-        'is_admin',
+        'mdp',
     ];
 
     /**
@@ -32,9 +37,14 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
-        'password',
+        'mdp',
         'remember_token',
     ];
+
+    public function getAuthPasswordName()
+    {
+        return 'mdp';
+    }
 
     /**
      * Get the attributes that should be cast.
@@ -45,12 +55,11 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'is_admin' => 'boolean',
+            'mdp' => 'hashed',
         ];
     }
     public function reservations()
     {
-        return $this->belongsToMany(Trajet::class, 'reserver', 'ID_Utilisateur', 'ID_Trajet');
+        return $this->belongsToMany(Trajet::class, 'reserver', 'id_utilisateur', 'id_trajet');
     }
 }

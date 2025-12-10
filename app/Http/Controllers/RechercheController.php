@@ -3,80 +3,129 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Trajet;
 use Carbon\Carbon;
 
 class RechercheController extends Controller
 {
-    // Affiche la page et les résultats
     public function index(Request $request)
     {
-        // 1. Simulation utilisateur connecté (Marie)
-        $user = User::find(1); 
-        $prenom = $user ? $user->firstname : 'Visiteur';
+        $user = Auth::user();
+        $prenom = $user ? $user->prenom : 'Visiteur';
+        
+        // Initialisation de la collection vide
+        $mesTrajets = collect();
 
-        // 2. Récupération de MES trajets (Conducteur + Passager)
-        $mesTrajets = Trajet::where('ID_Utilisateur', $user->id)
-            ->get()
-            ->merge($user->reservations()->get())
-            ->sortBy('Date_');
-
-        // 3. Logique de Recherche
-        $resultats = null;      
-        $rechercheFaite = false; 
-
-        if ($request->filled('depart') || $request->filled('arrivee') || $request->filled('date')) {
-            $rechercheFaite = true;
-            $query = Trajet::query();
+        // Si l'utilisateur est connecté, on récupère ses trajets 
+        if ($user) {
+            // Trajets conducteur 
+            $trajetsConducteur = Trajet::where('id_utilisateur', $user->id_utilisateur)
+                ->orderBy('date_depart')
+                ->get();
             
-            // On exclut nos propres trajets et ceux déjà réservés
-            $query->where('ID_Utilisateur', '!=', $user->id)
-                  ->whereNotIn('ID_Trajet', $user->reservations()->pluck('reserver.ID_Trajet'));
+            // Trajets passager 
+            $trajetsPassager = $user->reservations()
+                ->orderBy('date_depart')
+                ->get();
 
-            if ($request->filled('depart'))  $query->where('Lieu_Depart', 'LIKE', '%' . $request->depart . '%');
-            if ($request->filled('arrivee')) $query->where('Lieu_Arrivee', 'LIKE', '%' . $request->arrivee . '%');
-            
-            if ($request->filled('date')) {
-                try {
-                    $query->where('Date_', Carbon::createFromFormat('d/m/Y', $request->date)->format('Y-m-d'));
-                } catch (\Exception $e) {}
-            }
-            $resultats = $query->get();
+            // Fusionner et trier par date
+            $mesTrajets = $trajetsConducteur->merge($trajetsPassager)->sortBy('date_depart');
         }
 
-        return view('rechercher', compact('prenom', 'mesTrajets', 'resultats', 'rechercheFaite'));
+        // Gestion de la Recherche
+        $rechercheFaite = false;
+        $resultats = collect();
+
+        // On vérifie si une recherche est lancée 
+        if ($request->filled('depart') || $request->filled('arrivee')) {
+            
+            $rechercheFaite = true;
+            $villeDepart = $request->input('depart');
+            $villeArrivee = $request->input('arrivee');
+            $dateDepart = $request->input('date');
+
+            $query = Trajet::query();
+
+            // Recherche flexible 
+            if ($villeDepart) {
+                $query->where('lieu_depart', 'like', '%' . $villeDepart . '%');
+            }
+
+            if ($villeArrivee) {
+                $query->where('lieu_arrivee', 'like', '%' . $villeArrivee . '%');
+            }
+
+            // Filtre sur la date si elle est fournie
+            if ($dateDepart) {
+                try {
+                    // On parse la date format "d/m/Y" (format flatpickr) vers "Y-m-d" (format SQL)
+                    $dateSQL = Carbon::createFromFormat('d/m/Y', $dateDepart)->format('Y-m-d');
+                    $query->whereDate('date_depart', $dateSQL);
+                } catch (\Exception $e) {
+                    // Si format invalide, on ignore la date
+                }
+            }
+
+            // On récupère uniquement les trajets futurs avec des places
+            // Optionnel : ajouter ->where('place_disponible', '>', 0) si tu veux cacher les complets
+            $resultats = $query->orderBy('date_depart')->get();
+        }
+
+        return view('rechercher', compact('prenom', 'mesTrajets', 'rechercheFaite', 'resultats'));
     }
 
-    // Action : Réserver
+    // --- 2. FONCTION RESERVER ---
     public function reserver($id)
     {
-        $user = User::find(1); 
+        if (!Auth::check()) return redirect('/login');
+
+        $user = Auth::user();
         $trajet = Trajet::findOrFail($id);
 
-        if ($trajet->Place_Disponible > 0) {
+        // Empêcher de réserver son propre trajet
+        if ($trajet->id_utilisateur == $user->id_utilisateur) {
+            return redirect()->back()->with('error', 'Vous ne pouvez pas réserver votre propre trajet.');
+        }
+
+        // Vérifier si déjà réservé
+        if ($user->reservations()->where('trajet.id_trajet', $id)->exists()) {
+            return redirect()->back()->with('error', 'Vous avez déjà réservé ce trajet.');
+        }
+
+        if ($trajet->place_disponible > 0) {
             $user->reservations()->attach($id);
-            $trajet->decrement('Place_Disponible');
+            $trajet->decrement('place_disponible');
             return redirect()->back()->with('success', 'Trajet réservé avec succès !');
         }
+
         return redirect()->back()->with('error', 'Désolé, ce trajet est complet.');
     }
 
-    // Action : Annuler
+    // --- 3. FONCTION ANNULER ---
     public function annuler($id)
     {
-        $user = User::find(1);
+        if (!Auth::check()) return redirect('/login');
+
+        $user = Auth::user();
         $trajet = Trajet::findOrFail($id);
 
-        // Si conducteur : supprimer le trajet
-        if ($trajet->ID_Utilisateur == $user->id) {
+        // Cas 1 : C'est le conducteur qui annule (Suppression totale)
+        if ($trajet->id_utilisateur == $user->id_utilisateur) {
+            // Optionnel : Détacher tous les passagers avant de supprimer si cascade n'est pas configuré en BD
             $trajet->delete();
             return redirect()->back()->with('success', 'Votre trajet a été supprimé.');
         }
 
-        // Si passager : annuler réservation
-        $user->reservations()->detach($id);
-        $trajet->increment('Place_Disponible');
-        return redirect()->back()->with('success', 'Votre réservation a été annulée.');
+        // Cas 2 : C'est un passager qui annule (Désistement)
+        // detach() retourne le nombre de lignes supprimées. S'il retourne 0, c'est que l'user n'avait pas réservé.
+        $detached = $user->reservations()->detach($id);
+        
+        if ($detached > 0) {
+            $trajet->increment('place_disponible');
+            return redirect()->back()->with('success', 'Votre réservation a été annulée.');
+        }
+
+        return redirect()->back()->with('error', 'Erreur lors de l\'annulation.');
     }
 }
