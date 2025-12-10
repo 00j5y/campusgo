@@ -34,11 +34,11 @@
 
                         <div class="grid grid-cols-3 gap-6 pt-8 border-t border-vert-principale/20">
                             <div>
-                                <div class="text-3xl font-bold text-vert-principale">250+</div>
+                                <div class="text-3xl font-bold text-vert-principale js-counter" data-target="{{ $usersCount }}">0</div>
                                 <div class="text-gris1 text-sm mt-1">Membres actifs</div>
                             </div>
                             <div>
-                                <div class="text-3xl font-bold text-vert-principale">500+</div>
+                                <div class="text-3xl font-bold text-vert-principale js-counter" data-target="{{ $trajetsCount }}">0</div>
                                 <div class="text-gris1 text-sm mt-1">Trajets partagés</div>
                             </div>
                             <div>
