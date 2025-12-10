@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('prenom', 32);
             $table->string('nom', 32);
             $table->string('email', 32)->unique();
-            $table->string('numTel', 10)->nullable();
+            $table->string('num_tel', 10)->nullable();
             $table->string('mdp');
-            $table->boolean('estAdmin')->default(false);
+            $table->boolean('est_admin')->default(false);
         });
 
         // Table Véhicule
