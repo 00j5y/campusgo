@@ -64,7 +64,7 @@
                             <label for="firstname" class="block text-sm text-gris1 mb-2">Prénom</label>
                             <input type="text" name="firstname" id="firstname" 
                                 value="{{ old('firstname', $user->prenom) }}" 
-                                class="w-full rounded-lg border-gray-300 focus:border-vert-principale focus:ring-vert-principale shadow-sm">
+                                class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm">
                             @error('firstname') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
 
@@ -72,7 +72,7 @@
                             <label for="lastname" class="block text-sm text-gris1 mb-2">Nom</label>
                             <input type="text" name="lastname" id="lastname" 
                                 value="{{ old('lastname', $user->nom) }}" 
-                                class="w-full rounded-lg border-gray-300 focus:border-vert-principale focus:ring-vert-principale shadow-sm">
+                                class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm">
                             @error('lastname') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
 
@@ -80,14 +80,14 @@
                             <label for="email" class="block text-sm text-gris1 mb-2">Email Universitaire</label>
                             <input type="email" name="email" id="email" 
                                 value="{{ old('email', $user->email) }}" 
-                                class="w-full rounded-lg border-gray-300 focus:border-vert-principale focus:ring-vert-principale shadow-sm bg-gray-50 text-gray-500 cursor-not-allowed" readonly>
+                                class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm bg-gray-50 text-gray-500 cursor-not-allowed" readonly>
                         </div>
 
                         <div>
                             <label for="num_tel" class="block text-sm text-gris1 mb-2">Téléphone</label>
                             <input type="text" name="num_tel" id="num_tel" 
                                 value="{{ old('num_tel', $user->num_tel) }}" 
-                                class="w-full rounded-lg border-gray-300 focus:border-vert-principale focus:ring-vert-principale shadow-sm"
+                                class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm"
                                 placeholder="06 12 34 56 78">
                         </div>
                     </div>
@@ -96,7 +96,7 @@
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
                     <h2 class="text-xl font-bold text-noir mb-6 flex items-center gap-2">
                          <span class="w-10 h-10 rounded-full bg-beige-principale flex items-center justify-center">
-                            <img src="{{ asset('images/accueil/icones/feuille.png') }}" class="size-6">
+                            <img src="{{ asset('images/accueil/icones/preference.png') }}" class="size-6">
                         </span>
                         Préférences de Covoiturage
                     </h2>

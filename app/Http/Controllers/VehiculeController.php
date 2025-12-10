@@ -21,9 +21,14 @@ class VehiculeController extends Controller
             'Marque' => 'required|string|max:20', // Ici c'est le nom du champ HTML (Majuscule)
             'Modele' => 'required|string|max:20',
             'Couleur' => 'required|string|max:20',
-            'Immatriculation' => 'required|string|max:10',
+            'immatriculation' => 'required|string|regex:/^[A-Za-z]{2}[-\s]?[0-9]{3}[-\s]?[A-Za-z]{2}$/',
             'NombrePlace' => 'required|integer|min:1|max:9',
+        ],
+        [
+            'immatriculation.regex' => "Le format de l'immatriculation est invalide. Exemple valide : AB-123-CD",
         ]);
+
+        $cleanImmat = preg_replace('/[^A-Za-z0-9]/', '', $request->input('immatriculation'));
 
         // 2. Création
         $vehicule = new Vehicule();
@@ -33,7 +38,8 @@ class VehiculeController extends Controller
         $vehicule->marque = $request->Marque;
         $vehicule->modele = $request->Modele;
         $vehicule->couleur = $request->Couleur;
-        $vehicule->immatriculation = $request->Immatriculation;
+        $vehicule->immatriculation = strtoupper($cleanImmat);
+
         $vehicule->nombre_place = $request->NombrePlace; // Attention au _
         
         $vehicule->id_utilisateur = Auth::id(); // Clé étrangère en minuscule

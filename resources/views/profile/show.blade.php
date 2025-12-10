@@ -64,7 +64,7 @@
                 <div><p class="text-sm text-gris1 mb-1">Prénom</p><p class="text-lg text-gray-900">{{ $user->prenom }}</p></div>
                 <div><p class="text-sm text-gris1 mb-1">Nom</p><p class="text-lg text-gray-900">{{ $user->nom }}</p></div>
                 <div class="md:col-span-2"><p class="text-sm text-gris1 mb-1">Email</p><p class="text-lg text-gray-900">{{ $user->email }}</p></div>
-                <div class="pb-2"><p class="text-sm text-gris1 mb-1">Téléphone</p><p class="text-lg {{ $user->phone ? 'text-gray-900' : 'italic text-gray-400 font-normal' }}">{{ $user->phone ?? 'Non renseigné' }}</p></div>
+                <div class="pb-2"><p class="text-sm text-gris1 mb-1">Téléphone</p><p class="text-lg {{ $user->num_tel ? 'text-gray-900' : 'italic text-gray-400 font-normal' }}">{{ $user->num_tel ?? 'Non renseigné' }}</p></div>
             </div>
         </div>
 
