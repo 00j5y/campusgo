@@ -32,7 +32,7 @@
             Gagnez du temps en copiant les informations d'un trajet déjà effectué
         </p>
 
-        <!-- Si l'utilisateur n'a jamais créé de trajet -->
+        <!-- Si l'utilisateur a déjà créé un trajet -->
         @isset($dernierTrajet)
             <div class="bg-white border border-gray-200 rounded-lg p-4 flex justify-between items-center">
                 
@@ -64,7 +64,8 @@
                     </div>
                     
                 </div>
-            <button type="button" class="bg-vert-principale text-white px-4 py-2 rounded-md font-medium hover:bg-vert-principal-h transition shadow-sm flex items-center shrink-0 cursor-pointer">
+            <button type="button" class="bg-vert-principale text-white px-4 py-2 rounded-md font-medium hover:bg-vert-principal-h transition shadow-sm flex items-center shrink-0 cursor-pointer"
+            id="btn-utiliser">
             Utiliser
             </button>
             </div>
@@ -118,6 +119,9 @@
                         Date
                     </label>
                     <input type="date" name="date_depart" id="date_depart" class="w-full border border-gray-300 rounded-md shadow-sm p-3 " required>
+                    @error('date_depart')
+                    <p class="text-red-500 text-xs italic mt-1">Le champ « Date » doit correspondre à une date ultérieure ou égale à aujourd'hui.</p>
+                    @enderror
                 </div>
 
                 <!-- Heure de Départ -->
@@ -167,18 +171,22 @@
                 </label>
 
                 <!-- Si l'utilisateur n'a pas de véhicule d'enregistré -->
-                @if ($vehicules->isEmpty()) <!-- REGARDER QUE POUR CELUI DE L'USER PAS TOUTE LA TABLE !!!!!! -->
+                @if ($vehicules->isEmpty())
                     <div class="bg-red-100 border border-red-400 rounded-lg block text-sm text-red-700 italic text-center p-4 space-y-3">
                         <p>Vous n'avez pas de véhicule enregistré</p>
                         <a href="#" class="text-white font-medium bg-rouge border-red400 rounded-lg px-5 py-2 hover:bg-red-700">
                         + Ajouter un véhicule
                         </a>
+                        @error('id_vehicule')
+                        <p class="text-red-500 text-xs italic mt-4">Vous devez ajouter un véhicule</p>
+                        @enderror
                     </div>
                 <!-- Sinon -->   
                 @else
                     <select name="id_vehicule" id="vehicule_id" class="w-full border border-gray-300 rounded-md shadow-sm p-3 focus:ring-vert-principale focus:border-vert-principale focus:outline-none" required>
                         <option value="" disabled selected>Sélectionnez votre véhicule</option>
-
+                        
+                        <!-- Afficher tous les véhicules enregistrés -->
                         @foreach ($vehicules as $vehicule)
                             <option value="{{ $vehicule->id }}">
                             {{ $vehicule->marque }} {{ $vehicule->modele }} ({{ $vehicule->immatriculation }})

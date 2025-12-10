@@ -14,12 +14,12 @@ class TrajetController extends Controller
     //Récupération
     public function create()
     {
-        //1.Si l'utilisateur n'est pas connecté, il est redirigé
+        //Si l'utilisateur n'est pas connecté, il est redirigé
         if (!Auth::check()) {
             return redirect()->route('login'); 
         }
 
-        //Une fois l'utilisateur connecté , on récupère l'objet (Auth::user())
+        //Une fois l'utilisateur connecté , on récupère l'objet
         $user = Auth::user(); 
 
         $dernierTrajet = null;
@@ -36,19 +36,18 @@ class TrajetController extends Controller
 
         }
 
-        //2. Transmet les variables à la page "proposer-un-trajet" donc "resources/views/trajets/create.blade.php"
+        //Transmet les variables à la page "proposer-un-trajet" donc "resources/views/trajets/create.blade.php"
         return view('trajets.create', compact('dernierTrajet', 'vehicules'));
     }
 
     //Enregistrement
     public function store(Request $request)
     {
-        //1.Vérification de la connexion
         if (!Auth::check()) {
             return redirect()->route('login');
         }
 
-        // 2.Validation des données
+        //Validation des données
         $validatedData = $request->validate([
             // Correspond au nouveau schéma BDD Trajet
             'lieu_depart' => 'required|string|max:100',
@@ -59,9 +58,9 @@ class TrajetController extends Controller
             'id_vehicule' => 'required|exists:vehicule,id', // S'assure que l'ID existe dans la table 'vehicule'
         ]);
 
-        // 3. Enregistrement du Trajet
+        //Enregistrement du Trajet
         $trajet = Trajet::create([
-            'id_utilisateur' => Auth::id(), // ID de l'utilisateur connecté
+            'id_utilisateur' => Auth::id(),
             'id_vehicule' => $validatedData['id_vehicule'],
             'lieu_depart' => $validatedData['lieu_depart'],
             'lieu_arrivee' => $validatedData['lieu_arrivee'],
