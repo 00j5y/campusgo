@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminUtilisateursController;
+use App\Http\Controllers\AdminTrajetsController;
 
 // Page d'accueil
 Route::get('/', [HomeController::class, 'accueil'])->name('accueil');
@@ -26,3 +28,13 @@ Route::middleware('auth')->group(function () {
 */
 
 require __DIR__.'/auth.php';
+
+
+// Route pour la gestion des utilisateurs par l'admin
+
+Route::middleware(['auth'])->get('/admin-utilisateurs', [AdminUtilisateursController::class, 'index'])->name('admin.utilisateurs');
+
+
+// Route pour la gestion des trajets par l'admin
+
+Route::middleware(['auth'])->get('/admin-trajets', [AdminTrajetsController::class, 'index'])->name('admin.trajets');
