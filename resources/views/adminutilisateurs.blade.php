@@ -71,7 +71,7 @@
                                     Suspendre
                                 </button>
                                 
-                                <form action="#" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement ce compte ?');">
+                                <form action="{{ route('admin.utilisateurs.delete', $user->id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement ce compte ?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" title="Supprimer définitivement" class="text-gray-400 hover:text-red-600 transition pt-1">

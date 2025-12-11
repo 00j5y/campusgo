@@ -28,4 +28,30 @@ class AdminUtilisateursController extends Controller
         // 4. Retourner la vue en envoyant $users ET $stats
         return view('adminutilisateurs', compact('users', 'stats'));
     }
+
+    public function destroy($id)
+{
+    // 1. Sécurité
+    if (Auth::user()->est_admin != 1) {
+        return redirect('/');
+    }
+
+    // 2. On trouve l'utilisateur
+    $user = User::findOrFail($id);
+
+    // 3. Sécurité : On empêche de se supprimer soi-même !
+    if ($user->id === Auth::id()) {
+        return back()->with('error', 'Vous ne pouvez pas supprimer votre propre compte.');
+    }
+
+    // 4. On supprime
+    $user->delete();
+
+    // 5. On revient à la liste
+    return back()->with('success', 'Utilisateur supprimé définitivement.');
 }
+
+
+
+}
+
