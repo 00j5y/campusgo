@@ -41,9 +41,8 @@
                         </td>
 
                         <td class="px-6 py-4 text-gray-500">
-                            {{-- On vérifie si created_at existe, sinon on met un message par défaut --}}
-                            @if($user->created_at)
-                                {{ $user->created_at->format('d/m/Y') }}
+                            @if($user->date_creation)
+                                {{ \Carbon\Carbon::parse($user->date_creation)->format('d/m/Y') }}
                             @else
                                 <span class="text-gray-400 italic">Date inconnue</span>
                             @endif

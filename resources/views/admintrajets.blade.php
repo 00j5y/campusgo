@@ -67,7 +67,7 @@
 
                         <td class="px-6 py-4 text-center">
                             <span class="bg-blue-50 text-blue-700 py-1 px-2 rounded text-xs font-bold border border-blue-100">
-                                {{ $trajet->Place_Disponible }} disp.
+                                {{ $trajet->Place_Disponible }} disponible(s)
                             </span>
                         </td>
 

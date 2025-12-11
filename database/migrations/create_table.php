@@ -20,7 +20,10 @@ return new class extends Migration
             $table->string('email', 32)->unique();
             $table->string('num_tel', 10)->nullable();
             $table->string('mdp');
+            $table->timestamp('date_creation')->nullable();
+            $table->timestamp('updated_at')->nullable();
             $table->boolean('est_admin')->default(false);
+            $table->boolean('est_suspendu')->default(false);
         });
 
         // Table Véhicule
