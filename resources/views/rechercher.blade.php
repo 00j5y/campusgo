@@ -32,6 +32,14 @@
 
             {{-- Formulaire de Recherche --}}
             <div class="bg-white rounded-3xl shadow-xl p-8 max-w-4xl mx-auto mb-12 relative z-10">
+                {{-- Conseil UX pour l'autocomplétion --}}
+                <div class="bg-blue-50 border-l-4 border-[#2E7D32] text-blue-800 p-4 mb-6 rounded-r-lg text-sm flex items-start gap-3">
+                    <i class="fa-solid fa-circle-info mt-1 text-[#2E7D32]"></i>
+                    <div>
+                        <p class="font-bold">Astuce pour une recherche précise :</p>
+                        <p>Commencez à taper votre ville, puis <span class="font-bold underline">cliquez impérativement sur une des suggestions</span> de la liste pour valider l'adresse exacte.</p>
+                    </div>
+                </div>
                 <form action="{{ route('rechercher') }}" method="GET" autocomplete="off" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <input type="hidden" id="coords_depart" name="coords_depart" value="{{ request('coords_depart') }}">
                     <input type="hidden" id="coords_arrivee" name="coords_arrivee" value="{{ request('coords_arrivee') }}">
@@ -68,9 +76,13 @@
                         </div>
                     </div>
 
-                    {{-- Map Container --}}
+                    {{-- Map Container avec passage de données --}}
                     <div class="col-span-1 md:col-span-2 mt-4">
-                         <div id="map" class="w-full h-64 rounded-xl border border-gray-200 z-0"></div>
+                        <div id="map" 
+                            class="w-full h-64 rounded-xl border border-gray-200 z-0"
+                            data-token="pk.eyJ1IjoiZ2FieXNjb3RlIiwiYSI6ImNtaXlueXBycDBlMnIzZnM3NDF0aWZ4emIifQ.Kv51hN4zyQ9O2AZLlbSdZg"
+                            data-center="[2.263592, 49.873836]">
+                        </div>
                     </div>
 
                     {{-- Bouton Submit --}}
@@ -188,195 +200,13 @@
         </div>
     </div>
 
-    {{-- Scripts --}}
+    {{-- Scripts Externes --}}
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.9.4/mapbox-gl.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/fr.js"></script>
-    <script>
-        // CONFIG
-        mapboxgl.accessToken = 'pk.eyJ1IjoiZ2FieXNjb3RlIiwiYSI6ImNtaXlueXBycDBlMnIzZnM3NDF0aWZ4emIifQ.Kv51hN4zyQ9O2AZLlbSdZg'; 
-
-        // 1. UI FUNCTIONS
-        function closeModal(id) { 
-            document.getElementById(id).classList.add('hidden'); 
-        }
-        
-        function openReserverModal(id) { 
-            const form = document.getElementById('form-reserver');
-            form.action = "/trajet/reserver/" + id; 
-            document.getElementById('modal-reserver').classList.remove('hidden'); 
-        }
-        
-        function openAnnulerModal(id) { 
-            const form = document.getElementById('form-annuler');
-            form.action = "/trajet/annuler/" + id; 
-            document.getElementById('modal-annuler').classList.remove('hidden'); 
-        }
-        
-        function toggleVoirTout() {
-            const btn = document.getElementById('btn-voir-tout');
-            const hiddenElements = document.querySelectorAll('.trajet-cache');
-            let isShowing = false;
-
-            hiddenElements.forEach(el => {
-                if(el.classList.contains('hidden')) { 
-                    el.classList.remove('hidden'); 
-                    isShowing = true; 
-                } else { 
-                    el.classList.add('hidden'); 
-                    isShowing = false; 
-                }
-            });
-            btn.innerText = isShowing ? "Voir moins" : "Voir tout (" + (hiddenElements.length + 1) + ")";
-        }
-
-        // 2. MAPS INDIVIDUELLES
-        const mapsInstances = {};
-        
-        // Fonction globale appelée par les boutons "Voir la carte"
-        async function toggleTrajetMap(id, dTxt, aTxt) {
-            const container = document.getElementById('map-container-' + id);
-            const mapId = 'map-' + id;
-            
-            if(!container.classList.contains('hidden')) { 
-                container.classList.add('hidden'); 
-                return; 
-            }
-            
-            container.classList.remove('hidden');
-            
-            // Si la carte existe déjà, on redimensionne juste
-            if(mapsInstances[id]) { 
-                setTimeout(() => mapsInstances[id].resize(), 100); 
-                return; 
-            }
-
-            // Sinon on la crée
-            try {
-                // Fonction helper pour choper les coords
-                const getCoords = async (query) => {
-                    const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${query}&limit=1`);
-                    const data = await res.json();
-                    return data.features[0].geometry.coordinates;
-                };
-
-                const start = await getCoords(dTxt);
-                const end = await getCoords(aTxt);
-
-                const miniMap = new mapboxgl.Map({ 
-                    container: mapId, 
-                    style: 'mapbox://styles/mapbox/streets-v12', 
-                    center: start, 
-                    zoom: 10,
-                    interactive: true 
-                });
-                
-                miniMap.addControl(new mapboxgl.NavigationControl(), 'top-left');
-                mapsInstances[id] = miniMap;
-                
-                new mapboxgl.Marker({ color: "#666" }).setLngLat(start).addTo(miniMap);
-                new mapboxgl.Marker({ color: "#2E7D32" }).setLngLat(end).addTo(miniMap);
-                
-                // Tracer la route
-                miniMap.on('load', async () => {
-                    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
-                    const req = await fetch(url);
-                    const json = await req.json();
-                    const route = json.routes[0].geometry.coordinates;
-                    
-                    miniMap.addLayer({
-                        id: 'route',
-                        type: 'line',
-                        source: { type: 'geojson', data: { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: route } } },
-                        layout: { 'line-join': 'round', 'line-cap': 'round' },
-                        paint: { 'line-color': '#3887be', 'line-width': 4, 'line-opacity': 0.8 }
-                    });
-
-                    // Fit bounds
-                    const bounds = new mapboxgl.LngLatBounds(start, start);
-                    route.forEach(c => bounds.extend(c));
-                    miniMap.fitBounds(bounds, { padding: 40 });
-                });
-
-            } catch(e) { 
-                console.error("Erreur carte trajet " + id, e); 
-            }
-        }
-
-        // 3. MAIN MAP & AUTOCOMPLETE (Chargement page)
-        document.addEventListener('DOMContentLoaded', () => {
-            flatpickr("#date", { locale: "fr", minDate: "today", dateFormat: "d/m/Y", disableMobile: "true" });
-            flatpickr("#heure", { enableTime: true, noCalendar: true, dateFormat: "H:i", time_24hr: true, defaultDate: "08:00" });
-
-            const map = new mapboxgl.Map({ container: 'map', style: 'mapbox://styles/mapbox/streets-v12', center: [2.295, 49.894], zoom: 5 });
-            map.addControl(new mapboxgl.NavigationControl(), 'top-right');
-
-            // Autocomplete Logic
-            function setupAutocomplete(idInput, idList, idHidden) {
-                const input = document.getElementById(idInput);
-                const list = document.getElementById(idList);
-                const hidden = document.getElementById(idHidden);
-                let timeout;
-
-                input.addEventListener('input', function() {
-                    clearTimeout(timeout);
-                    const q = this.value;
-                    if(q.length < 3) { list.classList.add('hidden'); return; }
-
-                    timeout = setTimeout(() => {
-                        fetch(`https://api-adresse.data.gouv.fr/search/?q=${q}&limit=5`)
-                        .then(r=>r.json()).then(d=>{
-                            list.innerHTML='';
-                            if(d.features && d.features.length>0){
-                                list.classList.remove('hidden');
-                                d.features.forEach(f=>{
-                                    const li = document.createElement('li');
-                                    li.className="px-4 py-3 hover:bg-gray-100 cursor-pointer border-b text-sm";
-                                    li.textContent=f.properties.label;
-                                    li.onclick=()=>{ 
-                                        input.value=f.properties.label; 
-                                        hidden.value=f.geometry.coordinates; 
-                                        list.classList.add('hidden'); 
-                                        tracerRoute(); 
-                                    };
-                                    list.appendChild(li);
-                                });
-                            } else list.classList.add('hidden');
-                        });
-                    }, 300);
-                });
-                document.addEventListener('click', e=>{if(e.target!==input) list.classList.add('hidden');});
-            }
-            setupAutocomplete('depart', 'liste-depart', 'coords_depart');
-            setupAutocomplete('arrivee', 'liste-arrivee', 'coords_arrivee');
-
-            // Tracer Route Principale
-            function tracerRoute() {
-                const d = document.getElementById('coords_depart').value;
-                const a = document.getElementById('coords_arrivee').value;
-                if(d && a) {
-                    const start=d.split(',').map(Number), end=a.split(',').map(Number);
-                    // Clean markers
-                    const markers = document.getElementsByClassName('mapboxgl-marker');
-                    while(markers[0]) markers[0].parentNode.removeChild(markers[0]);
-                    
-                    new mapboxgl.Marker({color:"#666"}).setLngLat(start).addTo(map); 
-                    new mapboxgl.Marker({color:"#2E7D32"}).setLngLat(end).addTo(map);
-
-                    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`;
-                    fetch(url).then(r=>r.json()).then(json=>{
-                        const route = json.routes[0].geometry.coordinates;
-                        const geojson = { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: route } };
-                        if(map.getSource('route')) map.getSource('route').setData(geojson);
-                        else map.addLayer({ id: 'route', type: 'line', source: { type: 'geojson', data: geojson }, layout: {'line-join': 'round', 'line-cap': 'round'}, paint: {'line-color': '#2E7D32', 'line-width': 5} });
-                        
-                        const bounds = new mapboxgl.LngLatBounds(start, start);
-                        route.forEach(c => bounds.extend(c));
-                        map.fitBounds(bounds, { padding: 50 });
-                    });
-                }
-            }
-            map.on('load', tracerRoute);
-        });
-    </script>
+    
+    {{-- Ton script perso --}}
+    @vite(['resources/js/recherche.js'])
 @endsection
+
+    
