@@ -67,7 +67,9 @@ class TrajetController extends Controller
              // nous ajoutons une vérification sur les versions en minuscules.
         ],
         'lieu_arrivee_min' => [
-            Rule::notIn([$lieuDepartMin]), // Vérification notIn sur le champ en minuscules
+            'required', // <- Validation sur la version en minuscule
+            'string',   
+            Rule::notIn([$lieuDepartMin]) 
         ],
             'date_depart' => 'required|date|after_or_equal:today',
             'heure_depart' => 'required|date_format:H:i',
