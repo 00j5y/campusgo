@@ -15,7 +15,6 @@ class User extends Authenticatable
     // 1. Nom de la table dans la BDD
     protected $table = 'utilisateur';
 
-    public $timestamps = false;
 
     // 2. Les colonnes modifiables (Français)
     protected $fillable = [
@@ -23,7 +22,7 @@ class User extends Authenticatable
         'nom',
         'email',
         'mdp',
-        'estAdmin',
+        'est_admin',
         'photo',
         'num_tel',
     ];

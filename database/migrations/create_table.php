@@ -21,6 +21,18 @@ return new class extends Migration
             $table->string('num_tel', 10)->nullable();
             $table->string('mdp');
             $table->boolean('est_admin')->default(false);
+            $table->timestamps();
+        });
+
+        // Table Historique Connexions (AJOUTÉ)
+        Schema::create('historique_connexions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('id_utilisateur')
+                  ->constrained('utilisateur')
+                  ->onDelete('cascade');
+            $table->string('adresse_ip', 45)->nullable();
+            $table->string('agent_utilisateur')->nullable();
+            $table->timestamp('date_connexion')->useCurrent();
         });
 
         // Table Véhicule
@@ -34,6 +46,7 @@ return new class extends Migration
             $table->foreignId('id_utilisateur')
                 ->constrained('utilisateur')
                 ->onDelete('cascade');
+            $table->timestamps();
         });
         
         // Table Trajet
@@ -52,15 +65,19 @@ return new class extends Migration
             $table->foreignId('id_utilisateur')
                   ->constrained('utilisateur')
                   ->onDelete('cascade');
+            $table->timestamps();
         });
 
-        // Table préférences
         Schema::create('preference', function (Blueprint $table) {
             $table->id();
             $table->boolean('accepte_animaux')->default(false);
             $table->boolean('accepte_fumeurs')->default(false);
             $table->boolean('accepte_musique')->default(true);
             $table->boolean('accepte_discussion')->default(true);
+            
+            $table->boolean('telephone_public')->default(false);
+            $table->boolean('trajets_publics')->default(true);
+
             $table->foreignId('id_utilisateur')
                 ->constrained('utilisateur')
                 ->onDelete('cascade');
@@ -80,14 +97,15 @@ return new class extends Migration
             $table->foreignId('id_destinataire')
                 ->constrained('utilisateur')
                 ->onDelete('cascade');
+            $table->timestamps();
         });
 
-        // Vérification pour qu'un utilisateur ne puisse pas ce mettre un avis lui même
+        // Vérification anti-avis sur soi-même
         try {
             DB::statement('ALTER TABLE avis ADD CONSTRAINT check_auteur_destinataire CHECK (id_auteur <> id_destinataire)');
         } catch (\Exception $e) {}
 
-        // Relation entre Trajet et Utilisateur 
+        // Relation Trajet <-> Utilisateur (Réservation)
         Schema::create('reserver', function (Blueprint $table) {
             $table->foreignId('id_utilisateur')
                 ->constrained('utilisateur')
@@ -95,6 +113,7 @@ return new class extends Migration
             $table->foreignId('id_trajet')
                 ->constrained('trajet')
                 ->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -108,6 +127,7 @@ return new class extends Migration
         Schema::dropIfExists('preference');
         Schema::dropIfExists('trajet');
         Schema::dropIfExists('vehicule');
+        Schema::dropIfExists('historique_connexions');
         Schema::dropIfExists('utilisateur');
     }
 };

@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use App\Models\HistoriqueConnexion;
+use Illuminate\Support\Str;
 
 class ProfileController extends Controller
 {
@@ -26,19 +28,40 @@ class ProfileController extends Controller
             $validated = $request->validate([
                 'firstname' => ['required', 'string', 'max:255'],
                 'lastname'  => ['required', 'string', 'max:255'],
-                'num_tel'   => ['nullable', 'string', 'max:10'],
+                'num_tel'   => ['nullable', 'string', 'regex:/^0[1-9]([ .-]?[0-9]{2}){4}$/'],
                 'photo'     => ['nullable', 'image', 'max:2048'],
                 'Accepte_animaux' => ['boolean'], // Noms des checkbox HTML
                 'Accepte_fumeurs' => ['boolean'],
                 'Accepte_musique' => ['boolean'],
+                'accepte_discussion' => ['required', 'integer', 'min:1', 'max:5'],
+            ],[
+                'firstname.required' => "Votre prénom est obligatoire.",
+                'firstname.max'      => "Ce prénom est un peu trop long.",
+                
+                'lastname.required' => "Votre nom est obligatoire.",
+                'lastname.max'      => "Ce nom est un peu trop long.",
+                
+                'photo.image' => "Le fichier doit être une image (JPG, PNG, etc.).",
+                'photo.max'   => "L'image est trop lourde. La taille maximale est de 2 Mo.",
+                
+                'num_tel.regex' => "Numéro invalide. Format attendu : 06 12 34 56 78.",
+                
+                'accepte_discussion.required' => "Veuillez sélectionner votre niveau de discussion.",
+                'accepte_discussion.min'      => "Valeur de discussion incorrecte.",
+                'accepte_discussion.max'      => "Valeur de discussion incorrecte.",
             ]);
 
             $user = $request->user();
 
-            // 1. Mise à jour User
-            $user->prenom = $validated['firstname'];
-            $user->nom    = $validated['lastname'];
-            $user->num_tel = $validated['num_tel'];
+
+            $user->prenom = Str::title($validated['firstname']); 
+            $user->nom = Str::upper($validated['lastname']);
+
+            if ($request->filled('num_tel')) {
+                $user->num_tel = preg_replace('/[^0-9]/', '', $request->input('num_tel'));
+            } else {
+                $user->num_tel = null; // Si le champ est vide, on met NULL en BDD
+            }
 
             if ($request->hasFile('photo')) {
                 if ($user->photo) {
@@ -193,5 +216,68 @@ class ProfileController extends Controller
         return view('profile.public', [
             'user' => $user,
         ]);
+    }
+
+    /**
+     * Affiche l'historique (colonnes en français)
+     */
+    public function history(Request $request): View
+    {
+        $logins = \App\Models\HistoriqueConnexion::where('id_utilisateur', $request->user()->id)
+                              ->orderBy('date_connexion', 'desc')
+                              ->limit(20)
+                              ->get();
+
+        return view('profile.history', ['logins' => $logins]);
+    }
+
+    /**
+     * Affiche le formulaire de confidentialité
+     */
+    public function privacy(Request $request): View
+    {
+        $user = $request->user()->load('preference');
+        return view('profile.privacy', ['user' => $user]);
+    }
+
+    /**
+     * Sauvegarde la confidentialité
+     */
+    public function updatePrivacy(Request $request)
+    {
+        $user = $request->user();
+        
+        // On s'assure que la ligne préférence existe (sinon erreur)
+        $pref = $user->preference()->firstOrCreate(
+            ['id_utilisateur' => $user->id],
+            ['accepte_discussion' => 1] // Valeur par défaut obligatoire si création
+        );
+
+        // Checkbox cochée = true, sinon false
+        $pref->telephone_public = $request->has('telephone_public');
+        $pref->trajets_publics = $request->has('trajets_publics');
+        
+        $pref->save();
+
+        return back()->with('status', 'privacy-updated');
+    }
+
+    public function updateDiscussion(Request $request)
+    {
+        // On valide que c'est bien un chiffre entre 1 et 5
+        $request->validate([
+            'accepte_discussion' => 'required|integer|min:1|max:5',
+        ]);
+
+        $user = $request->user();
+        
+        // On récupère la préférence
+        $pref = $user->preference()->firstOrCreate(['id_utilisateur' => $user->id]);
+
+        // On enregistre la valeur du curseur
+        $pref->accepte_discussion = $request->input('accepte_discussion');
+        $pref->save();
+
+        return back()->with('status', 'preference-updated');
     }
 }

@@ -11,7 +11,7 @@ class Preference extends Model
 
     protected $table = 'preference'; // Nom de la table
     
-    public $timestamps = false; // Pas de created_at/updated_at dans l'image
+    public $timestamps = false;
 
     protected $fillable = [
         'accepte_animaux',
