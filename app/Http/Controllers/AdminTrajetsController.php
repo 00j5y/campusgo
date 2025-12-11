@@ -28,4 +28,20 @@ class AdminTrajetsController extends Controller
         // 4. Retourner la vue
         return view('admintrajets', compact('trajets', 'stats'));
     }
+
+    public function destroy($id){
+
+        // 1. Sécurité
+        if (Auth::user()->est_admin != 1) {
+            return redirect('/');
+        }
+
+        // 2. Suppression
+        $trajet = Trajet::findOrFail($id);
+        $trajet->delete();
+
+        // 3. Retour
+        return back()->with('success', 'Le trajet a bien été supprimé.');
+
+    }   
 }

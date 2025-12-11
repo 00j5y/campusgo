@@ -38,3 +38,6 @@ Route::middleware(['auth'])->get('/admin-trajets', [AdminTrajetsController::clas
 
 // Route pour SUPPRIMER un utilisateur
 Route::delete('/admin/utilisateurs/{id}', [AdminUtilisateursController::class, 'destroy'])->name('admin.utilisateurs.delete');
+
+// Route pour SUPPRIMER un trajet
+Route::delete('/admin/trajets/{id}', [AdminTrajetsController::class, 'destroy'])->name('admin.trajets.delete');

@@ -8,7 +8,7 @@ class Trajet extends Model
 {
     protected $table = 'trajet';
 
-    protected $primaryKey = 'ID_Trajet';
+    protected $primaryKey = 'id';
 
     public $timestamps = false;
 
