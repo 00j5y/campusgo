@@ -11,7 +11,7 @@ class AdminTrajetsController extends Controller
 {
     public function index()
     {
-        // 1. Sécurité : Vérifie que l'utilisateur est admin
+        // 1. Vérifie que l'utilisateur est admin
         if (Auth::user()->est_admin != 1) {
             return redirect('/');
         }
@@ -19,7 +19,7 @@ class AdminTrajetsController extends Controller
         // 2. Récupérer tous les trajets pour ton tableau
         $trajets = Trajet::all(); 
 
-        // 3. Les Stats pour le Layout (OBLIGATOIRE)
+        // 3. Les Stats pour le tableau de bord du layout admin
         $stats = [
             'users' => User::count(),
             'trajets' => Trajet::count(), 

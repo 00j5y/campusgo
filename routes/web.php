@@ -31,11 +31,9 @@ require __DIR__.'/auth.php';
 
 
 // Route pour la gestion des utilisateurs par l'admin
-
 Route::middleware(['auth'])->get('/admin-utilisateurs', [AdminUtilisateursController::class, 'index'])->name('admin.utilisateurs');
 
 // Route pour la gestion des trajets par l'admin
-
 Route::middleware(['auth'])->get('/admin-trajets', [AdminTrajetsController::class, 'index'])->name('admin.trajets');
 
 // Route pour SUPPRIMER un utilisateur
