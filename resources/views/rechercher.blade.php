@@ -109,7 +109,7 @@
                             </div>
                             <h3 class="text-lg font-bold text-[#333]">Aucun trajet trouvé</h3>
                             <p class="text-gray-500 mt-2 max-w-md mx-auto">Nous n'avons pas trouvé de trajet correspondant à vos critères. Essayez de modifier vos paramètres de recherche ou proposez votre propre trajet !</p>
-                            <a href="{{ route('trajets.create') }}" class="mt-6 inline-block bg-[#2E7D32] text-white px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-[#1b5e20] transition">Proposer un trajet</a>
+                            <a href="#" class="mt-6 inline-block bg-[#2E7D32] text-white px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-[#1b5e20] transition">Proposer un trajet</a>
                         </div>
                     @else
                         <div class="space-y-4">
@@ -151,7 +151,7 @@
             <div class="bg-[#E0E5D5] rounded-3xl p-8 mt-16 text-center">
                 <h3 class="font-bold text-[#333] text-lg mb-2">Prêt à partir ?</h3>
                 <div class="flex justify-center gap-4 mt-4">
-                    <a href="{{ route('trajets.create') }}" class="bg-[#2E7D32] text-white px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-[#1b5e20] transition">Proposer</a>
+                    <a href="#" class="bg-[#2E7D32] text-white px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-[#1b5e20] transition">Proposer</a>
                     <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' });" class="cursor-pointer bg-white text-[#333] px-6 py-2.5 rounded-lg font-bold text-sm border hover:bg-gray-50 transition">Rechercher</button>
                 </div>
                 <h4 class="text-gray-500 text-sm mt-4">Rejoignez la communauté Campus'Go et rendez vos trajets plus agréables.</h4>

@@ -9,7 +9,7 @@ use Carbon\Carbon;
 
 class RechercheController extends Controller
 {
-    public function index(Request $request)
+    public function rechercher(Request $request)
     {
         $user = Auth::user();
         $prenom = $user ? $user->prenom : 'Visiteur';

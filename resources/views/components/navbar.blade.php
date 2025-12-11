@@ -25,7 +25,7 @@
                     </svg>
                     Rechercher
                 </a>
-                <a href="#" class="flex items-center text-gris1 hover:text-vert-principale transition font-medium">
+                <a href="{{ route('trajets.mes-trajets') }}" class="flex items-center text-gris1 hover:text-vert-principale transition font-medium">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
@@ -97,7 +97,7 @@
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 Rechercher
             </a>
-            <a href="#" class="text-gris1 hover:text-vert-principale hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium flex items-center">
+            <a href="{{ route('trajets.mes-trajets') }}" class="text-gris1 hover:text-vert-principale hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium flex items-center">
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                 Mes Trajets
             </a>
