@@ -121,7 +121,6 @@
                         <p class="text-gris1 italic text-center py-4">Cet utilisateur n'a pas renseigné de véhicule.</p>
                     @endforelse
                 </div>
-
             </div>
         </div>
     </div>

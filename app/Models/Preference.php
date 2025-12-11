@@ -9,7 +9,7 @@ class Preference extends Model
 {
     use HasFactory;
 
-    protected $table = 'preference'; // Nom de la table
+    protected $table = 'preference';
     
     public $timestamps = false;
 

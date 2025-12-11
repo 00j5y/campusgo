@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('email', 100)->unique();
             $table->string('num_tel', 10)->nullable();
             $table->string('mdp');
+            $table->string('photo')->nullable();
             $table->boolean('est_admin')->default(false);
             $table->timestamps();
         });

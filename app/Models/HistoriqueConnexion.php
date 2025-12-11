@@ -9,7 +9,6 @@ class HistoriqueConnexion extends Model
     // 1. Nom de la table en français
     protected $table = 'historique_connexions';
 
-    // 2. On désactive les timestamps automatiques (created_at/updated_at)
     // car on utilise notre propre colonne 'date_connexion'
     public $timestamps = false;
 
@@ -21,7 +20,7 @@ class HistoriqueConnexion extends Model
         'date_connexion'
     ];
     
-    // Pour que Laravel gère 'date_connexion' comme une date (Carbon)
+    // Pour que Laravel gère 'date_connexion' comme une date
     protected $casts = [
         'date_connexion' => 'datetime',
     ];

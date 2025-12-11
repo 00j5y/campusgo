@@ -68,14 +68,13 @@ class ProfileController extends Controller
                     Storage::disk('public')->delete($user->photo);
                     }
             
-            // Enregistrer la nouvelle
+            // Enregistrer la nouvelle photo
             $path = $request->file('photo')->store('avatars', 'public');
             $user->photo = $path;
         }
 
             $user->save();
 
-            // 2. Mise à jour Préférences (C'est ce bloc qu'il manquait !)
             // On utilise updateOrCreate pour créer la ligne si elle n'existe pas encore
             $user->preference()->updateOrCreate(
                 ['id_utilisateur' => $user->id], // Condition de recherche
@@ -84,7 +83,7 @@ class ProfileController extends Controller
                     'accepte_animaux'    => $request->Accepte_animaux,
                     'accepte_fumeurs'    => $request->Accepte_fumeurs,
                     'accepte_musique'    => $request->Accepte_musique,
-                    'accepte_discussion' => 1, // Valeur par défaut
+                    'accepte_discussion' => 3, // Valeur par défaut
                 ]
             );
 
@@ -141,37 +140,13 @@ class ProfileController extends Controller
 
         $pref = $user->preference()->firstOrCreate(
             ['id_utilisateur' => $user->id],
-            ['accepte_discussion' => 1] // Valeur par défaut (1 ou 0 pour tinyint)
+            ['accepte_discussion' => 3] 
         );
 
         $pref->$field = ! $pref->$field;
         $pref->save();
 
         return back();
-    }
-
-    /**
-     * Met à jour UNIQUEMENT la photo de profil (Action rapide)
-     */
-    public function updateAvatar(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'Photo' => ['required', 'image', 'max:2048'],
-        ]);
-
-        $user = $request->user();
-
-        // Suppression ancienne photo
-        if ($user->Photo) {
-            Storage::disk('public')->delete($user->Photo);
-        }
-
-        // Sauvegarde nouvelle photo
-        $path = $request->file('Photo')->store('avatars', 'public');
-        $user->Photo = $path;
-        $user->save();
-
-        return back()->with('status', 'avatar-updated'); // "back()" renvoie sur la même page
     }
 
 
@@ -209,7 +184,6 @@ class ProfileController extends Controller
      */
     public function showPublic($id): View
     {
-        // On récupère l'utilisateur demandé avec ses infos
         // 'findOrFail' renvoie une erreur 404 si l'ID n'existe pas
         $user = \App\Models\User::with(['vehicules', 'preference'])->findOrFail($id);
 

@@ -17,9 +17,11 @@
         </div>
 
         <div class="max-w-2xl mx-auto">
-
+            
             @if (session('status') === 'password-updated')
-                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" 
+                <div x-data="{ show: true }" 
+                     x-show="show" 
+                     x-init="setTimeout(() => show = false, 3000)" 
                      class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
                     <strong class="font-bold">Succès !</strong>
                     <span class="block sm:inline">Votre mot de passe a été modifié.</span>
@@ -40,11 +42,10 @@
                 </h2>
 
                 <div class="space-y-6">
-                    
                     <div>
                         <label for="current_password" class="block text-sm text-gris1 mb-2">Mot de passe actuel</label>
                         <input type="password" name="current_password" id="current_password" autocomplete="current-password"
-                            class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm">
+                               class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm">
                         @error('current_password', 'updatePassword') 
                             <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> 
                         @enderror
@@ -53,7 +54,7 @@
                     <div>
                         <label for="password" class="block text-sm text-gris1 mb-2">Nouveau mot de passe</label>
                         <input type="password" name="password" id="password" autocomplete="new-password"
-                            class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm">
+                               class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm">
                         @error('password', 'updatePassword') 
                             <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> 
                         @enderror
@@ -62,12 +63,11 @@
                     <div>
                         <label for="password_confirmation" class="block text-sm text-gris1 mb-2">Confirmer le nouveau mot de passe</label>
                         <input type="password" name="password_confirmation" id="password_confirmation" autocomplete="new-password"
-                            class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm">
+                               class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm">
                         @error('password_confirmation', 'updatePassword') 
                             <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> 
                         @enderror
                     </div>
-
                 </div>
 
                 <div class="flex items-center justify-end gap-4 mt-8 pt-6 border-t border-gray-100">
@@ -78,13 +78,8 @@
                         Mettre à jour
                     </button>
                 </div>
-
             </form>
         </div>
     </div>
-
 </div>
-
-
-
 @endsection

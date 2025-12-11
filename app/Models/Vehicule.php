@@ -9,9 +9,8 @@ class Vehicule extends Model
 {
     use HasFactory;
 
-    protected $table = 'vehicule'; // Nom de la table
+    protected $table = 'vehicule';
 
-    // Pas de timestamps (created_at) dans ta table d'après l'image
     public $timestamps = false; 
 
     protected $fillable = [
@@ -20,7 +19,7 @@ class Vehicule extends Model
         'couleur',
         'nombre_place',
         'immatriculation',
-        'id_utilisateur', // Clé étrangère
+        'id_utilisateur',
     ];
 
     public function user()

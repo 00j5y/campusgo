@@ -19,7 +19,7 @@ class VehiculeController extends Controller
     {
         // 1. Validation
         $request->validate([
-            'Marque' => 'required|string|max:20', // Ici c'est le nom du champ HTML (Majuscule)
+            'Marque' => 'required|string|max:20',
             'Modele' => 'required|string|max:20',
             'Couleur' => 'required|string|max:20',
             'immatriculation' => 'required|string|regex:/^[A-Za-z]{2}[-\s]?[0-9]{3}[-\s]?[A-Za-z]{2}$/',
@@ -48,16 +48,14 @@ class VehiculeController extends Controller
         // 2. Création
         $vehicule = new Vehicule();
         
-        // À GAUCHE : Nom de la colonne BDD (minuscule)
-        // À DROITE : Nom du champ Formulaire (Majuscule)
         $vehicule->marque = Str::title($request->Marque);
         $vehicule->modele = Str::title($request->Modele);
         $vehicule->couleur = Str::title($request->Couleur);
         $vehicule->immatriculation = strtoupper($cleanImmat);
 
-        $vehicule->nombre_place = $request->NombrePlace; // Attention au _
+        $vehicule->nombre_place = $request->NombrePlace;
         
-        $vehicule->id_utilisateur = Auth::id(); // Clé étrangère en minuscule
+        $vehicule->id_utilisateur = Auth::id();
 
         $vehicule->save();
 
@@ -67,7 +65,7 @@ class VehiculeController extends Controller
 
     public function destroy($id)
         {
-            // On cherche le véhicule par son 'id' (nouvelle BDD)
+            // On cherche le véhicule par son 'id'
             // Et on vérifie toujours qu'il appartient à l'utilisateur (id_utilisateur)
             $vehicule = Vehicule::where('id', $id) 
                                 ->where('id_utilisateur', Auth::id())

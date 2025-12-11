@@ -5,6 +5,7 @@
 @section('content')
 <div class="bg-gray-50 min-h-screen py-12">
     <div class="container mx-auto px-4 max-w-4xl">
+        
         <div class="mb-8 flex items-center justify-between">
             <div>
                 <h1 class="text-2xl font-bold text-noir">Historique de connexion</h1>

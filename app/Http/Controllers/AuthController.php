@@ -38,16 +38,15 @@ class AuthController extends Controller
 
     public function register(Request $request)
         {
-            // 1. Validation (Noms du formulaire HTML en ANGLAIS)
+            // 1. Validation
             $request->validate([
                 'firstname' => ['required', 'string', 'max:255'],
                 'lastname'  => ['required', 'string', 'max:255'],
-                // Vérifie l'unicité dans la table 'utilisateur'
                 'email'     => ['required', 'string', 'email', 'max:255', 'unique:utilisateur'],
                 'password'  => ['required', 'confirmed', Rules\Password::defaults()],
             ]);
 
-            // 2. Création (Mapping vers la BDD en FRANÇAIS)
+            // 2. Création
             $user = User::create([
                 'prenom' => $request->firstname,
                 'nom'    => $request->lastname,
