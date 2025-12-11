@@ -24,8 +24,6 @@
                 </svg>
                 Réutiliser le trajet précédent
             </h2>
-            
-            <svg class="w-5 h-5 text-gris1 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
         </div>
 
         <p class="text-gris1 mb-3 text-sm">
@@ -106,7 +104,7 @@
                     Lieu d'Arrivée
                 </label>
                 <input type="text" name="lieu_arrivee" id="lieu_arrivee" value="IUT Amiens, Avenue des Facultés" class="w-full border rounded-md shadow-sm p-3 border-gray-300" required>
-                @error('lieu_arrivee')
+                @error('lieu_arrivee_min')
                 <p class="text-red-500 text-xs italic mt-1">Le lieu de départ et le lieu d'arrivée ne peuvent pas être identiques.</p>
                 @enderror
             </div>

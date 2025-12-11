@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Trajet; 
 use App\Models\Vehicule;
@@ -47,15 +48,31 @@ class TrajetController extends Controller
             return redirect()->route('login');
         }
 
+        $lieuDepartMin = strtolower($request->input('lieu_depart'));
+        $lieuArriveeMin = strtolower($request->input('lieu_arrivee')); 
+
+        $request->merge([
+        'lieu_depart_min' => $lieuDepartMin,
+        'lieu_arrivee_min' => $lieuArriveeMin,
+        ]);
+
         //Validation des données
         $validatedData = $request->validate([
-            // Correspond au nouveau schéma BDD Trajet
             'lieu_depart' => 'required|string|max:100',
-            'lieu_arrivee' => 'required|string|max:100|different:lieu_depart',
+            'lieu_arrivee' => [
+             'required', 
+             'string', 
+             'max:100',
+             // La validation sera faite sur lieu_arrivee (original) MAIS 
+             // nous ajoutons une vérification sur les versions en minuscules.
+        ],
+        'lieu_arrivee_min' => [
+            Rule::notIn([$lieuDepartMin]), // Vérification notIn sur le champ en minuscules
+        ],
             'date_depart' => 'required|date|after_or_equal:today',
             'heure_depart' => 'required|date_format:H:i',
             'places_disponibles' => 'required|integer|min:1|max:7',
-            'id_vehicule' => 'required|exists:vehicule,id', // S'assure que l'ID existe dans la table 'vehicule'
+            'id_vehicule' => 'required|exists:vehicule,id', 
         ]);
 
         //Enregistrement du Trajet
