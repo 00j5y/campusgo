@@ -4,7 +4,7 @@
 
 @section('content')
 <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 max-w-4xl">
-    <header class="mb-10 mt-25 text-center">
+    <header class="mb-10 mt-6 text-center">
         <h1 class="text-3xl font-semibold text-noir">Proposez votre covoiturage IUT</h1>
         <p class="mt-2 text-gris1">Remplissez les informations ci-dessous pour publier votre trajet</p>
     </header>
@@ -103,7 +103,7 @@
                     <svg class="w-4 h-4 mr-1 text-vert-principale" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg>
                     Lieu d'Arrivée
                 </label>
-                <input type="text" name="lieu_arrivee" id="lieu_arrivee" value="IUT Amiens, Avenue des Facultés" class="w-full border rounded-md shadow-sm p-3 border-gray-300" required>
+                <input type="text" name="lieu_arrivee" id="lieu_arrivee" placeholder="Entrez votre adresse d'arrivée" class="w-full border rounded-md shadow-sm p-3 border-gray-300" required>
                 @error('lieu_arrivee_min')
                 <p class="text-red-500 text-xs italic mt-1">Le lieu de départ et le lieu d'arrivée ne peuvent pas être identiques.</p>
                 @enderror
@@ -218,10 +218,5 @@
     </div>
 </main>
 @endsection
-
-<!-- JS pour le bouton "Utiliser" -->
 @section('scripts')
-<script>
-
-</script>
 @endsection
