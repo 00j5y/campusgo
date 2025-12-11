@@ -29,29 +29,52 @@ class AdminUtilisateursController extends Controller
         return view('adminutilisateurs', compact('users', 'stats'));
     }
 
-    public function destroy($id)
-{
-    // 1. Sécurité
-    if (Auth::user()->est_admin != 1) {
-        return redirect('/');
+    public function destroy($id){
+
+        // 1. Sécurité
+        if (Auth::user()->est_admin != 1) {
+            return redirect('/');
+        }
+
+        // 2. On trouve l'utilisateur
+        $user = User::findOrFail($id);
+
+        // 3. Sécurité : On empêche de se supprimer soi-même !
+        if ($user->id === Auth::id()) {
+            return back()->with('error', 'Vous ne pouvez pas supprimer votre propre compte.');
+        }
+
+        // 4. On supprime
+        $user->delete();
+
+        // 5. On revient à la liste
+        return back()->with('success', 'Utilisateur supprimé définitivement.');
     }
 
-    // 2. On trouve l'utilisateur
-    $user = User::findOrFail($id);
 
-    // 3. Sécurité : On empêche de se supprimer soi-même !
-    if ($user->id === Auth::id()) {
-        return back()->with('error', 'Vous ne pouvez pas supprimer votre propre compte.');
+    public function toggleSuspend($id){
+
+        // 1. Sécurité : Seul un admin peut faire ça
+        if (Auth::user()->est_admin != 1) {
+            return redirect('/');
+        }
+
+        // 2. On récupère l'utilisateur ciblé
+        $user = User::findOrFail($id);
+
+        // 3. Protection : Interdit de se suspendre soi-même (sinon tu perds l'accès admin !)
+        if ($user->id === Auth::id()) {
+            return back()->with('error', 'Vous ne pouvez pas suspendre votre propre compte.');
+        }
+
+        // 4. L'Interrupteur : On inverse la valeur ( !0 devient 1, !1 devient 0 )
+        $user->est_suspendu = ! $user->est_suspendu;
+        $user->save();
+
+        // 5. Petit message sympa pour confirmer
+        $etat = $user->est_suspendu ? 'suspendu' : 'réactivé';
+        return back()->with('success', "Le compte a bien été $etat.");
     }
-
-    // 4. On supprime
-    $user->delete();
-
-    // 5. On revient à la liste
-    return back()->with('success', 'Utilisateur supprimé définitivement.');
-}
-
-
 
 }
 

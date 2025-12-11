@@ -58,18 +58,33 @@
                         </td>
 
                         <td class="px-6 py-4 text-center">
-                            {{-- ICI il faudra lier ça à une colonne 'est_suspendu' dans ta BDD plus tard --}}
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
-                                Actif
-                            </span>
+                            @if($user->est_suspendu)
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 border border-red-200">
+                                    Suspendu
+                                </span>
+                            @else
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+                                    Actif
+                                </span>
+                            @endif
                         </td>
 
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end space-x-4">
                                 
-                                <button title="Empêcher la connexion" class="px-3 py-1.5 bg-white border border-gray-300 text-gray-700 text-xs font-medium rounded hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200 transition">
-                                    Suspendre
-                                </button>
+                                <form action="{{ route('admin.utilisateurs.suspend', $user->id) }}" method="POST" class="inline-block">
+                                    @csrf
+                                    
+                                    @if($user->est_suspendu)
+                                        <button type="submit" class="px-3 py-1.5 bg-green-50 border border-green-200 text-green-700 text-xs font-medium rounded hover:bg-green-100 transition shadow-sm">
+                                            Réactiver
+                                        </button>
+                                    @else
+                                        <button type="submit" class="px-3 py-1.5 bg-white border border-gray-300 text-gray-700 text-xs font-medium rounded hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200 transition shadow-sm">
+                                            Suspendre
+                                        </button>
+                                    @endif
+                                </form>
                                 
                                 <form action="{{ route('admin.utilisateurs.delete', $user->id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement ce compte ?');">
                                     @csrf

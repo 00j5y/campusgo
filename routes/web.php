@@ -41,3 +41,6 @@ Route::delete('/admin/utilisateurs/{id}', [AdminUtilisateursController::class, '
 
 // Route pour SUPPRIMER un trajet
 Route::delete('/admin/trajets/{id}', [AdminTrajetsController::class, 'destroy'])->name('admin.trajets.delete');
+
+// Route pour SUSPENDRE/REACTIVER un utilisateur
+Route::post('/admin/utilisateurs/{id}/suspend', [AdminUtilisateursController::class, 'toggleSuspend'])->name('admin.utilisateurs.suspend');
