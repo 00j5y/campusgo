@@ -102,6 +102,13 @@
                 <p class="text-xs text-gris1 mt-1">Exemple : 15 Rue des Étudiants, Amiens</p>
             </div>
 
+            <!-- Inverser le lieu de départ et le lieu d'arrivée -->
+            <div class="flex justify-center -my-2">
+                <button type="button" id="btn-inverser-lieux" class="bg-gray-100 hover:bg-gray-200 text-gris1 p-2 rounded-full transition transform rotate-90 cursor-pointer">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                </button>
+            </div>
+
 
             <!-- Lieu d'arrivée -->
             <div>
