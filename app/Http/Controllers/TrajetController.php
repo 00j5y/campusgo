@@ -36,7 +36,7 @@ class TrajetController extends Controller
 
         }
 
-        //Transmet les variables à la page "proposer-un-trajet" donc "resources/views/trajets/create.blade.php"
+        //Transmet les variables à la page "proposer-un-trajet"
         return view('trajets.create', compact('dernierTrajet', 'vehicules'));
     }
 
@@ -71,7 +71,25 @@ class TrajetController extends Controller
             'heure_arrivee' => '00:00:00', 
         ]);
         
-        // 4.Redirection après publication
-        return redirect()->route('accueil')->with('success', 'Votre trajet a été publié avec succès!');
+        //Redirection après publication
+        $request->session()->flash('success_message', 'Votre trajet a été publié avec succès!');
+
+        return redirect()->route('trajets.confirmation');
     }
+
+    //Confirmation de la création du trajet
+    public function confirmation(){
+        if(!Auth::check()){
+            return redirect()->route('login');
+        }
+        $message = session('success_message');
+
+        //Evite d'acceder à la page si on n'a pas créé de trajet 
+        if(!$message){
+            return redirect()->route('accueil');
+        }
+
+        return view('trajets.confirmation', compact('message'));
+    }
+
 }

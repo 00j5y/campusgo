@@ -61,8 +61,7 @@
                         <!-- Places -->
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-5a3 3 0 00-3-3H9a3 3 0 00-3 3v5H1V7a3 3 0 013-3h16a3 3 0 013 3v13H17zM12 11a4 4 0 100-8 4 4 0 000 8z"></path></svg>
                         <span>{{ $dernierTrajet->place_disponible }}</span>
-                    </div>
-                    
+                    </div> 
                 </div>
             <button type="button" class="bg-vert-principale text-white px-4 py-2 rounded-md font-medium hover:bg-vert-principal-h transition shadow-sm flex items-center shrink-0 cursor-pointer"
             id="btn-utiliser">
@@ -108,10 +107,9 @@
                 </label>
                 <input type="text" name="lieu_arrivee" id="lieu_arrivee" value="IUT Amiens, Avenue des Facultés" class="w-full border rounded-md shadow-sm p-3 border-gray-300" required>
                 @error('lieu_arrivee')
-                <p class="text-red-500 text-xs italic mt-1">Le lieu de départ et le lieu d'arrivée ne peuvent pas être identiques</p>
+                <p class="text-red-500 text-xs italic mt-1">Le lieu de départ et le lieu d'arrivée ne peuvent pas être identiques.</p>
                 @enderror
             </div>
-
 
             <!-- Date -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -123,7 +121,7 @@
                     </label>
                     <input type="date" name="date_depart" id="date_depart" class="w-full border border-gray-300 rounded-md shadow-sm p-3 " required>
                     @error('date_depart')
-                    <p class="text-red-500 text-xs italic mt-1">Le champ « Date » doit correspondre à une date ultérieure ou égale à aujourd'hui.</p>
+                    <p class="text-red-500 text-xs italic mt-1">Le champ « Date » doit correspondre à une date suppérieur ou égale à celle d'aujourd'hui.</p>
                     @enderror
                 </div>
 
@@ -221,4 +219,11 @@
         </div>
     </div>
 </main>
+@endsection
+
+<!-- JS pour le bouton "Utiliser" -->
+@section('scripts')
+<script>
+
+</script>
 @endsection
