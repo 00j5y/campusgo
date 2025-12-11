@@ -32,7 +32,14 @@
 
         <!-- Si l'utilisateur a déjà créé un trajet -->
         @isset($dernierTrajet)
-            <div class="bg-white border border-gray-200 rounded-lg p-4 flex justify-between items-center">
+            <div 
+            id="dernier-trajet-data"
+            js-depart="{{ $dernierTrajet->lieu_depart}}"
+            js-arrivee="{{ $dernierTrajet->lieu_arrivee}}"
+            js-heure="{{ \Carbon\Carbon::parse($dernierTrajet->heure_depart)->format('H:i') }}"
+            js-places="{{ $dernierTrajet->place_disponible}}"
+            js-vehicule="{{ $dernierTrajet->id_vehicule}}"
+            class="bg-white border border-gray-200 rounded-lg p-4 flex justify-between items-center">
                 
                 <div class="text-sm">
                     
@@ -61,9 +68,9 @@
                         <span>{{ $dernierTrajet->place_disponible }}</span>
                     </div> 
                 </div>
-            <button type="button" class="bg-vert-principale text-white px-4 py-2 rounded-md font-medium hover:bg-vert-principal-h transition shadow-sm flex items-center shrink-0 cursor-pointer"
-            id="btn-utiliser">
-            Utiliser
+                    <button type="button" class="bg-vert-principale text-white px-4 py-2 rounded-md font-medium hover:bg-vert-principal-h transition shadow-sm flex items-center shrink-0 cursor-pointer"
+                    id="btn-utiliser">
+                    Utiliser
             </button>
             </div>
         

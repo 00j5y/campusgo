@@ -78,4 +78,67 @@ document.addEventListener('DOMContentLoaded', function() {
         
         initializeFields(); 
     }
+
+    // ---------------- Bouton "Utiliser" ----------------------
+
+    const useButton = document.getElementById('btn-utiliser'); 
+    const dataContainer = document.getElementById('dernier-trajet-data'); 
+
+    if (useButton && dataContainer) {
+        useButton.addEventListener('click', function() {
+            
+            //Récupération des données du dernier trajet (via les attributs de données du Blade)
+            const depart = dataContainer.getAttribute('js-depart');
+            const arrivee = dataContainer.getAttribute('js-arrivee');
+            const heure = dataContainer.getAttribute('js-heure');
+            const places = dataContainer.getAttribute('js-places');
+            const vehiculeId = dataContainer.getAttribute('js-vehicule');
+
+            // On active le flag pour que le script ignore les changements de valeur
+            isProgrammaticChange = true;
+            
+            //Déterminer quel champ était l'IUT dans le trajet précédent
+            const dernierDepartEstIUT = depart.toLowerCase() === iutAddress.toLowerCase();
+            const dernierArriveeEstIUT = arrivee.toLowerCase() === iutAddress.toLowerCase();
+            
+            //Application de la Contrainte IUT et remplissage des champs de Lieu
+            if (dernierDepartEstIUT) {
+                // Trajet précédent: Le DEPART doit être IUT qui est bloqué
+                // Départ Bloqué sur IUT
+                setInputState(departInput, true, depart); 
+                
+                //Arrivée: Débloqué et reçoit l'adresse de la ville
+                setInputState(arriveeInput, false, arrivee); 
+                
+            } else if (dernierArriveeEstIUT) {
+                //Trajet précédent: L'ARRIVÉE doit être IUT qui est bloquée
+                
+                //Arrivée Bloqué sur IUT
+                setInputState(arriveeInput, true, arrivee); 
+                
+                //Départ Débloqué et reçoit l'adresse de la ville
+                setInputState(departInput, false, depart); 
+                
+            } else {
+                //Cas d'erreur ou cas où l'IUT n'était ni en départ ni en arrivée (doit être géré par la validation)
+                departInput.value = depart; 
+                arriveeInput.value = arrivee;
+                
+                //On applique la contrainte manuellement (force l'arrivée à l'IUT)
+                setInputState(arriveeInput, true, arrivee); 
+                setInputState(departInput, false, depart);
+            }
+
+            //Remplissage des autres champs (Heure, Places, Véhicule)
+            document.getElementById('heure_depart').value = heure;
+            document.getElementById('places_disponibles').value = places;
+            const selectVehicule = document.getElementById('vehicule_id');
+            if (selectVehicule) {
+                selectVehicule.value = vehiculeId;
+            }
+
+            isProgrammaticChange = false;
+        });
+    }
+
 });
