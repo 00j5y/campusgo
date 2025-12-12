@@ -66,36 +66,35 @@
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="firstname" class="block text-sm text-gris1 mb-2">Prénom</label>
-                            <input type="text" name="firstname" id="firstname" 
-                                   value="{{ old('firstname', $user->prenom) }}" 
-                                   class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm">
-                            @error('firstname') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                        </div>
+                        
+                        <x-input-text 
+                            name="firstname" 
+                            label="Prénom" 
+                            :value="$user->prenom" 
+                        />
 
-                        <div>
-                            <label for="lastname" class="block text-sm text-gris1 mb-2">Nom</label>
-                            <input type="text" name="lastname" id="lastname" 
-                                   value="{{ old('lastname', $user->nom) }}" 
-                                   class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm">
-                            @error('lastname') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                        </div>
+                        <x-input-text 
+                            name="lastname" 
+                            label="Nom" 
+                            :value="$user->nom" 
+                        />
 
                         <div class="md:col-span-2">
-                            <label for="email" class="block text-sm text-gris1 mb-2">Email Universitaire</label>
-                            <input type="email" name="email" id="email" 
-                                   value="{{ old('email', $user->email) }}" 
-                                   class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm bg-gray-50 text-gray-500 cursor-not-allowed" readonly>
+                            <x-input-text 
+                                name="email" 
+                                label="Email Universitaire" 
+                                type="email" 
+                                :value="$user->email" 
+                                readonly 
+                            />
                         </div>
 
-                        <div>
-                            <label for="num_tel" class="block text-sm text-gris1 mb-2">Téléphone</label>
-                            <input type="text" name="num_tel" id="num_tel" 
-                                   value="{{ old('num_tel', $user->num_tel) }}" 
-                                   class="w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm"
-                                   placeholder="06 12 34 56 78">
-                        </div>
+                        <x-input-text 
+                            name="num_tel" 
+                            label="Téléphone" 
+                            :value="$user->num_tel" 
+                            placeholder="06 12 34 56 78" 
+                        />
                     </div>
                 </div>
 
@@ -108,80 +107,30 @@
                     </h2>
                     
                     <div class="space-y-6">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <img src="{{ asset('images/accueil/icones/patte.png') }}" class="size-6 object-contain">
-                                <div><h4 class="font-semibold text-noir">Accepter les animaux</h4></div>
-                            </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="hidden" name="Accepte_animaux" value="0">
-                                <input type="checkbox" name="Accepte_animaux" value="1" class="sr-only peer" 
-                                       {{ old('Accepte_animaux', $user->preference?->accepte_animaux) ? 'checked' : '' }}>
-                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-vert-principale/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vert-principale"></div>
-                            </label>
-                        </div>
+                        <x-preference-row icon="patte" title="Accepter les animaux">
+                            <input type="hidden" name="Accepte_animaux" value="0">
+                            <x-toggle name="Accepte_animaux" 
+                                      :checked="old('Accepte_animaux', $user->preference?->accepte_animaux)" />
+                        </x-preference-row>
 
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <img src="{{ asset('images/accueil/icones/cigarette.png') }}" class="size-6 object-contain">
-                                <div><h4 class="font-semibold text-noir">Fumeur</h4></div>
-                            </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="hidden" name="Accepte_fumeurs" value="0">
-                                <input type="checkbox" name="Accepte_fumeurs" value="1" class="sr-only peer"
-                                       {{ old("Accepte_fumeurs", $user->preference?->accepte_fumeurs) ? 'checked' : '' }}>
-                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-vert-principale/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vert-principale"></div>
-                            </label>
-                        </div>
+                        <x-preference-row icon="cigarette" title="Fumeur">
+                            <input type="hidden" name="Accepte_fumeurs" value="0">
+                            <x-toggle name="Accepte_fumeurs" 
+                                      :checked="old('Accepte_fumeurs', $user->preference?->accepte_fumeurs)" />
+                        </x-preference-row>
 
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <img src="{{ asset('images/accueil/icones/musique.png') }}" class="size-6 object-contain">
-                                <div><h4 class="font-semibold text-noir">Musique</h4></div>
-                            </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="hidden" name="Accepte_musique" value="0">
-                                <input type="checkbox" name="Accepte_musique" value="1" class="sr-only peer"
-                                       {{ old("Accepte_musique", $user->preference?->accepte_musique) ? 'checked' : '' }}>
-                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-vert-principale/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vert-principale"></div>
-                            </label>
-                        </div>
+                        <x-preference-row icon="musique" title="Musique">
+                            <input type="hidden" name="Accepte_musique" value="0">
+                            <x-toggle name="Accepte_musique" 
+                                      :checked="old('Accepte_musique', $user->preference?->accepte_musique)" />
+                        </x-preference-row>
                     </div>
 
-                    <div class="p-4 rounded-xl border border-gray-100 bg-gray-50/50 mt-4">
-                        <div class="flex items-center gap-4 mb-3">
-                            <div class="mt-1 shrink-0 text-vert-principale">
-                                <img src="{{ asset('images/accueil/icones/discussion.png') }}" alt="Discussion" class="size-6 object-contain">
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-noir">Envie de discuter ?</h4>
-                                <p class="text-sm text-gris1">Quel genre de personne es-tu ?</p>
-                            </div>
-                        </div>
+                    <x-preference-slider 
+                        name="accepte_discussion" 
+                        :value="old('accepte_discussion', $user->preference?->accepte_discussion ?? 3)" 
+                    />
 
-                        <div class="relative w-full px-2">
-                            <div class="flex justify-between text-xs font-medium text-gris1 mb-2">
-                                <span>Très Timide</span>
-                                <span>Timide</span>
-                                <span>Ni l'un ni l'autre</span>
-                                <span>Bavard</span>
-                                <span>Très Bavard</span>
-                            </div>
-
-                            <input type="range" 
-                                   name="accepte_discussion" 
-                                   min="1" max="5" step="1" 
-                                   value="{{ old('accepte_discussion', $user->preference?->accepte_discussion ?? 3) }}" 
-                                   class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                                   style="accent-color: #68A35E;"> 
-                            
-                            <div class="flex justify-between w-full px-1 mt-1">
-                                @for ($i = 0; $i < 5; $i++)
-                                    <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
-                                @endfor
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="flex items-center justify-end gap-4 mt-6">

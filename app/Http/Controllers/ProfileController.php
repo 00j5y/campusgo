@@ -173,7 +173,7 @@ class ProfileController extends Controller
         ]);
 
         $request->user()->update([
-            'password' => Hash::make($validated['password']),
+            'mdp' => Hash::make($validated['password']),
         ]);
 
         return back()->with('status', 'password-updated');
@@ -206,18 +206,18 @@ class ProfileController extends Controller
     }
 
     /**
-     * Affiche le formulaire de confidentialité
+     * Affiche le formulaire de paramètres
      */
-    public function privacy(Request $request): View
+    public function setup(Request $request): View
     {
         $user = $request->user()->load('preference');
-        return view('profile.privacy', ['user' => $user]);
+        return view('profile.setup', ['user' => $user]);
     }
 
     /**
      * Sauvegarde la confidentialité
      */
-    public function updatePrivacy(Request $request)
+    public function updateSetup(Request $request)
     {
         $user = $request->user();
         
@@ -233,7 +233,7 @@ class ProfileController extends Controller
         
         $pref->save();
 
-        return back()->with('status', 'privacy-updated');
+        return back()->with('status', 'setup-updated');
     }
 
     public function updateDiscussion(Request $request)

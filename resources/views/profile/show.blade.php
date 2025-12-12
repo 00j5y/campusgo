@@ -6,35 +6,7 @@
 <div class="bg-gray-50 min-h-screen py-12">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
 
-        @if (session('status'))
-            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" 
-                class="mb-6 border px-4 py-3 rounded relative 
-                {{ session('status') === 'vehicle-deleted' ? 'bg-red-100 border-red-400 text-red-700' : 'bg-green-100 border-green-400 text-green-700' }}" role="alert">
-                
-                <strong class="font-bold">
-                    {{ session('status') === 'vehicle-deleted' ? '' : 'Succès !' }}
-                </strong>
-
-                <span class="block sm:inline">
-                    @switch(session('status'))
-                        @case('profile-updated')
-                            Votre profil a été mis à jour.
-                            @break
-                        @case('password-updated')
-                            Votre mot de passe a été modifié.
-                            @break
-                        @case('vehicle-added')
-                            Votre véhicule a été ajouté avec succès.
-                            @break
-                        @case('vehicle-deleted')
-                            Votre véhicule a bien été supprimé.
-                            @break
-                        @default
-                            Opération effectuée.
-                    @endswitch
-                </span>
-            </div>
-        @endif
+        <x-flash-message />
         
         <div class="mb-10">
             <h1 class="text-3xl font-bold text-noir">Mon Profil</h1>
@@ -143,91 +115,49 @@
                     </h2>
                     <div class="space-y-6">
                         
-                        <div class="flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-vert-principale/30 transition-colors bg-gray-50/50">
-                            <div class="flex items-center gap-4">
-                                <div class="mt-1 shrink-0 text-vert-principale"><img src="{{ asset('images/accueil/icones/patte.png') }}" alt="Animaux" class="size-6 object-contain"></div>
-                                <div><h4 class="font-semibold text-noir">Accepter les animaux</h4><p class="text-sm text-gris1">Autoriser les animaux de compagnie</p></div>
-                            </div>
+                        <x-preference-row icon="patte" title="Accepter les animaux" subtitle="Autoriser les animaux de compagnie">
                             <form action="{{ route('preference.toggle') }}" method="POST">
                                 @csrf @method('PATCH')
                                 <input type="hidden" name="field" value="accepte_animaux">
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" onchange="this.form.submit()" class="sr-only peer" {{ $user->preference?->accepte_animaux ? 'checked' : '' }}>
-                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-vert-principale/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vert-principale"></div>
-                                </label>
+                                
+                                <x-toggle name="toggle_animaux" 
+                                        :checked="$user->preference?->accepte_animaux" 
+                                        onchange="this.form.submit()" />
                             </form>
-                        </div>
+                        </x-preference-row>
 
-                        <div class="flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-vert-principale/30 transition-colors bg-gray-50/50">
-                            <div class="flex items-center gap-4">
-                                <div class="mt-1 shrink-0 text-vert-principale"><img src="{{ asset('images/accueil/icones/cigarette.png') }}" alt="Fumeur" class="size-6 object-contain"></div>
-                                <div><h4 class="font-semibold text-noir">Fumeur</h4><p class="text-sm text-gris1">Autoriser de fumer dans le véhicule</p></div>
-                            </div>
+                        <x-preference-row icon="cigarette" title="Fumeur" subtitle="Autoriser de fumer dans le véhicule">
                             <form action="{{ route('preference.toggle') }}" method="POST">
                                 @csrf @method('PATCH')
                                 <input type="hidden" name="field" value="accepte_fumeurs">
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" onchange="this.form.submit()" class="sr-only peer" {{ $user->preference?->accepte_fumeurs ? 'checked' : '' }}>
-                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vert-principale"></div>
-                                </label>
+                                
+                                <x-toggle name="toggle_fumeurs" 
+                                        :checked="$user->preference?->accepte_fumeurs" 
+                                        onchange="this.form.submit()" />
                             </form>
-                        </div>
+                        </x-preference-row>
 
-                        <div class="flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-vert-principale/30 transition-colors bg-gray-50/50">
-                            <div class="flex items-center gap-4">
-                                <div class="mt-1 shrink-0 text-vert-principale"><img src="{{ asset('images/accueil/icones/musique.png') }}" alt="Musique" class="size-6 object-contain"></div>
-                                <div><h4 class="font-semibold text-noir">Musique</h4><p class="text-sm text-gris1">Écouter de la musique pendant le trajet</p></div>
-                            </div>
+                        <x-preference-row icon="musique" title="Accepter la musique" subtitle="Autoriser l'écoute de musique dans le véhicule">'">
                             <form action="{{ route('preference.toggle') }}" method="POST">
                                 @csrf @method('PATCH')
                                 <input type="hidden" name="field" value="accepte_musique">
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" onchange="this.form.submit()" class="sr-only peer" {{ $user->preference?->accepte_musique ? 'checked' : '' }}>
-                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vert-principale"></div>
-                                </label>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="p-4 rounded-xl border border-gray-100 bg-gray-50/50 mt-4">
-                        <div class="flex items-center gap-4 mb-3">
-                            <div class="mt-1 shrink-0 text-vert-principale">
-                                <img src="{{ asset('images/accueil/icones/discussion.png') }}" alt="Discussion" class="size-6 object-contain">
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-noir">Envie de discuter ?</h4>
-                                <p class="text-sm text-gris1">Quel genre de personne es-tu ?</p>
-                            </div>
-                        </div>
-
-                        <form action="{{ route('preference.discussion') }}" method="POST" class="px-2">
-                            @csrf @method('PATCH')
-                            
-                            <div class="relative w-full">
-                                <div class="flex justify-between text-xs font-medium text-gris1 mb-2">
-                                    <span>Très Timide</span>
-                                    <span>Timide</span>
-                                    <span>Ni l'un ni l'autre</span>
-                                    <span>Bavard</span>
-                                    <span>Très Bavard</span>
-                                </div>
-
-                                <input type="range" 
-                                    name="accepte_discussion" 
-                                    min="1" max="5" step="1" 
-                                    value="{{ $user->preference?->accepte_discussion ?? 3 }}" 
-                                    onchange="this.form.submit()"
-                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                                    style="accent-color: #68A35E;"> 
                                 
-                                <div class="flex justify-between w-full px-1 mt-1">
-                                    @for ($i = 0; $i < 5; $i++)
-                                        <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
-                                    @endfor
-                                </div>
-                            </div>
-                        </form>
+                                <x-toggle name="toggle_musique" 
+                                        :checked="$user->preference?->accepte_musique" 
+                                        onchange="this.form.submit()" />
+                            </form>
+                        </x-preference-row>
                     </div>
+
+                    <form action="{{ route('preference.discussion') }}" method="POST">
+                        @csrf @method('PATCH')
+                        <x-preference-slider 
+                            name="accepte_discussion" 
+                            :value="$user->preference?->accepte_discussion ?? 3" 
+                            :autosubmit="true" 
+                        />
+                    </form>
+                    
                 </div>
             </div>
 
@@ -246,7 +176,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                         </a>
                         <hr class="border-gray-100">
-                        <a href="{{ route('profile.privacy') }}" class="block text-gris1 hover:text-vert-principale transition-colors flex justify-between">
+                        <a href="{{ route('profile.setup') }}" class="block text-gris1 hover:text-vert-principale transition-colors flex justify-between">
                             Paramètres
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                         </a>

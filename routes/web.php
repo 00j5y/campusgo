@@ -44,8 +44,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/membre/{id}', [App\Http\Controllers\ProfileController::class, 'showPublic'])->name('profile.public');
 
     Route::get('/profile/history', [ProfileController::class, 'history'])->name('profile.history');
-    Route::get('/profile/privacy', [ProfileController::class, 'privacy'])->name('profile.privacy');
-    Route::patch('/profile/privacy', [ProfileController::class, 'updatePrivacy'])->name('profile.privacy.update');
+    Route::get('/profile/setup', [ProfileController::class, 'setup'])->name('profile.setup');
+    Route::patch('/profile/setup', [ProfileController::class, 'updateSetup'])->name('profile.setup.update');
 
     Route::patch('/profile/preference/discussion', [ProfileController::class, 'updateDiscussion'])->name('preference.discussion');
 });
