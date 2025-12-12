@@ -8,8 +8,6 @@ class Trajet extends Model
 {
     protected $table = 'trajet';
 
-    protected $primaryKey = 'ID_Trajet';
-
     public $timestamps = false;
 
     protected $fillable = [
