@@ -65,7 +65,7 @@ class User extends Authenticatable
     public function reservations()
     {
         return $this->belongsToMany(Trajet::class, 'reserver', 'id_utilisateur', 'id_trajet');
-
+    }
     
     public function vehicules() {
         return $this->hasMany(Vehicule::class, 'id_utilisateur', 'id');
