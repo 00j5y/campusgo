@@ -56,3 +56,5 @@ Route::middleware('auth')->group(function () {
 
     Route::patch('/profile/preference/discussion', [ProfileController::class, 'updateDiscussion'])->name('preference.discussion');
 });
+
+require __DIR__.'/auth.php';

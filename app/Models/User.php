@@ -18,8 +18,6 @@ class User extends Authenticatable
     protected $primaryKey = 'id'; 
     public $incrementing = true;
 
-    public $timestamps = false;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -33,6 +31,8 @@ class User extends Authenticatable
         'photo',
         'num_tel',
         'est_admin',
+        'created_at',
+        'updated_at'
     ];
 
     protected $hidden = [
@@ -61,10 +61,6 @@ class User extends Authenticatable
     public function reservations()
     {
         return $this->belongsToMany(Trajet::class, 'reserver', 'id_utilisateur', 'id_trajet');
-    }
-    
-    public function vehicules() {
-        return $this->hasMany(Vehicule::class, 'id_utilisateur', 'id');
     }
 
     public function trajets() {
