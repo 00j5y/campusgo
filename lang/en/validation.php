@@ -2,6 +2,15 @@
 
 return [
 
+
+    'custom' => [
+    'lieu_arrivee_min' => [ 
+        'not_in' => 'Le lieu de départ et le lieu d\'arrivée ne peuvent pas être identiques.', 
+    ],
+    ],
+
+    
+
     /*
     |--------------------------------------------------------------------------
     | Validation Language Lines
@@ -196,5 +205,6 @@ return [
     */
 
     'attributes' => [],
+    
 
 ];
