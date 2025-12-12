@@ -11,22 +11,23 @@ class AdminUtilisateursController extends Controller
 {
     public function index()
     {
-        // 1. La sécurité
+        // 1. Sécurité
         if (Auth::user()->est_admin != 1) {
             return redirect('/');
         }
 
-        // 2. Récupérer les utilisateurs pour le tableau
-        $users = User::all();
+        // 2. Récupération des utilisateurs
+        $users = User::orderBy('date_creation', 'desc')->paginate(10);
 
-        // 3. Récupérer les statistiques
+        // 3. Stats
         $stats = [
-            'users' => User::count(),    // Compte tous les inscrits
-            'trajets' => Trajet::count() // Compte tous les trajets
+            'users' => User::count(),
+            'trajets' => Trajet::count(),
         ];
 
-        // 4. Retourner la vue en envoyant $users ET $stats
+        // 4. Envoi à la vue
         return view('adminutilisateurs', compact('users', 'stats'));
+
     }
 
     public function destroy($id){
