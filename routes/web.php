@@ -3,28 +3,35 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController; // Le contrôleur du collègue
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\TrajetController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RechercheController;
 
 
 // Page d'accueil
 Route::get('/', [HomeController::class, 'accueil'])->name('accueil');
 
+// Page de recherche de trajets
+Route::get('/rechercher', [RechercheController::class, 'index'])->name('rechercher');
 
-// Page de connexion (GET) -> Appelle la méthode index()
-Route::get('/login', [AuthController::class, 'index'])->name('login');
+// Route pour RÉSERVER un trajet (POST pour la sécurité)
+Route::post('/trajet/reserver/{id}', [RechercheController::class, 'reserver'])->name('trajet.reserver');
 
-// Action de connexion (POST) -> Appelle la méthode connexion()
-Route::post('/login', [AuthController::class, 'connexion']);
+// Route pour ANNULER un trajet (POST aussi)
+Route::post('/trajet/annuler/{id}', [RechercheController::class, 'annuler'])->name('trajet.annuler');
 
-// 1. Afficher le formulaire (GET) -> Appelle la méthode 'create' qu'on vient d'ajouter
-Route::get('/register', [AuthController::class, 'create'])->name('register');
+// Routes pour la proposition de trajets
+Route::get('proposer-trajet', [HomeController::class, 'create'])->name('trajets.create');
 
-// 2. Traiter le formulaire (POST) -> Appelle la méthode 'register' existante
-Route::post('/register', [AuthController::class, 'register']);
+//Proposer-un-Trajet
+Route::get('/proposer-trajet', [TrajetController::class, 'create'])->name('trajets.create');
+Route::post('/proposer-trajets', [TrajetController::class, 'store'])->name('trajets.store');
+Route::get('/trajets-confirmation',[TrajetController::class, 'confirmation'])->name('trajets.confirmation');
 
-// Déconnexion (POST) -> Appelle la méthode logout()
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
+// Erreur 404
+Route::fallback(function () {
+    return view('errors.404');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/mon-profil', [ProfileController::class, 'show'])->name('profile.show');
@@ -48,8 +55,4 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile/setup', [ProfileController::class, 'updateSetup'])->name('profile.setup.update');
 
     Route::patch('/profile/preference/discussion', [ProfileController::class, 'updateDiscussion'])->name('preference.discussion');
-});
-
-Route::fallback(function () {
-    return view('errors.404');
 });
