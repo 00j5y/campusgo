@@ -3,27 +3,26 @@
 @section('title', 'Mes Trajets - Campus\'GO')
 
 @section('content')
-    {{-- CSS Libraries --}}
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.9.4/mapbox-gl.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <main class="bg-[#F3EDE3] min-h-screen py-12">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
             
-            {{-- Header --}}
+            {{Header}}
             <div class="mb-8">
                 <h1 class="text-3xl font-semibold text-[#333] mb-2">Mes Trajets</h1>
                 <p class="text-gray-500">Gérez vos covoiturages passés et à venir.</p>
             </div>
 
-            {{-- Notifications --}}
+            {{Notifications}}
             @if(session('success'))
                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6">
                     <i class="fa-solid fa-check-circle mr-2"></i> {{ session('success') }}
                 </div>
             @endif
 
-            {{-- SYSTÈME D'ONGLETS --}}
+            {{SYSTÈME D'ONGLETS}}
             <div class="bg-gray-200 p-1 rounded-xl flex mb-8">
                 <button id="btn-avenir" onclick="window.changerOnglet('avenir')" class="cursor-pointer flex-1 py-2 rounded-lg font-bold text-sm transition-all bg-white text-[#2E7D32] shadow-sm">
                     <i class="fa-regular fa-calendar-days mr-2"></i> Trajets à Venir
@@ -33,10 +32,9 @@
                 </button>
             </div>
 
-            {{-- CONTENU : TRAJETS À VENIR --}}
+            {{TRAJETS À VENIR}}
             <div id="content-avenir" class="space-y-4 animate-fade-in">
                 @forelse($trajetsAvenir as $trajet)
-                    {{-- On passe 'etat' => 'avenir' --}}
                     @include('components.trajet-card', ['trajet' => $trajet, 'mode' => 'perso', 'etat' => 'avenir'])
                 @empty
                     <div class="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-300">
@@ -47,10 +45,9 @@
                 @endforelse
             </div>
 
-            {{-- CONTENU : TRAJETS PASSÉS --}}
+            {{TRAJETS PASSÉS}}
             <div id="content-passe" class="space-y-4 hidden animate-fade-in">
                 @forelse($trajetsPasses as $trajet)
-                    {{-- On passe 'etat' => 'passe' --}}
                     @include('components.trajet-card', ['trajet' => $trajet, 'mode' => 'perso', 'etat' => 'passe'])
                 @empty
                     <div class="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-300">
@@ -63,7 +60,7 @@
         </div>
     </main>
     
-    {{-- MODALE ANNULER (Copiée pour être dispo ici aussi) --}}
+    {{ANNULER }}
     <div id="modal-annuler" class="fixed inset-0 z-[9999] hidden" aria-labelledby="modal-title-annuler" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" onclick="window.closeModal('modal-annuler')"></div>
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto flex items-center justify-center p-4">
@@ -82,13 +79,11 @@
         </div>
     </div>
 
-    {{-- Configuration Mapbox cachée pour récupération par le JS --}}
     <div id="mapbox-config" class="hidden" data-token="pk.eyJ1IjoiZ2FieXNjb3RlIiwiYSI6ImNtaXlueXBycDBlMnIzZnM3NDF0aWZ4emIifQ.Kv51hN4zyQ9O2AZLlbSdZg"></div>
 
-    {{-- SCRIPTS --}}
+    {{SCRIPTS}}
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.9.4/mapbox-gl.js"></script>
     
-    {{-- Appel du nouveau fichier JS spécifique --}}
     @vite(['resources/js/mes-trajets.js'])
 
 @endsection
