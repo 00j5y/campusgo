@@ -128,7 +128,6 @@ class ProfileController extends Controller
      */
     public function togglePreference(Request $request)
     {
-        // 1. Sécurité : On n'autorise que ces 3 champs
         $allowed = ['accepte_animaux', 'accepte_fumeurs', 'accepte_musique'];
         $field = $request->input('field');
 
@@ -164,8 +163,6 @@ class ProfileController extends Controller
      */
     public function updatePassword(Request $request): RedirectResponse
     {
-        // CORRECTION : On enlève 'updatePassword' et la virgule juste après.
-        // On commence directement par le crochet [
         $validated = $request->validate([
             'current_password' => ['required', 'current_password'],
             'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
