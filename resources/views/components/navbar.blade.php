@@ -29,12 +29,21 @@
                     </svg>
                     Mes Trajets
                 </a>
-                <a href="#" class="flex items-center text-gris1 hover:text-vert-principale transition font-medium">
+                @auth
+                <a href="{{ route('profile.show') }}" class="flex items-center text-gris1 hover:text-vert-principale transition font-medium">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
                     Profil
                 </a>
+                @else
+                    <a href="{{ route('profile.show') }}" class="flex items-center text-gris1 hover:text-vert-principale transition font-medium">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        Profil
+                    </a>
+                @endauth
             </nav>
 
             <div class="hidden lg:flex items-center space-x-6">

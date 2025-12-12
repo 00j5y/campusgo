@@ -26,7 +26,9 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended('/');
+            
+
+            return redirect()->intended(route('accueil'));
         }
 
         return back()->withErrors([
@@ -34,30 +36,33 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    // Tentative d'inscription
     public function register(Request $request)
+        {
+            // 1. Validation
+            $request->validate([
+                'firstname' => ['required', 'string', 'max:255'],
+                'lastname'  => ['required', 'string', 'max:255'],
+                'email'     => ['required', 'string', 'email', 'max:255', 'unique:utilisateur'],
+                'password'  => ['required', 'confirmed', Rules\Password::defaults()],
+            ]);
+
+            // 2. Création
+            $user = User::create([
+                'prenom' => $request->firstname,
+                'nom'    => $request->lastname,
+                'email'  => $request->email,
+                'mdp'    => Hash::make($request->password),
+            ]);
+
+            Auth::login($user);
+
+            return redirect()->route('profile.show');
+        }
+
+    // Affichage de la page d'inscription
+    public function create()
     {
-        // Information
-        $request->validate([
-            'firstname' => ['required', 'string', 'max:255'],
-            'lastname' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
-
-        // Création de l'utilisateur
-        $user = User::create([
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        // Connexion automatique
-        Auth::connexion($user);
-
-        // Retour sur la page d'accueil
-        return redirect('/');
+        return view('auth.inscription');
     }
 
     // Déconnexion

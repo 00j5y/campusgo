@@ -1,11 +1,12 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuthController; // Le contrôleur du collègue
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TrajetController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RechercheController;
+
 
 // Page d'accueil
 Route::get('/', [HomeController::class, 'accueil'])->name('accueil');
@@ -32,16 +33,26 @@ Route::fallback(function () {
     return view('errors.404');
 });
 
-/*
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-*/
+    Route::get('/mon-profil', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/mon-profil/modifier', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/mon-profil', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/mon-profil', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-require __DIR__.'/auth.php';
+    Route::get('/vehicule/ajouter', [App\Http\Controllers\VehiculeController::class, 'create'])->name('vehicule.create');
+    Route::patch('/profil/preference/toggle', [ProfileController::class, 'togglePreference'])->name('preference.toggle');
+
+    Route::post('/vehicule', [App\Http\Controllers\VehiculeController::class, 'store'])->name('vehicule.store');
+    Route::delete('/vehicule/{id}', [App\Http\Controllers\VehiculeController::class, 'destroy'])->name('vehicule.destroy');
+
+    Route::get('/parametres/securite', [ProfileController::class, 'editSecurity'])->name('profile.security');
+    Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+
+    Route::get('/membre/{id}', [App\Http\Controllers\ProfileController::class, 'showPublic'])->name('profile.public');
+
+    Route::get('/profile/history', [ProfileController::class, 'history'])->name('profile.history');
+    Route::get('/profile/setup', [ProfileController::class, 'setup'])->name('profile.setup');
+    Route::patch('/profile/setup', [ProfileController::class, 'updateSetup'])->name('profile.setup.update');
+
+    Route::patch('/profile/preference/discussion', [ProfileController::class, 'updateDiscussion'])->name('preference.discussion');
+});

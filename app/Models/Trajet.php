@@ -7,11 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Trajet extends Model
 {
     protected $table = 'trajet';
-    protected $primaryKey = 'id'; // Correction : minuscule
+    protected $primaryKey = 'id';
 
     public $timestamps = false;
 
-    // Correction : Tout en minuscule pour correspondre à ta base de données
     protected $fillable = [
         'lieu_depart',
         'lieu_arrivee',
