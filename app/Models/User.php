@@ -14,7 +14,7 @@ class User extends Authenticatable
 
     protected $table = 'utilisateur';
 
-    protected $primaryKey = 'id_utilisateur'; 
+    protected $primaryKey = 'id'; 
     public $incrementing = true; //
 
     public $timestamps = false;
