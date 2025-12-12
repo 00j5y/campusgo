@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Vehicule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class VehiculeController extends Controller
 {
@@ -18,14 +19,28 @@ class VehiculeController extends Controller
     {
         // 1. Validation
         $request->validate([
-            'Marque' => 'required|string|max:20', // Ici c'est le nom du champ HTML (Majuscule)
+            'Marque' => 'required|string|max:20',
             'Modele' => 'required|string|max:20',
             'Couleur' => 'required|string|max:20',
             'immatriculation' => 'required|string|regex:/^[A-Za-z]{2}[-\s]?[0-9]{3}[-\s]?[A-Za-z]{2}$/',
             'NombrePlace' => 'required|integer|min:1|max:9',
         ],
         [
-            'immatriculation.regex' => "Le format de l'immatriculation est invalide. Exemple valide : AB-123-CD",
+            'Marque.required' => "Veuillez renseigner la marque du véhicule.",
+            'Marque.max'      => "La marque est trop longue (20 caractères max).",
+            
+            'Modele.required' => "Veuillez renseigner le modèle du véhicule.",
+            'Modele.max'      => "Le modèle est trop long (20 caractères max).",
+            
+            'Couleur.required' => "Veuillez indiquer la couleur.",
+            'Couleur.max'      => "Le nom de la couleur est trop long.",
+            
+            'NombrePlace.required' => "Le nombre de places est obligatoire.",
+            'NombrePlace.min'      => "Il faut au moins 1 place passager disponible.",
+            'NombrePlace.max'      => "C'est un bus ? Maximum 9 places autorisées.",
+            
+            'immatriculation.required' => "L'immatriculation est obligatoire.",
+            'immatriculation.regex'    => "Format invalide. Exemple attendu : AA-123-AA.",
         ]);
 
         $cleanImmat = preg_replace('/[^A-Za-z0-9]/', '', $request->input('immatriculation'));
@@ -33,16 +48,14 @@ class VehiculeController extends Controller
         // 2. Création
         $vehicule = new Vehicule();
         
-        // À GAUCHE : Nom de la colonne BDD (minuscule)
-        // À DROITE : Nom du champ Formulaire (Majuscule)
-        $vehicule->marque = $request->Marque;
-        $vehicule->modele = $request->Modele;
-        $vehicule->couleur = $request->Couleur;
+        $vehicule->marque = Str::title($request->Marque);
+        $vehicule->modele = Str::title($request->Modele);
+        $vehicule->couleur = Str::title($request->Couleur);
         $vehicule->immatriculation = strtoupper($cleanImmat);
 
-        $vehicule->nombre_place = $request->NombrePlace; // Attention au _
+        $vehicule->nombre_place = $request->NombrePlace;
         
-        $vehicule->id_utilisateur = Auth::id(); // Clé étrangère en minuscule
+        $vehicule->id_utilisateur = Auth::id();
 
         $vehicule->save();
 
@@ -52,7 +65,7 @@ class VehiculeController extends Controller
 
     public function destroy($id)
         {
-            // On cherche le véhicule par son 'id' (nouvelle BDD)
+            // On cherche le véhicule par son 'id'
             // Et on vérifie toujours qu'il appartient à l'utilisateur (id_utilisateur)
             $vehicule = Vehicule::where('id', $id) 
                                 ->where('id_utilisateur', Auth::id())

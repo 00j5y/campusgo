@@ -9,9 +9,9 @@ class Preference extends Model
 {
     use HasFactory;
 
-    protected $table = 'preference'; // Nom de la table
+    protected $table = 'preference';
     
-    public $timestamps = false; // Pas de created_at/updated_at dans l'image
+    public $timestamps = false;
 
     protected $fillable = [
         'accepte_animaux',

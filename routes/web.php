@@ -38,12 +38,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/vehicule', [App\Http\Controllers\VehiculeController::class, 'store'])->name('vehicule.store');
     Route::delete('/vehicule/{id}', [App\Http\Controllers\VehiculeController::class, 'destroy'])->name('vehicule.destroy');
 
-    Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar');
-
     Route::get('/parametres/securite', [ProfileController::class, 'editSecurity'])->name('profile.security');
     Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
 
     Route::get('/membre/{id}', [App\Http\Controllers\ProfileController::class, 'showPublic'])->name('profile.public');
+
+    Route::get('/profile/history', [ProfileController::class, 'history'])->name('profile.history');
+    Route::get('/profile/setup', [ProfileController::class, 'setup'])->name('profile.setup');
+    Route::patch('/profile/setup', [ProfileController::class, 'updateSetup'])->name('profile.setup.update');
+
+    Route::patch('/profile/preference/discussion', [ProfileController::class, 'updateDiscussion'])->name('preference.discussion');
 
     Route::get('/mes-avis', [App\Http\Controllers\ReviewController::class, 'index'])->name('reviews.index');
     Route::get('/laisser-un-avis', [App\Http\Controllers\ReviewController::class, 'create'])->name('reviews.create');
