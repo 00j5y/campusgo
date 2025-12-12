@@ -16,6 +16,9 @@ class User extends Authenticatable
 
     protected $table = 'utilisateur';
 
+    protected $primaryKey = 'id'; 
+    public $incrementing = true; //
+
     public $timestamps = false;
 
     /**
@@ -59,6 +62,9 @@ class User extends Authenticatable
             'mdp' => 'hashed',
         ];
     }
+    public function reservations()
+    {
+        return $this->belongsToMany(Trajet::class, 'reserver', 'id_utilisateur', 'id_trajet');
 
     
     public function vehicules() {
