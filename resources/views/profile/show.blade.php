@@ -137,7 +137,7 @@
                             </form>
                         </x-preference-row>
 
-                        <x-preference-row icon="musique" title="Accepter la musique" subtitle="Autoriser l'écoute de musique dans le véhicule">'">
+                        <x-preference-row icon="musique" title="Accepter la musique" subtitle="Autoriser l'écoute de musique dans le véhicule">
                             <form action="{{ route('preference.toggle') }}" method="POST">
                                 @csrf @method('PATCH')
                                 <input type="hidden" name="field" value="accepte_musique">
