@@ -20,6 +20,9 @@ Route::post('/reserver/{id}', [RechercheController::class, 'reserver'])->name('r
 // Route pour ANNULER un trajet 
 Route::post('/annuler/{id}', [RechercheController::class, 'annuler'])->name('annuler');
 
+//Route pour voir ses trajets
+Route::get('/mes-trajets', [TrajetController::class, 'mesTrajets'])->name('historique-trajet');
+
 // Routes pour la proposition de trajets
 Route::get('proposer-trajet', [HomeController::class, 'create'])->name('trajets.create');
 
