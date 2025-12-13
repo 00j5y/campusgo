@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class HistoriqueConnexion extends Model
 {
-    // 1. Nom de la table en français
+    // Nom de la table en français
     protected $table = 'historique_connexions';
 
     // car on utilise notre propre colonne 'date_connexion'
     public $timestamps = false;
 
-    // 3. Champs autorisés
+    // Champs autorisés
     protected $fillable = [
         'id_utilisateur', 
         'adresse_ip', 

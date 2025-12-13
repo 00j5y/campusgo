@@ -128,7 +128,6 @@ class ProfileController extends Controller
      */
     public function togglePreference(Request $request)
     {
-        // 1. Sécurité : On n'autorise que ces 3 champs
         $allowed = ['accepte_animaux', 'accepte_fumeurs', 'accepte_musique'];
         $field = $request->input('field');
 
@@ -164,12 +163,13 @@ class ProfileController extends Controller
      */
     public function updatePassword(Request $request): RedirectResponse
     {
-        $validated = $request->validateWithBag('updatePassword', [
+        $validated = $request->validate([
             'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'confirmed', Password::defaults()],
+            'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
         ], [
             'current_password.current_password' => 'Le mot de passe actuel est incorrect.',
             'password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
+            'password.min' => 'Le mot de passe doit contenir au moins :min caractères.',
         ]);
 
         $request->user()->update([
