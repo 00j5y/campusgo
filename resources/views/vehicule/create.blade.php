@@ -11,14 +11,24 @@
                 <h1 class="text-3xl font-bold text-noir">Ajouter un véhicule</h1>
                 <p class="text-gris1 mt-2">Renseignez les détails de votre voiture pour le covoiturage</p>
             </div>
-            <a href="{{ route('profile.show') }}" class="text-vert-principale hover:underline font-medium">
-                &larr; Retour au profil
-            </a>
+            <div class="mb-6">
+                @if(request('source') == 'trajet')
+                    <a href="{{ route('trajets.create') }}" class="text-vert-principale hover:underline font-medium flex items-center gap-2">
+                        &larr; Retour à la proposition de trajet
+                    </a>
+                @else
+                    <a href="{{ route('profile.show') }}" class="text-vert-principale hover:underline font-medium flex items-center gap-2">
+                        &larr; Retour au profil
+                    </a>
+                @endif
+            </div>
         </div>
 
         <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
             <form method="post" action="{{ route('vehicule.store') }}" class="space-y-6"> 
                 @csrf
+
+                <input type="hidden" name="source" value="{{ request('source') }}">
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <x-input-text name="Marque" label="Marque" placeholder="Ex: Bugatti" />
