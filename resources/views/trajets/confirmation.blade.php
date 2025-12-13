@@ -3,7 +3,7 @@
 @section('title', 'Proposer un trajet - Campus\'GO')
 
 @section('content')
-    <main class="mx-auto max-w-xl p- text-center m-30">
+    <main class="mx-auto max-w-xl p-6 text-center m-30">
 
     <div class="bg-white border border-vert-principale/50 rounded-xl p-8 shadow-xl">
         
