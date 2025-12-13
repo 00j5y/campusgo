@@ -59,8 +59,14 @@ class VehiculeController extends Controller
 
         $vehicule->save();
 
-        // 3. Redirection
-        return redirect()->route('profile.show')->with('status', 'vehicle-added');
+        if ($request->input('source') === 'trajet') {
+                return redirect()->route('trajets.create')
+                                ->with('success', 'Véhicule ajouté ! Vous pouvez continuer votre trajet.')
+                                ->with('new_vehicule_id', $vehicule->id);
+            }
+
+        return redirect()->route('profile.show')
+                        ->with('success', 'Véhicule ajouté avec succès.');
     }
 
     public function destroy($id)
