@@ -9,6 +9,30 @@
         <p class="mt-2 text-gris1">Remplissez les informations ci-dessous pour publier votre trajet</p>
     </header>
 
+    @if ($errors->any())
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-8 rounded-r-md shadow-sm">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-red-800">
+                        Il y a {{ $errors->count() }} erreur(s) dans votre formulaire :
+                    </h3>
+                    <div class="mt-2 text-sm text-red-700">
+                        <ul class="list-disc pl-5 space-y-1">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('trajets.store') }}">
     @csrf
 
@@ -169,48 +193,68 @@
             </div>
 
 
-            <!-- Véhicule -->
-            <div>
-                <div>
-                <label for="voiture" class="block text-sm font-medium text-noir mb-1 flex items-center">
-                    <!-- Icone voiture -->
-                     <svg class="w-4 h-4 mr-1 text-vert-principale" fill="none" stroke="currentColor" viewBox="0 0 64 28" xmlns="http://www.w3.org/2000/svg">
+        <div class="mb-6">
+            <label for="vehicule_id" class="block text-sm font-medium text-noir mb-2 flex items-center gap-2">
+                <svg class="w-5 h-5 text-vert-principale" fill="none" stroke="currentColor" viewBox="0 0 64 28" xmlns="http://www.w3.org/2000/svg">
                     <path d="M6 18L9 12C10 10 12 8 15 8H32C34.5 8 36.5 9 38 10.5C40 12.5 42 14.5 46 14.5H52C53.7 14.5 55 15.8 55 17.5V19C55 19.6 54.6 20 54 20H51C51 22.8 48.8 25 46 25C43.2 25 41 22.8 41 20H23C23 22.8 20.8 25 18 25C15.2 25 13 22.8 13 20H8C7.4 20 7 19.6 7 19V18H6Z"
                     stroke="currentColor" stroke-width="3" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
                     <circle cx="18" cy="20" r="4" stroke="currentColor" stroke-width="3" fill="none"/>
                     <circle cx="46" cy="20" r="4" stroke="currentColor" stroke-width="3" fill="none"/>
-                    </svg>
-                    Véhicule
-                </label>
+                </svg>
+                Véhicule utilisé
+            </label>
 
-                <!-- Si l'utilisateur n'a pas de véhicule d'enregistré -->
-                @if ($vehicules->isEmpty())
-                    <div class="bg-red-100 border border-red-400 rounded-lg block text-sm text-red-700 italic text-center p-4 space-y-3">
-                        <p>Vous n'avez pas de véhicule enregistré</p>
-                        <a href="#" class="text-white font-medium bg-rouge border-red400 rounded-lg px-5 py-2 hover:bg-red-700">
+            @if ($vehicules->isEmpty())
+                <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-center">
+                    <p class="text-red-600 text-sm font-medium mb-3">Vous n'avez pas de véhicule enregistré.</p>
+                    
+                    <a href="{{ route('vehicule.create', ['source' => 'trajet']) }}" 
+                        onclick="saveFormData()"
+                        class="text-white font-medium bg-red-500 hover:bg-red-600 rounded-lg px-5 py-2 transition-colors">
                         + Ajouter un véhicule
-                        </a>
-                        @error('id_vehicule')
-                        <p class="text-red-500 text-xs italic mt-4">Vous devez ajouter un véhicule</p>
-                        @enderror
-                    </div>
-                <!-- Sinon -->   
-                @else
-                    <select name="id_vehicule" id="vehicule_id" class="w-full border border-gray-300 rounded-md shadow-sm p-3 focus:ring-vert-principale focus:border-vert-principale focus:outline-none" required>
+                    </a>
+
+                    @error('id_vehicule')
+                        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                    @enderror
+                </div>
+
+            @else
+                <div class="relative">
+                    <select name="id_vehicule" id="vehicule_id" class="w-full bg-gray-50 border border-gray-200 appearance-none bg-none" required>
                         <option value="" disabled selected>Sélectionnez votre véhicule</option>
                         
-                        <!-- Afficher tous les véhicules enregistrés -->
                         @foreach ($vehicules as $vehicule)
-                            <option value="{{ $vehicule->id }}">
-                            {{ $vehicule->marque }} {{ $vehicule->modele }} ({{ $vehicule->immatriculation }})
+                            <option value="{{ $vehicule->id }}" 
+                                {{-- Priorité 1: Nouveau véhicule créé --}}
+                                {{ session('new_vehicule_id') == $vehicule->id ? 'selected' : '' }}
+                                
+                                {{-- Priorité 2: Retour d'erreur de formulaire --}}
+                                {{ old('id_vehicule') == $vehicule->id ? 'selected' : '' }}
+                            >
+                                {{ $vehicule->marque }} {{ $vehicule->modele }} ({{ $vehicule->immatriculation }})
                             </option>
                         @endforeach
                     </select>
-        
-                    <p class="text-xs text-gris1 mt-2 text-right">
-                    <a href="#" class="text-vert-principale hover:underline font-medium">+ Ajouter un autre véhicule</a>
-                @endif
-            </div>
+                    
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                </div>
+
+                <div class="mt-2 text-right">
+                    <a href="{{ route('vehicule.create', ['source' => 'trajet']) }}" 
+                    onclick="saveFormData()"
+                    class="text-xs text-vert-principale hover:text-vert-principal-h font-medium hover:underline transition-colors">
+                        + Ajouter un autre véhicule
+                    </a>
+                </div>
+                
+                @error('id_vehicule')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            @endif
+        </div>
             
 
         <!-- Récapitulatif -->
@@ -232,5 +276,53 @@
     </div>
 </main>
 @endsection
+
 @section('scripts')
+<script>
+    // 1. SAUVEGARDE (On ne change rien ici)
+    function saveFormData() {
+        const formData = {
+            lieu_depart: document.getElementById('lieu_depart')?.value,
+            lieu_arrivee: document.getElementById('lieu_arrivee')?.value,
+            date_depart: document.getElementById('date_depart')?.value,
+            heure_depart: document.getElementById('heure_depart')?.value,
+            places_disponibles: document.getElementById('places_disponibles')?.value
+        };
+        localStorage.setItem('trajet_temp_data', JSON.stringify(formData));
+    }
+
+    // 2. RESTAURATION (Version "Ninja" - Silencieuse)
+    document.addEventListener('DOMContentLoaded', function() {
+        const savedData = localStorage.getItem('trajet_temp_data');
+
+        if (savedData) {
+            const data = JSON.parse(savedData);
+            
+            // On attend que votre script "IUT Amiens" ait fini de charger
+            setTimeout(() => {
+                console.log("🤫 Restauration silencieuse des données...");
+                
+                const dep = document.getElementById('lieu_depart');
+                const arr = document.getElementById('lieu_arrivee');
+                const date = document.getElementById('date_depart');
+                const heure = document.getElementById('heure_depart');
+                const places = document.getElementById('places_disponibles');
+
+                // 1. On applique les valeurs DIRECTEMENT (sans simuler de clic/frappe)
+                // Cela évite de déclencher votre script d'inversion
+                if (dep && data.lieu_depart) dep.value = data.lieu_depart;
+                if (arr && data.lieu_arrivee) arr.value = data.lieu_arrivee;
+                
+                // Pour les autres champs, c'est sans risque
+                if (date && data.date_depart) date.value = data.date_depart;
+                if (heure && data.heure_depart) heure.value = data.heure_depart;
+                if (places && data.places_disponibles) places.value = data.places_disponibles;
+
+                // 2. On nettoie la mémoire
+                localStorage.removeItem('trajet_temp_data');
+
+            }, 100); // Délai court de 100ms
+        }
+    });
+</script>
 @endsection
