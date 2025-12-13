@@ -63,11 +63,6 @@ class User extends Authenticatable
         return $this->belongsToMany(Trajet::class, 'reserver', 'id_utilisateur', 'id_trajet');
     }
 
-    
-    public function vehicules() {
-        return $this->hasMany(Vehicule::class, 'id_utilisateur', 'id');
-    }
-
     public function trajets() {
         return $this->hasMany(Trajet::class, 'id_utilisateur', 'id');
     }
