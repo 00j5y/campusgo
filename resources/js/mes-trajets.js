@@ -67,6 +67,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const getCoords = async q => {
+                if (!q) return null;
+                if (q.toLowerCase().includes('iut amiens') || q.toLowerCase().includes('avenue des facultés')) {
+                    return [2.263592, 49.873836];
+                }
                 const r = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(q)}&limit=1`);
                 const d = await r.json();
                 return d.features?.[0]?.geometry.coordinates || null;
@@ -75,7 +79,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const start = await getCoords(dTxt);
             const end = await getCoords(aTxt);
 
-            if (!start || !end) return;
+            if (!start || !end) {
+                document.getElementById(mapId).innerHTML = '<p class="text-red-500 text-center pt-10">Adresse introuvable</p>';
+                return;
+            }
 
             const miniMap = new mapboxgl.Map({
                 container: mapId,

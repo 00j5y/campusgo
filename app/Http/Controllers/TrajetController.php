@@ -23,7 +23,7 @@ class TrajetController extends Controller
         // Trajets à venir (conducteur ou passager)
         $trajetsAvenir = Trajet::where(function ($query) use ($userId, $idsReservations) {
                 $query->where('id_utilisateur', $userId)
-                      ->orWhereIn('id_trajet', $idsReservations);
+                      ->orWhereIn('id', $idsReservations);
             })
             ->where(function ($query) {
                 $query->where('date_depart', '>', Carbon::now()->toDateString())
@@ -39,7 +39,7 @@ class TrajetController extends Controller
         // Trajets passés (conducteur ou passager)
         $trajetsPasses = Trajet::where(function ($query) use ($userId, $idsReservations) {
                 $query->where('id_utilisateur', $userId)
-                      ->orWhereIn('id_trajet', $idsReservations);
+                      ->orWhereIn('id', $idsReservations);
             })
             ->where(function ($query) {
                 $query->where('date_depart', '<', Carbon::now()->toDateString())
