@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Trajet; 
 use App\Models\Vehicule;
 use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+
 
 class TrajetController extends Controller
 {
@@ -125,6 +128,51 @@ class TrajetController extends Controller
         }
 
         return view('trajets.confirmation', compact('message'));
+    }
+
+    public function mesTrajets()
+    {
+        $userId = Auth::id();
+
+        // ID des trajets réservés en tant que passager
+        $idsReservations = DB::table('reserver')
+            ->where('id_utilisateur', $userId)
+            ->pluck('id_trajet')
+            ->toArray();
+
+        // Trajets à venir (conducteur ou passager)
+        $trajetsAvenir = Trajet::where(function ($query) use ($userId, $idsReservations) {
+                $query->where('id_utilisateur', $userId)
+                      ->orWhereIn('id', $idsReservations);
+            })
+            ->where(function ($query) {
+                $query->where('date_depart', '>', Carbon::now()->toDateString())
+                      ->orWhere(function ($q) {
+                          $q->where('date_depart', Carbon::now()->toDateString())
+                            ->where('heure_depart', '>', Carbon::now()->toTimeString());
+                      });
+            })
+            ->orderBy('date_depart')
+            ->orderBy('heure_depart')
+            ->get();
+
+        // Trajets passés (conducteur ou passager)
+        $trajetsPasses = Trajet::where(function ($query) use ($userId, $idsReservations) {
+                $query->where('id_utilisateur', $userId)
+                      ->orWhereIn('id', $idsReservations);
+            })
+            ->where(function ($query) {
+                $query->where('date_depart', '<', Carbon::now()->toDateString())
+                      ->orWhere(function ($q) {
+                          $q->where('date_depart', Carbon::now()->toDateString())
+                            ->where('heure_depart', '<', Carbon::now()->toTimeString());
+                      });
+            })
+            ->orderBy('date_depart', 'desc')
+            ->orderBy('heure_depart', 'desc')
+            ->get();
+
+        return view('historique-trajet', compact('trajetsAvenir', 'trajetsPasses'));
     }
 
 }

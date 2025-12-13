@@ -20,7 +20,7 @@
             Accueil
             </a>
     
-            <a href="#" class="inline-block border border-gray-300 text-gray-700 px-8 py-2 rounded-md font-medium transition w-full sm:w-auto hover:bg-gray-100">
+            <a href="{{ route('historique-trajet') }}" class="inline-block border border-gray-300 text-gray-700 px-8 py-2 rounded-md font-medium transition w-full sm:w-auto hover:bg-gray-100">
             Voir Mes Trajets
             </a>
         </div>
