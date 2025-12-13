@@ -2,6 +2,15 @@
 
 return [
 
+
+    'custom' => [
+    'lieu_arrivee_min' => [ 
+        'not_in' => 'Le lieu de départ et le lieu d\'arrivée ne peuvent pas être identiques.', 
+    ],
+    ],
+
+    
+
     /*
     |--------------------------------------------------------------------------
     | Validation Language Lines
@@ -109,7 +118,7 @@ return [
         'array' => 'The :attribute field must have at least :min items.',
         'file' => 'The :attribute field must be at least :min kilobytes.',
         'numeric' => 'The :attribute field must be at least :min.',
-        'string' => 'Le mot de passe doit contenir au moins :min charactères.',
+        'string' => 'Le mot de passe doit contenir au moins :min caractères.',
     ],
     'min_digits' => 'The :attribute field must have at least :min digits.',
     'missing' => 'The :attribute field must be missing.',
@@ -196,5 +205,6 @@ return [
     */
 
     'attributes' => [],
+    
 
 ];

@@ -23,11 +23,11 @@
                         </p>
 
                         <div class="flex flex-col sm:flex-row gap-4 mb-12">
-                            <a href="#" class="inline-flex justify-center items-center gap-2 bg-vert-principale hover:bg-vert-principal-h text-white px-6 py-3.5 rounded-lg font-medium transition-colors shadow-sm">
+                            <a href="{{ route('rechercher') }}" class="inline-flex justify-center items-center gap-2 bg-vert-principale hover:bg-vert-principal-h text-white px-6 py-3.5 rounded-lg font-medium transition-colors shadow-sm">
                                 Rechercher un Trajet
                                 <img src="{{ asset('images/accueil/icones/fleche-droite.png') }}" alt="Fleche pointant vers la droite blanche" class="size-6 pt-0.5">
                             </a>
-                            <a href="#" class="inline-flex justify-center items-center bg-white hover:white/20 text-gris1 hover:text-vert-principale px-6 py-3.5 rounded-lg font-medium transition-colors ">
+                            <a href="{{ route('trajets.create') }}" class="inline-flex justify-center items-center bg-white hover:white/20 text-gris1 hover:text-vert-principale px-6 py-3.5 rounded-lg font-medium transition-colors ">
                                 Proposer un Trajet
                             </a>
                         </div>

@@ -36,7 +36,7 @@
 
             @if($mode === 'perso')
                 <div class="flex gap-2">
-                    @if(Auth::check() && $trajet->id_utilisateur == Auth::user()->id_utilisateur) 
+                    @if(Auth::check() && $trajet->id_utilisateur == Auth::id()) 
                         <span class="bg-[#2E7D32] text-white text-[10px] font-bold px-2 py-1 rounded">Conducteur (Moi)</span>
                     @else
                         <span class="bg-[#F59E0B] text-white text-[10px] font-bold px-2 py-1 rounded">Passager</span>
@@ -54,7 +54,7 @@
             
             {{-- CAS 1 : MODE RECHERCHE --}}
             @if($mode === 'search')
-                <button onclick="openReserverModal({{ $trajet->id_trajet }})" 
+                <button onclick="openReserverModal('{{ route('reserver', $trajet->id) }}')" 
                         class="cursor-pointer bg-[#2E7D32] hover:bg-[#1b5e20] text-white font-bold py-2 px-6 rounded-lg transition text-center shadow-sm">
                     Choisir
                 </button>
@@ -91,7 +91,7 @@
     @if($mode === 'perso' && $etat === 'avenir')
         <div id="map-container-{{ $trajet->id_trajet }}" class="hidden mt-6 pt-4 border-t border-gray-100">
             <p class="text-xs text-gray-400 mb-2">Itinéraire estimé :</p>
-            <div id="map-{{ $trajet->id_trajet }}" class="h-64 w-full rounded-xl overflow-hidden border border-gray-200 bg-gray-50"></div>
+            <div id="map-{{ $trajet->id }}" class="h-64 w-full rounded-xl overflow-hidden border border-gray-200 bg-gray-50"></div>
         </div>
     @endif
 </div>

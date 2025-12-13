@@ -3,38 +3,37 @@
 @section('title', 'Rechercher un trajet - Campus\'GO')
 
 @section('content')
-    {{-- CSS Libraries --}}
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.9.4/mapbox-gl.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://npmcdn.com/flatpickr/dist/themes/airbnb.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <main class="bg-[#F3EDE3] min-h-screen py-12 relative">
+    <main class="bg-white min-h-screen py-12 relative">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             
             {{-- Header --}}
             <div class="text-center mb-8">
-                <h1 class="text-3xl font-semibold text-[#333] mb-2">Salut {{ $prenom }} ! Où voulez vous partir aujourd'hui ?</h1>
-                <p class="text-gray-500">Trouvez un covoiturage en quelques clics.</p>
+                <h1 class="text-3xl font-semibold text-gris1 mb-2">Salut {{ $prenom }} ! Où voulez vous partir aujourd'hui ?</h1>
+                <p class="text-gris1">Trouvez un covoiturage en quelques clics.</p>
             </div>
 
             {{-- Notifications --}}
             @if(session('success'))
-                <div class="max-w-4xl mx-auto mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
+                <div class="max-w-4xl mx-auto mb-6 bg-green-100 border border-green-400 text-vert-principale px-4 py-3 rounded relative">
                     <i class="fa-solid fa-check-circle mr-2"></i> {{ session('success') }}
                 </div>
             @endif
             @if(session('error'))
-                <div class="max-w-4xl mx-auto mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                <div class="max-w-4xl mx-auto mb-6 bg-red-100 border border-rouge text-rouge px-4 py-3 rounded relative">
                     <i class="fa-solid fa-circle-exclamation mr-2"></i> {{ session('error') }}
                 </div>
             @endif
 
             {{-- Formulaire de Recherche --}}
             <div class="bg-white rounded-3xl shadow-xl p-8 max-w-4xl mx-auto mb-12 relative z-10">
-                {{-- Conseil UX pour l'autocomplétion --}}
-                <div class="bg-blue-50 border-l-4 border-[#2E7D32] text-blue-800 p-4 mb-6 rounded-r-lg text-sm flex items-start gap-3">
-                    <i class="fa-solid fa-circle-info mt-1 text-[#2E7D32]"></i>
+
+                <div class="bg-blue-50 border-l-4 border-vert-principale text-blue-800 p-4 mb-6 rounded-r-lg text-sm flex items-start gap-3">
+                    <i class="fa-solid fa-circle-info mt-1 text-vert-principale"></i>
                     <div>
                         <p class="font-bold">Astuce pour une recherche précise :</p>
                         <p>Commencez à taper votre ville, puis <span class="font-bold underline">cliquez impérativement sur une des suggestions</span> de la liste pour valider l'adresse exacte.</p>
@@ -46,37 +45,37 @@
                     
                     {{-- Départ --}}
                     <div class="col-span-1 md:col-span-2 relative">
-                        <label class="font-bold text-gray-700 text-sm mb-2 block">Départ</label>
-                        <i class="fa-solid fa-location-dot absolute left-4 top-[2.8rem] text-gray-400"></i>
-                        <input type="text" id="depart" name="depart" value="{{ request('depart') }}" placeholder="Ville de départ..." class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-12 pr-4 focus:border-[#2E7D32] focus:outline-none focus:ring-1 focus:ring-[#2E7D32]">
+                        <label class="font-bold text-noir text-sm mb-2 block">Départ</label>
+                        <i class="fa-solid fa-location-dot absolute left-4 top-[2.8rem] text-vert-principale"></i>
+                        <input type="text" id="depart" name="depart" value="{{ request('depart') }}" placeholder="Ville de départ..." class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-12 pr-4 focus:border-vert-principale focus:outline-none focus:ring-1 focus:ring-vert-principale">
                         <ul id="liste-depart" class="absolute w-full bg-white border mt-1 max-h-60 overflow-auto shadow-lg hidden z-50 rounded-lg"></ul>
                     </div>
 
                     {{-- Arrivée --}}
                     <div class="col-span-1 md:col-span-2 relative">
-                        <label class="font-bold text-gray-700 text-sm mb-2 block">Arrivée</label>
-                        <i class="fa-solid fa-location-crosshairs absolute left-4 top-[2.8rem] text-[#2E7D32]"></i>
-                        <input type="text" id="arrivee" name="arrivee" value="{{ request('arrivee') }}" placeholder="Ville d'arrivée..." class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-12 pr-4 focus:border-[#2E7D32] focus:outline-none focus:ring-1 focus:ring-[#2E7D32]">
+                        <label class="font-bold text-noir text-sm mb-2 block">Arrivée</label>
+                        <i class="fa-solid fa-location-crosshairs absolute left-4 top-[2.8rem] text-vert-principale"></i>
+                        <input type="text" id="arrivee" name="arrivee" value="{{ request('arrivee') }}" placeholder="Ville d'arrivée..." class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-12 pr-4 focus:border-vert-principale focus:outline-none focus:ring-1 focus:ring-vert-principale">
                         <ul id="liste-arrivee" class="absolute w-full bg-white border mt-1 max-h-60 overflow-auto shadow-lg hidden z-50 rounded-lg"></ul>
                     </div>
 
                     {{-- Date & Heure --}}
                     <div>
-                        <label class="font-bold text-gray-700 text-sm mb-2 block">Date</label>
+                        <label class="font-bold text-noir text-sm mb-2 block">Date</label>
                         <div class="relative">
-                            <input type="text" id="date" name="date" value="{{ request('date') }}" placeholder="Sélectionner une date" class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 focus:border-[#2E7D32] focus:outline-none cursor-pointer">
+                            <input type="text" id="date" name="date" value="{{ request('date') }}" placeholder="Sélectionner une date" class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 focus:border-vert-principale focus:outline-none cursor-pointer">
                             <i class="fa-regular fa-calendar absolute right-4 top-3.5 text-gray-400 pointer-events-none"></i>
                         </div>
                     </div>
                     <div>
-                        <label class="font-bold text-gray-700 text-sm mb-2 block">Heure (Optionnel)</label>
+                        <label class="font-bold text-noir text-sm mb-2 block">Heure (Optionnel)</label>
                         <div class="relative">
-                            <input type="text" id="heure" name="heure" value="{{ request('heure') }}" placeholder="08:00" class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 focus:border-[#2E7D32] focus:outline-none cursor-pointer">
+                            <input type="text" id="heure" name="heure" value="{{ request('heure') }}" placeholder="08:00" class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 focus:border-vert-principale focus:outline-none cursor-pointer">
                             <i class="fa-regular fa-clock absolute right-4 top-3.5 text-gray-400 pointer-events-none"></i>
                         </div>
                     </div>
 
-                    {{-- Map Container avec passage de données --}}
+                    {{-- Map --}}
                     <div class="col-span-1 md:col-span-2 mt-4">
                         <div id="map" 
                             class="w-full h-64 rounded-xl border border-gray-200 z-0"
@@ -85,9 +84,9 @@
                         </div>
                     </div>
 
-                    {{-- Bouton Submit --}}
+                    {{-- Btn rechercher --}}
                     <div class="col-span-1 md:col-span-2">
-                        <button type="submit" class="cursor-pointer w-full bg-[#2E7D32] hover:bg-[#1b5e20] text-white font-bold py-3 rounded-xl transition shadow-md flex justify-center items-center gap-2 transform active:scale-95 relative z-20">
+                        <button type="submit" class="cursor-pointer w-full bg-vert-principale hover:bg-[#1b5e20] text-white font-bold py-3 rounded-xl transition shadow-md flex justify-center items-center gap-2 transform active:scale-95 relative z-20">
                             <i class="fa-solid fa-magnifying-glass"></i> Rechercher
                         </button>
                     </div>
@@ -109,7 +108,7 @@
                             </div>
                             <h3 class="text-lg font-bold text-[#333]">Aucun trajet trouvé</h3>
                             <p class="text-gray-500 mt-2 max-w-md mx-auto">Nous n'avons pas trouvé de trajet correspondant à vos critères. Essayez de modifier vos paramètres de recherche ou proposez votre propre trajet !</p>
-                            <a href="#" class="mt-6 inline-block bg-[#2E7D32] text-white px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-[#1b5e20] transition">Proposer un trajet</a>
+                            <a href="{{ route('trajets.create') }}" class="mt-6 inline-block bg-vert-principale text-white px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-[#1b5e20] transition">Proposer un trajet</a>
                         </div>
                     @else
                         <div class="space-y-4">
@@ -126,7 +125,7 @@
                 <div class="mb-6 flex justify-between items-end border-b pb-2">
                     <h2 class="text-xl font-bold text-[#333]">Vos Prochains Trajets</h2>
                     @if($mesTrajets->count() > 1)
-                        <button id="btn-voir-tout" onclick="toggleVoirTout()" class="cursor-pointer text-sm text-[#2E7D32] font-semibold hover:underline bg-transparent border-0">
+                        <button id="btn-voir-tout" onclick="toggleVoirTout()" class="cursor-pointer text-sm text-vert-principale font-semibold hover:underline bg-transparent border-0">
                                 Voir tout ({{ $mesTrajets->count() }})
                         </button>
                     @endif
@@ -147,11 +146,10 @@
                 @endif
             </div>
             
-            {{-- Footer CTA --}}
             <div class="bg-[#E0E5D5] rounded-3xl p-8 mt-16 text-center">
                 <h3 class="font-bold text-[#333] text-lg mb-2">Prêt à partir ?</h3>
                 <div class="flex justify-center gap-4 mt-4">
-                    <a href="#" class="bg-[#2E7D32] text-white px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-[#1b5e20] transition">Proposer</a>
+                    <a href="{{ route('trajets.create') }}" class="bg-vert-principale text-white px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-[#1b5e20] transition">Proposer</a>
                     <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' });" class="cursor-pointer bg-white text-[#333] px-6 py-2.5 rounded-lg font-bold text-sm border hover:bg-gray-50 transition">Rechercher</button>
                 </div>
                 <h4 class="text-gray-500 text-sm mt-4">Rejoignez la communauté Campus'Go et rendez vos trajets plus agréables.</h4>
@@ -160,13 +158,13 @@
         </div>
     </main>
 
-    {{-- MODALE RESERVER --}}
-    <div id="modal-reserver" class="fixed inset-0 z-[9999] hidden" aria-labelledby="modal-title-reserver" role="dialog" aria-modal="true">
+    {{-- RESERVER --}}
+    <div id="modal-reserver" class="fixed inset-0 hidden z-50" aria-labelledby="modal-title-reserver" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" onclick="closeModal('modal-reserver')"></div>
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto flex items-center justify-center p-4">
             <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full text-center transform transition-all scale-100">
                 <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
-                    <i class="fa-solid fa-check text-2xl text-green-600"></i>
+                    <i class="fa-solid fa-check text-2xl text-vert-principale"></i>
                 </div>
                 <h3 class="text-xl font-bold mb-2 text-gray-800">Confirmer la réservation</h3>
                 <p class="text-gray-500 text-sm mb-6">Voulez-vous réserver ce trajet ?</p>
@@ -174,14 +172,14 @@
                 <form id="form-reserver" action="" method="POST" class="flex gap-3 justify-center w-full">
                     @csrf 
                     <button type="button" onclick="closeModal('modal-reserver')" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-3 rounded-xl font-bold transition">Retour</button>
-                    <button type="submit" class="flex-1 bg-[#2E7D32] hover:bg-[#1b5e20] text-white px-4 py-3 rounded-xl font-bold transition shadow-lg">Réserver</button>
+                    <button type="submit" class="flex-1 bg-vert-principale hover:bg-[#1b5e20] text-white px-4 py-3 rounded-xl font-bold transition shadow-lg">Réserver</button>
                 </form>
             </div>
         </div>
     </div>
 
-    {{-- MODALE ANNULER --}}
-    <div id="modal-annuler" class="fixed inset-0 z-[9999] hidden" aria-labelledby="modal-title-annuler" role="dialog" aria-modal="true">
+    {{-- ANNULER --}}
+    <div id="modal-annuler" class="fixed inset-0 hidden z-50" aria-labelledby="modal-title-annuler" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" onclick="closeModal('modal-annuler')"></div>
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto flex items-center justify-center p-4">
             <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full text-center transform transition-all scale-100">
@@ -200,12 +198,11 @@
         </div>
     </div>
 
-    {{-- Scripts Externes --}}
+    {{-- Scripts --}}
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.9.4/mapbox-gl.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/fr.js"></script>
     
-    {{-- Ton script perso --}}
     @vite(['resources/js/recherche.js'])
 @endsection
 

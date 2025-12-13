@@ -14,9 +14,7 @@
 
             <nav class="hidden lg:flex space-x-8 items-center">
                 <a href="{{ url('/') }}" class="flex items-center text-gris1 font-semibold hover:text-vert-principale transition">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                    </svg>
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                     Accueil
                 </a>
                 <a href="{{ route('rechercher') }}" class="flex items-center text-gris1 hover:text-vert-principale transition font-medium">
@@ -31,16 +29,26 @@
                     </svg>
                     Mes Trajets
                 </a>
-                <a href="#" class="flex items-center text-gris1 hover:text-vert-principale transition font-medium">
+                @auth
+                <a href="{{ route('profile.show') }}" class="flex items-center text-gris1 hover:text-vert-principale transition font-medium">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
                     Profil
                 </a>
+                @else
+                    <a href="{{ route('profile.show') }}" class="flex items-center text-gris1 hover:text-vert-principale transition font-medium">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        Profil
+                    </a>
+                @endauth
             </nav>
 
             <div class="hidden lg:flex items-center space-x-6">
-                <a href="#" class="bg-vert-principale text-white px-5 py-2 rounded-md font-medium hover:bg-vert-principal-h transition shadow-sm whitespace-nowrap">
+                <a href="{{ route('trajets.create') }}" class="bg-vert-principale text-white px-5 py-2 rounded-md font-medium hover:bg-vert-principal-h transition shadow-sm whitespace-nowrap">
+
                     Proposer un Trajet
                 </a>
                 @auth {{--  Si l'utilisateur est connecté --}}
@@ -89,7 +97,7 @@
          class="lg:hidden bg-white border-t border-gray-200" id="mobile-menu">
         
         <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <a href="#" class="text-gris1 hover:text-vert-principale hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium flex items-center">
+            <a href="{{ url('/') }}" class="text-gris1 hover:text-vert-principale hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium flex items-center">
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                 Accueil
             </a>
@@ -109,7 +117,7 @@
 
         <div class="pt-4 pb-4 border-t border-gray-200">
             <div class="px-2 space-y-3">
-                <a href="#" class="block w-full text-center bg-vert-principale text-white px-5 py-3 rounded-md font-medium hover:bg-vert-principal-h transition shadow-sm">
+                <a href="{{route('trajets.create')}}" class="block w-full text-center bg-vert-principale text-white px-5 py-3 rounded-md font-medium hover:bg-vert-principal-h transition shadow-sm">
                     Proposer un Trajet
                 </a>
                 @auth {{--  Si l'utilisateur est connecté --}}
