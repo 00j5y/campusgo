@@ -3,7 +3,6 @@
 @section('title', 'Rechercher un trajet - Campus\'GO')
 
 @section('content')
-    {{-- CSS Libraries --}}
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.9.4/mapbox-gl.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://npmcdn.com/flatpickr/dist/themes/airbnb.css">
@@ -12,13 +11,13 @@
     <main class="bg-[#F3EDE3] min-h-screen py-12 relative">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             
-            {{-- Header --}}
+            {{Header}}
             <div class="text-center mb-8">
                 <h1 class="text-3xl font-semibold text-[#333] mb-2">Salut {{ $prenom }} ! Où voulez vous partir aujourd'hui ?</h1>
                 <p class="text-gray-500">Trouvez un covoiturage en quelques clics.</p>
             </div>
 
-            {{-- Notifications --}}
+            {{Notifications}}
             @if(session('success'))
                 <div class="max-w-4xl mx-auto mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
                     <i class="fa-solid fa-check-circle mr-2"></i> {{ session('success') }}
@@ -30,9 +29,9 @@
                 </div>
             @endif
 
-            {{-- Formulaire de Recherche --}}
+            {{Formulaire de Recherche}}
             <div class="bg-white rounded-3xl shadow-xl p-8 max-w-4xl mx-auto mb-12 relative z-10">
-                {{-- Conseil UX pour l'autocomplétion --}}
+
                 <div class="bg-blue-50 border-l-4 border-[#2E7D32] text-blue-800 p-4 mb-6 rounded-r-lg text-sm flex items-start gap-3">
                     <i class="fa-solid fa-circle-info mt-1 text-[#2E7D32]"></i>
                     <div>
@@ -44,7 +43,7 @@
                     <input type="hidden" id="coords_depart" name="coords_depart" value="{{ request('coords_depart') }}">
                     <input type="hidden" id="coords_arrivee" name="coords_arrivee" value="{{ request('coords_arrivee') }}">
                     
-                    {{-- Départ --}}
+                    {{Départ}}
                     <div class="col-span-1 md:col-span-2 relative">
                         <label class="font-bold text-gray-700 text-sm mb-2 block">Départ</label>
                         <i class="fa-solid fa-location-dot absolute left-4 top-[2.8rem] text-gray-400"></i>
@@ -52,7 +51,7 @@
                         <ul id="liste-depart" class="absolute w-full bg-white border mt-1 max-h-60 overflow-auto shadow-lg hidden z-50 rounded-lg"></ul>
                     </div>
 
-                    {{-- Arrivée --}}
+                    {{Arrivée}}
                     <div class="col-span-1 md:col-span-2 relative">
                         <label class="font-bold text-gray-700 text-sm mb-2 block">Arrivée</label>
                         <i class="fa-solid fa-location-crosshairs absolute left-4 top-[2.8rem] text-[#2E7D32]"></i>
@@ -60,7 +59,7 @@
                         <ul id="liste-arrivee" class="absolute w-full bg-white border mt-1 max-h-60 overflow-auto shadow-lg hidden z-50 rounded-lg"></ul>
                     </div>
 
-                    {{-- Date & Heure --}}
+                    {{Date & Heure}}
                     <div>
                         <label class="font-bold text-gray-700 text-sm mb-2 block">Date</label>
                         <div class="relative">
@@ -76,7 +75,7 @@
                         </div>
                     </div>
 
-                    {{-- Map Container avec passage de données --}}
+                    {{Map}}
                     <div class="col-span-1 md:col-span-2 mt-4">
                         <div id="map" 
                             class="w-full h-64 rounded-xl border border-gray-200 z-0"
@@ -85,7 +84,7 @@
                         </div>
                     </div>
 
-                    {{-- Bouton Submit --}}
+                    {{Btn rechercher}}
                     <div class="col-span-1 md:col-span-2">
                         <button type="submit" class="cursor-pointer w-full bg-[#2E7D32] hover:bg-[#1b5e20] text-white font-bold py-3 rounded-xl transition shadow-md flex justify-center items-center gap-2 transform active:scale-95 relative z-20">
                             <i class="fa-solid fa-magnifying-glass"></i> Rechercher
@@ -94,7 +93,7 @@
                 </form>
             </div>
 
-            {{-- Résultats de recherche --}}
+            {{Résultats de recherche}}
             @if($rechercheFaite)
                 <div class="max-w-4xl mx-auto mb-16 animate-fade-in-up">
                     <h2 class="text-xl font-bold text-[#333] mb-6 flex items-center gap-2">
@@ -121,7 +120,7 @@
                 </div>
             @endif
 
-            {{-- Mes Prochains Trajets --}}
+            {{Mes Prochains Trajets}}
             <div class="max-w-4xl mx-auto">
                 <div class="mb-6 flex justify-between items-end border-b pb-2">
                     <h2 class="text-xl font-bold text-[#333]">Vos Prochains Trajets</h2>
@@ -147,7 +146,6 @@
                 @endif
             </div>
             
-            {{-- Footer CTA --}}
             <div class="bg-[#E0E5D5] rounded-3xl p-8 mt-16 text-center">
                 <h3 class="font-bold text-[#333] text-lg mb-2">Prêt à partir ?</h3>
                 <div class="flex justify-center gap-4 mt-4">
@@ -160,7 +158,7 @@
         </div>
     </main>
 
-    {{-- MODALE RESERVER --}}
+    {{RESERVER}}
     <div id="modal-reserver" class="fixed inset-0 z-[9999] hidden" aria-labelledby="modal-title-reserver" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" onclick="closeModal('modal-reserver')"></div>
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto flex items-center justify-center p-4">
@@ -180,7 +178,7 @@
         </div>
     </div>
 
-    {{-- MODALE ANNULER --}}
+    {{ANNULER}}
     <div id="modal-annuler" class="fixed inset-0 z-[9999] hidden" aria-labelledby="modal-title-annuler" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" onclick="closeModal('modal-annuler')"></div>
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto flex items-center justify-center p-4">
@@ -200,12 +198,11 @@
         </div>
     </div>
 
-    {{-- Scripts Externes --}}
+    {{Scripts}}
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.9.4/mapbox-gl.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/fr.js"></script>
     
-    {{-- Ton script perso --}}
     @vite(['resources/js/recherche.js'])
 @endsection
 
