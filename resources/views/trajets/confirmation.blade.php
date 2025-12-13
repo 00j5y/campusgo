@@ -3,7 +3,7 @@
 @section('title', 'Proposer un trajet - Campus\'GO')
 
 @section('content')
-    <main class="mx-auto max-w-xl p- text-center m-30">
+    <main class="mx-auto max-w-xl p-6 text-center m-30">
 
     <div class="bg-white border border-vert-principale/50 rounded-xl p-8 shadow-xl">
         
@@ -20,7 +20,7 @@
             Accueil
             </a>
     
-            <a href="#" class="inline-block border border-gray-300 text-gray-700 px-8 py-2 rounded-md font-medium transition w-full sm:w-auto hover:bg-gray-100">
+            <a href="{{ route('historique-trajet') }}" class="inline-block border border-gray-300 text-gray-700 px-8 py-2 rounded-md font-medium transition w-full sm:w-auto hover:bg-gray-100">
             Voir Mes Trajets
             </a>
         </div>

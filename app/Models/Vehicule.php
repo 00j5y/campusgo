@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Vehicule extends Model
 {
@@ -23,6 +23,10 @@ class Vehicule extends Model
         'id_utilisateur',
     ];
 
+    public function user(){
+        return $this->belongsTo(User::class, 'id_utilisateur');
+    }
+  
     public function utilisateur() {
         return $this->belongsTo(User::class, 'id_utilisateur', 'id');
     }
