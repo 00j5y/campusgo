@@ -25,7 +25,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Table Historique Connexions (AJOUTÉ)
+        // Table Historique Connexions
         Schema::create('historique_connexions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_utilisateur')
@@ -69,6 +69,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        // Table Préférence
         Schema::create('preference', function (Blueprint $table) {
             $table->id();
             $table->boolean('accepte_animaux')->default(false);
@@ -77,7 +78,6 @@ return new class extends Migration
             $table->boolean('accepte_discussion')->default(true);
             
             $table->boolean('telephone_public')->default(false);
-            $table->boolean('trajets_publics')->default(true);
 
             $table->foreignId('id_utilisateur')
                 ->constrained('utilisateur')
