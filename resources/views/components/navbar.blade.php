@@ -1,4 +1,4 @@
-<header x-data="{ isOpen: false }" class="bg-white shadow-lg relative">
+<header x-data="{ isOpen: false }" class="bg-white shadow-lg relative z-50">
     <div class="mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-20">
 
