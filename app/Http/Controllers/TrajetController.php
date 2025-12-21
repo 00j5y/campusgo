@@ -132,6 +132,9 @@ class TrajetController extends Controller
 
     public function mesTrajets()
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
         $userId = Auth::id();
 
         // ID des trajets réservés en tant que passager
