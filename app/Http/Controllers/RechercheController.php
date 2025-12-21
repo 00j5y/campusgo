@@ -62,7 +62,7 @@ class RechercheController extends Controller
                 }
             }
 
-            $resultats = $query->orderBy('date_depart')->get();
+            $resultats = $query->with('conducteur')->orderBy('date_depart')->get();
         }
 
         return view('rechercher', compact(
