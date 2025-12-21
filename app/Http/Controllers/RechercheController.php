@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Trajet;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class RechercheController extends Controller
 {
@@ -18,17 +19,26 @@ class RechercheController extends Controller
 
         // Trajets de l'utilisateur connecté
         if ($user) {
-            $trajetsConducteur = Trajet::where('id_utilisateur', $user->id)
-                ->orderBy('date_depart')
-                ->get();
+            $idsReservations = DB::table('reserver')
+                ->where('id_utilisateur', $user->id)
+                ->pluck('id_trajet')
+                ->toArray();
 
-            $trajetsPassager = $user->reservations()
+            $mesTrajets = Trajet::with('conducteur') 
+                ->where(function ($query) use ($user, $idsReservations) {
+                    $query->where('id_utilisateur', $user->id)
+                          ->orWhereIn('id', $idsReservations);
+                })
+                ->where(function ($query) {
+                    $query->where('date_depart', '>', Carbon::now()->toDateString())
+                          ->orWhere(function ($q) {
+                              $q->where('date_depart', Carbon::now()->toDateString())
+                                ->where('heure_depart', '>', Carbon::now()->toTimeString());
+                          });
+                })
                 ->orderBy('date_depart')
+                ->orderBy('heure_depart')
                 ->get();
-
-            $mesTrajets = $trajetsConducteur
-                ->merge($trajetsPassager)
-                ->sortBy('date_depart');
         }
 
         $rechercheFaite = false;
