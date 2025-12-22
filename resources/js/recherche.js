@@ -10,10 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const coordsDepart = document.getElementById('coords_depart');
     const coordsArrivee = document.getElementById('coords_arrivee');
     const inverserBtn = document.getElementById('btn-inverser-recherche');
-    const form = document.querySelector('form');
+    const form = document.getElementById('form-recherche');
 
     // Variable pour éviter les boucles infinies lors des mises à jour automatiques
     let isProgrammatic = false;
+
 
     const IUT_AMIENS = {
         label: "IUT Amiens, Avenue des Facultés",
@@ -21,6 +22,29 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     mapboxgl.accessToken = mapboxToken;
+
+    function showInputError(input, errorId) {
+        const errorEl = document.getElementById(errorId);
+        if (input) {
+            input.classList.remove('border-gray-200', 'focus:border-vert-principale', 'focus:ring-vert-principale');
+            input.classList.add('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
+        }
+        if (errorEl) {
+            errorEl.innerText = "Veuillez cliquer sur une suggestion pour valider l'adresse.";
+            errorEl.classList.remove('hidden');
+        }
+    }
+
+    function clearInputError(input, errorId) {
+        const errorEl = document.getElementById(errorId);
+        if (input) {
+            input.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
+            input.classList.add('border-gray-200', 'focus:border-vert-principale', 'focus:ring-vert-principale');
+        }
+        if (errorEl) {
+            errorEl.classList.add('hidden');
+        }
+    }
 
     // OUTILS UI
     flatpickr("#date", {
@@ -36,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         noCalendar: true,
         dateFormat: "H:i",
         time_24hr: true,
-        defaultDate: "08:00"
+
     });
 
     //CARTE PRINCIPALE
@@ -91,12 +115,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const input = document.getElementById(idInput);
         const list = document.getElementById(idList);
         const hidden = document.getElementById(idHidden);
+        const errorId = 'error-' + idInput; // ex: error-depart
 
         if (!input) return;
 
         let timeout = null;
 
         input.addEventListener('input', function () {
+            // >>> AJOUT : Nettoyage erreur dès la frappe
+            clearInputError(input, errorId);
+
             if (isProgrammatic || input.readOnly) return;
 
             hidden.value = ""; 
@@ -118,7 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             list.classList.add('hidden');
                             return;
                         }
-
                         list.classList.remove('hidden');
 
                         d.features.forEach(f => {
@@ -130,11 +157,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                 isProgrammatic = true; 
                                 input.value = f.properties.label;
                                 hidden.value = f.geometry.coordinates;
+                                
+                                // >>> AJOUT : Validation OK, on nettoie l'erreur
+                                clearInputError(input, errorId);
                                 list.classList.add('hidden');
+                                
                                 isProgrammatic = false;
 
                                 applyConstraint(idInput === 'depart' ? 'depart' : 'arrivee');
-                                
                                 verifierEtTracerRoute();
                             };
 
@@ -151,6 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+        
 
     setupAutocomplete('depart', 'liste-depart', 'coords_depart');
     setupAutocomplete('arrivee', 'liste-arrivee', 'coords_arrivee');
@@ -172,12 +204,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (form) {
         form.addEventListener('submit', function(e) {
-            const depInvalid = !departInput.readOnly && departInput.value && !coordsDepart.value;
-            const arrInvalid = !arriveeInput.readOnly && arriveeInput.value && !coordsArrivee.value;
+            let hasError = false;
 
-            if (depInvalid || arrInvalid) {
-                e.preventDefault();
-                alert("Veuillez sélectionner une adresse dans la liste déroulante pour valider la localisation précise.");
+            // Vérification DÉPART
+            if (!departInput.readOnly && departInput.value && !coordsDepart.value) {
+                showInputError(departInput, 'error-depart');
+                hasError = true;
+            } else {
+                clearInputError(departInput, 'error-depart');
+            }
+
+            // Vérification ARRIVÉE
+            if (!arriveeInput.readOnly && arriveeInput.value && !coordsArrivee.value) {
+                showInputError(arriveeInput, 'error-arrivee');
+                hasError = true;
+            } else {
+                clearInputError(arriveeInput, 'error-arrivee');
+            }
+
+            if (hasError) {
+                e.preventDefault(); 
             }
         });
     }
