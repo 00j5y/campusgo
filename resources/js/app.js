@@ -1,5 +1,4 @@
 import './bootstrap';
-import './proposer.js';
 
 import Alpine from 'alpinejs';
 

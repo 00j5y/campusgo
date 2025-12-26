@@ -1,189 +1,314 @@
-//public/js/proposer.js
+//FONCTION DE SAUVEGARDE GLOBALE 
+window.saveFormData = function() {
+    const formData = {
+        lieu_depart: document.getElementById('lieu_depart')?.value,
+        lieu_arrivee: document.getElementById('lieu_arrivee')?.value,
+        date_depart: document.getElementById('date_depart')?.value,
+        heure_depart: document.getElementById('heure_depart')?.value,
+        places_disponibles: document.getElementById('places_disponibles')?.value
+    };
+    localStorage.setItem('trajet_temp_data', JSON.stringify(formData));
+};
 
 document.addEventListener('DOMContentLoaded', function() {
-    const iutAddress = "IUT Amiens, Avenue des Facultés";
+
+    //VARIABLES
+    const IUT_LABEL = "IUT Amiens, Avenue des Facultés";
+    const IUT_COORDS = "2.263592,49.873836";
+
     const departInput = document.getElementById('lieu_depart');
     const arriveeInput = document.getElementById('lieu_arrivee');
+    const coordsDepart = document.getElementById('coords_depart');
+    const coordsArrivee = document.getElementById('coords_arrivee');
     const inverserButton = document.getElementById('btn-inverser-lieux');
-    
-    let isProgrammaticChange = false;
-    
-    //Fonction utilitaire pour bloquer/débloquer et gérer la valeur IUT
-    function setInputState(input, isIUTBlocked, valueToSet) {
-        input.readOnly = isIUTBlocked;
-        input.style.backgroundColor = isIUTBlocked ? '#f0f0f0' : '';
-        
-        //Si c'est le champ IUT (bloqué), forcer la valeur IUT
-        if (isIUTBlocked) {
-            input.value = iutAddress;
-        } else {
-            //Si ce n'est pas bloqué, utiliser la valeur fournie (saisie utilisateur)
-            input.value = valueToSet || ''; 
-        }
-    }
-    
-    //Initialisation de l'état : Les deux champs sont vides et modifiables
-    function initializeFields() {
-        if (arriveeInput) {
-            setInputState(arriveeInput, false, ''); 
-        }
-        if (departInput) {
-            setInputState(departInput, false, '');
-        }
-    }
-    
-    //Logique d'Auto-Remplissage et d'Interversion 
-
-    function handleInput(event) {
-        if (isProgrammaticChange) return;
-
-        const changedInput = event.target;
-        let otherInput;
-        
-        if (changedInput === departInput) {
-            otherInput = arriveeInput;
-        } else if (changedInput === arriveeInput) {
-            otherInput = departInput;
-        } else {
-            return;
-        }
-
-        const isInputEmpty = changedInput.value.trim() === '';
-
-        isProgrammaticChange = true;
-        
-        if (!isInputEmpty) {
-            
-            //L'utilisateur tape dans le champ (Départ ou Arrivée)
-            //L'autre champ est OBLIGATOIREMENT l'IUT et bloqué
-            setInputState(otherInput, true); 
-            
-            //Le champ modifié est débloqué et conserve sa saisie
-            setInputState(changedInput, false, changedInput.value); 
-            
-        } else {
-
-            //L'utilisateur EFFACE complétement le champ (vide)
-            //Les deux champs sont maintenant vides et modifiables
-            setInputState(changedInput, false, '');
-            setInputState(otherInput, false, ''); 
-        }
-        
-        isProgrammaticChange = false;
-    }
-
-    //Inversion du départ et d'arrivée
-
-    function invertLieux() {
-        
-        //Lire les valeurs actuelles
-        const departValue = departInput.value;
-        const arriveeValue = arriveeInput.value;
-        
-        const departEstBloque = departInput.readOnly;
-        const arriveeEstBloque = arriveeInput.readOnly;
-        
-        isProgrammaticChange = true;
-        
-        if (departEstBloque) {
-
-            //IUT était en DÉPART : Nouvelle état: Adresse -> IUT
-            //DÉPART : Débloqué et reçoit l'ancienne valeur d'ARRIVÉE
-            setInputState(departInput, false, arriveeValue); 
-
-            //ARRIVÉE : Bloqué et reçoit l'IUT
-            setInputState(arriveeInput, true); 
-
-        } else if (arriveeEstBloque) {
-
-            //IUT était en ARRIVÉE : Nouvelle état: IUT -> Adresse
-            //ARRIVÉE : Débloqué, reçoit l'ancienne valeur de DÉPART (la Adresse)
-            setInputState(arriveeInput, false, departValue);
-
-            //DÉPART : Bloqué, reçoit l'IUT
-            setInputState(departInput, true);
-            
-        } else {
-
-            //Les deux sont vides/modifiables (état initial).
-            //On force l'état par défaut : Adresse en Départ / IUT en Arrivée
-            //DÉPART : Débloqué
-            setInputState(departInput, false, departValue); 
-            
-            //ARRIVÉE : Bloqué (IUT)
-            setInputState(arriveeInput, true); 
-        }
-
-        isProgrammaticChange = false;
-    }
-
-    //Écouteurs d'événements et Initialisation 
-    if (departInput && arriveeInput) {
-        departInput.addEventListener('input', handleInput);
-        arriveeInput.addEventListener('input', handleInput);
-        
-        initializeFields(); 
-    }
-
-    if (inverserButton) {
-        inverserButton.addEventListener('click', invertLieux);
-    }
-
-    //Bouton "Utiliser"
-
     const useButton = document.getElementById('btn-utiliser'); 
     const dataContainer = document.getElementById('dernier-trajet-data'); 
+    const form = document.getElementById('form-creation');
 
-    if (useButton && dataContainer) {
-        useButton.addEventListener('click', function() {
+    let isProgrammaticChange = false; // Pour éviter les boucles infinies
+
+    //CONFIGURATION Calendriers
+    let datePicker = null;
+    let timePicker = null;
+
+    if(document.getElementById("date_depart")) {
+        datePicker = flatpickr("#date_depart", {
+            locale: "fr",
+            minDate: "today",
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "d/m/Y",  
+            disableMobile: true,
+            allowInput: true
+        });
+    }
+
+    if(document.getElementById("heure_depart")) {
+        timePicker = flatpickr("#heure_depart", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            time_24hr: true,
+        });
+    }
+
+    
+    // Gère l'état visuel et logique d'un champ 
+    function setFieldState(input, hiddenInput, isBlocked, value = '', coords = '') {
+        if(!input) return;
+
+        input.readOnly = isBlocked;
+        input.style.backgroundColor = isBlocked ? '#f3f4f6' : '#ffffff';
+        input.style.cursor = isBlocked ? 'not-allowed' : 'text';
+
+        if (isBlocked) {
+            // Si bloqué -> C'est l'IUT
+            input.value = IUT_LABEL;
+            if(hiddenInput) hiddenInput.value = IUT_COORDS;
+            input.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
+        } else {
+            // Si débloqué -> On met la valeur demandée 
+            if (value !== null) input.value = value;
+            if (hiddenInput) hiddenInput.value = coords || '';
+        }
+    }
+
+    //AUTOCOMPLETE
+    function setupAutocomplete(inputId, listId, hiddenId) {
+        const input = document.getElementById(inputId);
+        const list = document.getElementById(listId);
+        const hidden = document.getElementById(hiddenId);
+        let timeout = null;
+
+        if (!input || !list) return;
+
+        input.addEventListener('input', function() {
+            if (isProgrammaticChange || input.readOnly) return;
             
-            //Récupération des données du dernier trajet (via les attributs de données du Blade)
-            const depart = dataContainer.getAttribute('js-depart');
-            const arrivee = dataContainer.getAttribute('js-arrivee');
-            const heure = dataContainer.getAttribute('js-heure');
-            const places = dataContainer.getAttribute('js-places');
-            const vehiculeId = dataContainer.getAttribute('js-vehicule');
+            if(hidden) hidden.value = "";
+            
+            const query = this.value;
+            clearTimeout(timeout);
 
-            //On active le flag pour que le script ignore les changements de valeur
+            if (query.length < 3) {
+                list.classList.add('hidden');
+                return;
+            }
+
+            timeout = setTimeout(() => {
+                fetch(`https://api-adresse.data.gouv.fr/search/?q=${query}&limit=5`)
+                    .then(r => r.json())
+                    .then(d => {
+                        list.innerHTML = '';
+                        if (!d.features || d.features.length === 0) {
+                            list.classList.add('hidden');
+                            return;
+                        }
+                        list.classList.remove('hidden');
+
+                        d.features.forEach(f => {
+                            const li = document.createElement('li');
+                            li.className = "px-4 py-3 hover:bg-gray-100 cursor-pointer border-b text-sm text-gray-700";
+                            li.textContent = f.properties.label;
+                            
+                            li.addEventListener('click', () => {
+                                isProgrammaticChange = true;
+                                input.value = f.properties.label;
+                                if(hidden) hidden.value = f.geometry.coordinates;
+                                list.classList.add('hidden');
+                                isProgrammaticChange = false;
+                                
+                                // On applique la contrainte IUT 
+                                handleConstraint(input === departInput ? 'depart' : 'arrivee');
+                                
+                                // Nettoyage erreurs
+                                input.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
+                                const errId = input === departInput ? 'error-lieu-depart' : 'error-lieu-arrivee';
+                                document.getElementById(errId)?.classList.add('hidden');
+                            });
+                            
+                            list.appendChild(li);
+                        });
+                    })
+                    .catch(() => list.classList.add('hidden'));
+            }, 300);
+        });
+
+        // Fermer la liste si on clique ailleurs
+        document.addEventListener('click', e => {
+            if (e.target !== input && e.target !== list) {
+                list.classList.add('hidden');
+            }
+        });
+    }
+
+    setupAutocomplete('lieu_depart', 'liste-depart', 'coords_depart');
+    setupAutocomplete('lieu_arrivee', 'liste-arrivee', 'coords_arrivee');
+
+    //LOGIQUE CONTRAINTE IUT
+    function handleConstraint(source) {
+        if(isProgrammaticChange) return;
+
+        if (source === 'depart' && departInput) {
+            if (departInput.value.trim() !== '') {
+                setFieldState(arriveeInput, coordsArrivee, true);
+            } else {
+                setFieldState(arriveeInput, coordsArrivee, false, '');
+            }
+        } else if (source === 'arrivee' && arriveeInput) {
+            if (arriveeInput.value.trim() !== '') {
+                setFieldState(departInput, coordsDepart, true);
+            } else {
+                setFieldState(departInput, coordsDepart, false, '');
+            }
+        }
+    }
+
+    if(departInput) departInput.addEventListener('input', () => handleConstraint('depart'));
+    if(arriveeInput) arriveeInput.addEventListener('input', () => handleConstraint('arrivee'));
+
+    //BOUTON INVERSER
+    if (inverserButton) {
+        inverserButton.addEventListener('click', function() {
             isProgrammaticChange = true;
             
-            //Déterminer quel champ était l'IUT dans le trajet précédent
-            const dernierDepartEstIUT = depart.toLowerCase() === iutAddress.toLowerCase();
-            const dernierArriveeEstIUT = arrivee.toLowerCase() === iutAddress.toLowerCase();
+            // On échange les valeurs, les coords et l'état ReadOnly
+            const dVal = departInput.value;
+            const dCoords = coordsDepart.value;
+            const dReadOnly = departInput.readOnly;
+
+            const aVal = arriveeInput.value;
+            const aCoords = coordsArrivee.value;
+            const aReadOnly = arriveeInput.readOnly;
+
+            setFieldState(departInput, coordsDepart, aReadOnly, aVal, aCoords);
+            setFieldState(arriveeInput, coordsArrivee, dReadOnly, dVal, dCoords);
             
-            //Application de la Contrainte IUT et remplissage des champs de Lieu
-            if (dernierDepartEstIUT) {
-                //Trajet précédent: IUT -> Adresse
-                setInputState(departInput, true, depart); //Départ Bloqué sur IUT
-                setInputState(arriveeInput, false, arrivee); //Arrivée: Débloqué et reçoit l'adresse de la Adresse
-                
-            } else if (dernierArriveeEstIUT) {
-                //Trajet précédent: Adresse -> IUT
-                setInputState(arriveeInput, true, arrivee); //Arrivée Bloqué sur IUT
-                setInputState(departInput, false, depart); //Départ Débloqué et reçoit l'adresse de la Adresse
-                
-            } else {
-                //Cas d'erreur : On force la contrainte par défaut (IUT en Arrivée)
-                
-                //On met les valeurs brutes
-                departInput.value = depart; 
-                arriveeInput.value = arrivee;
-                
-                //On applique la contrainte manuellement (force l'arrivée à l'IUT)
-                setInputState(arriveeInput, true, arrivee); 
-                setInputState(departInput, false, depart); 
-            }
-
-            //Remplissage des autres champs (Heure, Places, Véhicule)
-            document.getElementById('heure_depart').value = heure;
-            document.getElementById('places_disponibles').value = places;
-            const selectVehicule = document.getElementById('vehicule_id');
-            if (selectVehicule) {
-                selectVehicule.value = vehiculeId;
-            }
-
             isProgrammaticChange = false;
         });
     }
 
+    // BOUTON "UTILISER"
+    if (useButton && dataContainer) {
+        useButton.addEventListener('click', function() {
+            try {
+                isProgrammaticChange = true;
+
+                // Récupération des attributs HTML injectés par Blade
+                const prevDepart = dataContainer.getAttribute('js-depart') || '';
+                const prevArrivee = dataContainer.getAttribute('js-arrivee') || '';
+                const prevDate = dataContainer.getAttribute('js-date');
+                const prevHeure = dataContainer.getAttribute('js-heure'); 
+                const prevPlaces = dataContainer.getAttribute('js-places');
+                const prevVehicule = dataContainer.getAttribute('js-vehicule');
+
+                const departIsIUT = prevDepart.toLowerCase().includes('iut amiens') || prevDepart.toLowerCase().includes('facultés');
+                
+                if (departIsIUT) {
+                    setFieldState(departInput, coordsDepart, true);
+                    setFieldState(arriveeInput, coordsArrivee, false, prevArrivee); 
+                } else {
+                    setFieldState(arriveeInput, coordsArrivee, true);
+                    setFieldState(departInput, coordsDepart, false, prevDepart);
+                }
+
+                if (prevDate && datePicker) {
+                    // Si la date est passée, Flatpickr l'ignorera 
+                    datePicker.setDate(prevDate, true);
+                }
+                
+                if (prevHeure && timePicker) {
+                    timePicker.setDate(prevHeure, true);
+                }
+
+                const placesSelect = document.getElementById('places_disponibles');
+                const vehiculeSelect = document.getElementById('vehicule_id');
+                
+                if (placesSelect && prevPlaces) placesSelect.value = prevPlaces;
+                if (vehiculeSelect && prevVehicule) vehiculeSelect.value = prevVehicule;
+
+                [departInput, arriveeInput].forEach(input => {
+                    if(input) {
+                        input.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
+                        const errId = input === departInput ? 'error-lieu-depart' : 'error-lieu-arrivee';
+                        document.getElementById(errId)?.classList.add('hidden');
+                    }
+                });
+
+            } catch (error) {
+                console.error("Erreur remplissage auto :", error);
+            } finally {
+                isProgrammaticChange = false;
+            }
+        });
+    }
+
+    //VALIDATION DU FORMULAIRE
+    if(form) {
+        form.addEventListener('submit', function(e) {
+            let isValid = true;
+            const errDep = document.getElementById('error-lieu-depart');
+            const errArr = document.getElementById('error-lieu-arrivee');
+
+            if(errDep) errDep.classList.add('hidden');
+            if(errArr) errArr.classList.add('hidden');
+            if(departInput) departInput.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
+            if(arriveeInput) arriveeInput.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
+
+            if (departInput && departInput.value && !coordsDepart.value && departInput.value !== IUT_LABEL) {
+                isValid = false;
+                departInput.classList.add('border-red-500', 'ring-1', 'ring-red-500');
+                if(errDep) {
+                    errDep.textContent = "Veuillez cliquer sur une suggestion pour valider l'adresse.";
+                    errDep.classList.remove('hidden');
+                }
+            }
+
+            if (arriveeInput && arriveeInput.value && !coordsArrivee.value && arriveeInput.value !== IUT_LABEL) {
+                isValid = false;
+                arriveeInput.classList.add('border-red-500', 'ring-1', 'ring-red-500');
+                if(errArr) {
+                    errArr.textContent = "Veuillez cliquer sur une suggestion pour valider l'adresse.";
+                    errArr.classList.remove('hidden');
+                }
+            }
+
+            if (!isValid) {
+                e.preventDefault(); 
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    }
+
+    //RESTAURATION DES DONNÉES
+    const savedData = localStorage.getItem('trajet_temp_data');
+    if (savedData) {
+        try {
+            const data = JSON.parse(savedData);
+            
+            setTimeout(() => {
+                isProgrammaticChange = true;
+
+                if (data.lieu_depart && departInput) departInput.value = data.lieu_depart;
+                if (data.lieu_arrivee && arriveeInput) arriveeInput.value = data.lieu_arrivee;
+                
+                if (data.date_depart && datePicker) datePicker.setDate(data.date_depart);
+                if (data.heure_depart && timePicker) timePicker.setDate(data.heure_depart);
+                
+                const places = document.getElementById('places_disponibles');
+                if (places && data.places_disponibles) places.value = data.places_disponibles;
+
+                if(departInput && departInput.value === IUT_LABEL) {
+                    setFieldState(departInput, coordsDepart, true);
+                    setFieldState(arriveeInput, coordsArrivee, false, data.lieu_arrivee);
+                } else if (arriveeInput && arriveeInput.value === IUT_LABEL) {
+                    setFieldState(arriveeInput, coordsArrivee, true);
+                    setFieldState(departInput, coordsDepart, false, data.lieu_depart);
+                }
+
+                isProgrammaticChange = false;
+                localStorage.removeItem('trajet_temp_data');
+            }, 100);
+        } catch(e) { console.error(e); }
+    }
 });

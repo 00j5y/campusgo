@@ -33,6 +33,6 @@ class Trajet extends Model
 
     public function conducteur()
     {
-        return $this->belongsTo(User::class, 'id_utilisateur', 'id_utilisateur');
+        return $this->belongsTo(User::class, 'id_utilisateur', 'id');
     }
 }
