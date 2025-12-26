@@ -72,10 +72,28 @@
                 </button>
                 
                 @if($etat !== 'passe')
+                    {{-- Si le trajet est À VENIR -> Bouton Annuler --}}
                     <button onclick="openAnnulerModal('{{ route('annuler', $trajet->id) }}')" 
                             class="cursor-pointer w-full bg-[#FF5A5F] hover:bg-[#E0484D] text-white font-bold py-2 px-4 rounded-lg transition text-sm text-center">
                         Annuler
                     </button>
+                @else
+                    {{-- Si le trajet est PASSÉ --}}
+                    
+                    {{-- Bouton Noter (si pas encore noté) --}}
+                    @if(Auth::check() && $trajet->id_utilisateur !== Auth::id())
+                    
+                        <a href="{{ route('reviews.create', ['id_trajet' => $trajet->id]) }}" 
+                        class="cursor-pointer w-full border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white font-bold py-2 px-4 rounded-lg transition text-sm text-center flex items-center justify-center gap-2">
+                            <i class="fa-regular fa-star"></i> Noter
+                        </a>
+                        
+                    @else
+                        <span class="block w-full text-center text-xs text-gray-400 italic py-2 border border-transparent">
+                            Trajet terminé
+                        </span>
+                    @endif
+
                 @endif
             @endif
         </div>

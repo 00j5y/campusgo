@@ -18,6 +18,7 @@
 
         <div class="max-w-3xl mx-auto space-y-8">
 
+            {{-- BLOC STATISTIQUES (Moyenne) --}}
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-full h-1 bg-vert-principale"></div>
                 
@@ -41,35 +42,51 @@
                 </p>
             </div>
 
+            {{-- LISTE DES AVIS --}}
             <div class="space-y-4">
                 @forelse($reviews as $review)
                     <div class="bg-white rounded-xl p-6 border border-gray-100 shadow-sm transition hover:shadow-md">
                         <div class="flex gap-4">
+                            
+                            {{-- AVATAR (Initiale de l'auteur) --}}
                             <div class="shrink-0">
                                 <div class="w-12 h-12 bg-vert-principale/10 rounded-full flex items-center justify-center text-vert-principale font-bold text-lg border border-vert-principale/20">
-                                    {{ substr($review['author'], 0, 1) }}
+                                    {{-- On vérifie si l'auteur existe (au cas où un utilisateur est supprimé) --}}
+                                    {{ $review->auteur ? substr($review->auteur->prenom, 0, 1) : '?' }}
                                 </div>
                             </div>
                             
                             <div class="flex-1">
                                 <div class="flex justify-between items-start mb-1">
-                                    <h3 class="font-bold text-noir text-lg">{{ $review['author'] }}</h3>
-                                    <span class="text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded-md border border-gray-100">{{ $review['date'] }}</span>
+                                    {{-- NOM DE L'AUTEUR --}}
+                                    <h3 class="font-bold text-noir text-lg">
+                                        {{ $review->auteur ? $review->auteur->prenom : 'Utilisateur supprimé' }}
+                                    </h3>
+                                    
+                                    {{-- DATE (Formatée "Il y a X jours") --}}
+                                    {{-- diffForHumans() gère automatiquement "il y a X temps" --}}
+                                    <span class="text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded-md border border-gray-100">
+                                        {{ $review->created_at->diffForHumans() }}
+                                    </span>
                                 </div>
                                 
+                                {{-- ÉTOILES INDIVIDUELLES --}}
                                 <div class="flex text-yellow-400 text-sm mb-3">
                                     @for($i = 0; $i < 5; $i++)
-                                        <span>{{ $i < $review['rating'] ? '★' : '☆' }}</span>
+                                        {{-- On compare avec $review->note (colonne BDD) --}}
+                                        <span>{{ $i < $review->note ? '★' : '☆' }}</span>
                                     @endfor
                                 </div>
                                 
+                                {{-- COMMENTAIRE --}}
                                 <p class="text-gray-600 leading-relaxed">
-                                    "{{ $review['comment'] }}"
+                                    "{{ $review->commentaire }}"
                                 </p>
                             </div>
                         </div>
                     </div>
                 @empty
+                    {{-- SI AUCUN AVIS --}}
                     <div class="text-center py-16 bg-white rounded-xl border border-dashed border-gray-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-300 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />

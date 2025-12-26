@@ -7,7 +7,7 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         
         <div class="mb-8">
-            <a href="{{ route('reviews.index') }}" class="text-vert-principale hover:underline font-medium flex items-center gap-1 mb-4">
+            <a href="{{ route('historique-trajet') }}" class="text-vert-principale hover:underline font-medium flex items-center gap-1 mb-4">
                 &larr; Retour à mes trajets
             </a>
             <h1 class="text-3xl font-bold text-noir">Évaluer le trajet</h1>
@@ -16,52 +16,58 @@
 
         <div class="max-w-3xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
 
+            {{-- COLONNE GAUCHE : RÉCAPITULATIF TRAJET --}}
             <div class="lg:col-span-1 space-y-6">
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                     <div class="flex items-center gap-4 mb-6">
                         <div class="w-12 h-12 bg-beige-principale rounded-full flex items-center justify-center text-noir font-bold">
-                            SB
+                            {{ substr($trajet->conducteur->prenom, 0, 1) }}{{ substr($trajet->conducteur->nom, 0, 1) }}
                         </div>
                         <div>
                             <p class="text-xs text-gris1 uppercase">Conducteur</p>
-                            <p class="font-bold text-noir text-lg">{{ $trip['driver_name'] }}</p>
+                            <p class="font-bold text-noir text-lg">{{ $trajet->conducteur->prenom }} {{ $trajet->conducteur->nom }}</p>
                         </div>
                     </div>
                     
                     <div class="space-y-4 relative pl-4 border-l-2 border-gray-100">
                         <div class="relative">
                             <div class="absolute -left-[21px] top-1.5 w-3 h-3 rounded-full bg-vert-principale"></div>
-                            <p class="font-semibold text-noir">{{ $trip['from'] }}</p>
+                            <p class="font-semibold text-noir">{{ $trajet->lieu_depart }}</p>
                         </div>
                         <div class="relative">
                             <div class="absolute -left-[21px] top-1.5 w-3 h-3 rounded-full bg-noir"></div>
-                            <p class="font-semibold text-noir">{{ $trip['to'] }}</p>
+                            <p class="font-semibold text-noir">{{ $trajet->lieu_arrivee }}</p>
                         </div>
                     </div>
 
                     <div class="mt-6 pt-6 border-t border-gray-100 flex justify-between items-center text-sm">
                         <div class="flex items-center gap-2 text-gris1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            {{ $trip['time'] }}
+                            {{ \Carbon\Carbon::parse($trajet->heure_depart)->format('H:i') }}
                         </div>
                         <div class="flex items-center gap-2 text-gris1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                            {{ $trip['date'] }}
+                            {{ \Carbon\Carbon::parse($trajet->date_depart)->format('d/m/Y') }}
                         </div>
                     </div>
                 </div>
             </div>
 
+            {{-- COLONNE DROITE : FORMULAIRE --}}
             <div class="lg:col-span-2">
-                <form action="#" method="POST" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8 space-y-8">
+                
+                <form action="{{ route('reviews.store') }}" method="POST" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8 space-y-8">
                     @csrf
+                    
+                    <input type="hidden" name="trajet_id" value="{{ $trajet->id }}">
                     
                     <div>
                         <h2 class="text-xl font-bold text-noir mb-2">Note globale <span class="text-red-500">*</span></h2>
                         <p class="text-sm text-gris1 mb-4">Notez votre expérience pour aider les autres membres</p>
                         
                         <div x-data="{ rating: 0, hover: 0 }" class="flex gap-2">
-                            <input type="hidden" name="rating" :value="rating">
+                            <input type="hidden" name="note" :value="rating" required>
+                            
                             <template x-for="star in 5">
                                 <button type="button" 
                                     @click="rating = star" 
@@ -76,6 +82,9 @@
                                 </button>
                             </template>
                         </div>
+                        @error('note')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <hr class="border-gray-100">
@@ -100,12 +109,12 @@
                             @endforeach
                         </div>
                     </div>
-
                     <hr class="border-gray-100">
+                    --}}
 
                     <div>
-                        <label for="comment" class="block font-bold text-noir mb-2">Commentaire (optionnel)</label>
-                        <textarea name="comment" id="comment" rows="4" 
+                        <label for="commentaire" class="block font-bold text-noir mb-2">Commentaire (optionnel)</label>
+                        <textarea name="commentaire" id="commentaire" rows="4" 
                             class="w-full rounded-lg border-gray-300 focus:border-vert-principale focus:ring-vert-principale shadow-sm placeholder-gray-400"
                             placeholder="Partagez votre expérience de covoiturage..."></textarea>
                         <p class="text-xs text-gray-400 mt-2">Soyez constructif et respectueux dans vos commentaires.</p>
