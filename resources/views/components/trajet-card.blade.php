@@ -23,18 +23,29 @@
                 @endif
             </div>
 
-            {{-- INFO CONDUCTEUR (Affichage simple sans lien) --}}
+            {{-- INFO CONDUCTEUR --}}
             @if($trajet->conducteur)
-            <div class="flex items-center gap-2 mt-2 pt-2 border-t border-gray-100">
-                {{-- Avatar (Initiales) --}}
-                <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-[10px] font-bold text-gray-600">
-                    {{ substr($trajet->conducteur->prenom, 0, 1) }}{{ substr($trajet->conducteur->nom, 0, 1) }}
-                </div>
+            <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-100">
                 
-                {{-- Nom (Texte simple) --}}
-                <p class="text-xs text-gray-500">
-                    Proposé par <span class="font-bold text-noir">{{ $trajet->conducteur->prenom }} {{ $trajet->conducteur->nom }}</span>
-                </p>
+                {{-- PARTIE GAUCHE : AVATAR + NOM --}}
+                <div class="flex items-center gap-2">
+                    {{-- Avatar (Initiales) --}}
+                    <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-[10px] font-bold text-gray-600">
+                        {{ substr($trajet->conducteur->prenom, 0, 1) }}{{ substr($trajet->conducteur->nom, 0, 1) }}
+                    </div>
+                    
+                    {{-- Nom --}}
+                    <p class="text-xs text-gray-500">
+                        <span class="font-bold text-noir">{{ $trajet->conducteur->prenom }} {{ substr($trajet->conducteur->nom, 0, 1) }}.</span>
+                    </p>
+                </div>
+
+                {{-- PARTIE DROITE : LE BOUTON "VOIR LE PROFIL" --}}
+                <a href="{{ route('profile.public', $trajet->conducteur->id) }}" 
+                   class="text-[10px] font-semibold text-vert-principale border border-vert-principale/30 hover:bg-vert-principale hover:text-white px-2 py-1 rounded transition-colors duration-200 flex items-center gap-1">
+                    Voir le profil
+                </a>
+                
             </div>
             @endif
 

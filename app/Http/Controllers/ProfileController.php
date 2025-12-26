@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use App\Models\HistoriqueConnexion;
 use Illuminate\Support\Str;
+use App\Models\Avis;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
@@ -182,14 +184,16 @@ class ProfileController extends Controller
     /**
      * Affiche le profil public d'un autre utilisateur.
      */
-    public function showPublic($id): View
+    public function showPublic($id)
     {
-        // 'findOrFail' renvoie une erreur 404 si l'ID n'existe pas
-        $user = \App\Models\User::with(['vehicules', 'preference'])->findOrFail($id);
+        $user = User::with(['vehicules', 'preference'])->findOrFail($id);
 
-        return view('profile.public', [
-            'user' => $user,
-        ]);
+        $avisRecus = \App\Models\Avis::where('id_destinataire', $id)->get();
+
+        $nombreAvis = $avisRecus->count();
+        $moyenne = $nombreAvis > 0 ? round($avisRecus->avg('note'), 1) : 0;
+
+        return view('profile.public', compact('user', 'nombreAvis', 'moyenne'));
     }
 
     /**

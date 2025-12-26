@@ -60,11 +60,35 @@
 
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                     <h3 class="font-bold text-noir mb-4">Évaluations</h3>
+                    
                     <div class="flex items-end gap-2 mb-2">
-                        <span class="text-4xl font-bold text-noir">4.8</span>
-                        <div class="flex text-yellow-400 mb-1.5 text-lg">★★★★★</div>
+                        {{-- Affichage de la moyenne --}}
+                        <span class="text-4xl font-bold text-noir">
+                            {{ $nombreAvis > 0 ? $moyenne : '-' }}
+                        </span>
+                        
+                        {{-- Affichage des étoiles dynamiques --}}
+                        <div class="flex text-yellow-400 mb-1.5 text-lg">
+                            @for($i = 1; $i <= 5; $i++)
+                                @if($nombreAvis > 0)
+                                    {{-- Étoile pleine si i <= moyenne arrondie --}}
+                                    <span>{{ $i <= round($moyenne) ? '★' : '☆' }}</span>
+                                @else
+                                    {{-- Étoiles grises si pas d'avis --}}
+                                    <span class="text-gray-200">★</span>
+                                @endif
+                            @endfor
+                        </div>
                     </div>
-                    <p class="text-sm text-gris1">(12 avis reçus)</p>
+
+                    {{-- Affichage du nombre d'avis --}}
+                    <p class="text-sm text-gris1">
+                        @if($nombreAvis > 0)
+                            ({{ $nombreAvis }} avis reçu{{ $nombreAvis > 1 ? 's' : '' }})
+                        @else
+                            (Aucun avis reçu pour le moment)
+                        @endif
+                    </p>
                 </div>
             </div>
 

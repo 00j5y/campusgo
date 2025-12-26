@@ -110,7 +110,6 @@
                         </div>
                     </div>
                     <hr class="border-gray-100">
-                    --}}
 
                     <div>
                         <label for="commentaire" class="block font-bold text-noir mb-2">Commentaire (optionnel)</label>
