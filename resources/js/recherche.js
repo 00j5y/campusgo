@@ -1,18 +1,52 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    //VARIABLES HTML
+    // --- VARIABLES & CONFIGURATION ---
     const mapContainer = document.getElementById('map');
     const mapboxToken = mapContainer.dataset.token;
     const defaultCenter = JSON.parse(mapContainer.dataset.center);
 
-    mapboxgl.accessToken = mapboxToken;
+    const departInput = document.getElementById('depart');
+    const arriveeInput = document.getElementById('arrivee');
+    const coordsDepart = document.getElementById('coords_depart');
+    const coordsArrivee = document.getElementById('coords_arrivee');
+    const inverserBtn = document.getElementById('btn-inverser-recherche');
+    const form = document.getElementById('form-recherche');
+
+    // Variable pour éviter les boucles infinies lors des mises à jour automatiques
+    let isProgrammatic = false;
+
 
     const IUT_AMIENS = {
         label: "IUT Amiens, Avenue des Facultés",
         coords: "2.263592,49.873836"
     };
 
-    //OUTILS UI
+    mapboxgl.accessToken = mapboxToken;
+
+    function showInputError(input, errorId) {
+        const errorEl = document.getElementById(errorId);
+        if (input) {
+            input.classList.remove('border-gray-200', 'focus:border-vert-principale', 'focus:ring-vert-principale');
+            input.classList.add('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
+        }
+        if (errorEl) {
+            errorEl.innerText = "Veuillez cliquer sur une suggestion pour valider l'adresse.";
+            errorEl.classList.remove('hidden');
+        }
+    }
+
+    function clearInputError(input, errorId) {
+        const errorEl = document.getElementById(errorId);
+        if (input) {
+            input.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
+            input.classList.add('border-gray-200', 'focus:border-vert-principale', 'focus:ring-vert-principale');
+        }
+        if (errorEl) {
+            errorEl.classList.add('hidden');
+        }
+    }
+
+    // OUTILS UI
     flatpickr("#date", {
         locale: "fr",
         minDate: "today",
@@ -26,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         noCalendar: true,
         dateFormat: "H:i",
         time_24hr: true,
-        defaultDate: "08:00"
+
     });
 
     //CARTE PRINCIPALE
@@ -39,7 +73,164 @@ document.addEventListener('DOMContentLoaded', () => {
 
     map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
-    //MODALES
+    //NOUVELLES FONCTIONNALITÉS & LOGIQUE FORMULAIRE 
+
+    function updateField(input, hidden, isLocked, val = '', co = '') {
+        input.readOnly = isLocked;
+        input.style.backgroundColor = isLocked ? '#f3f4f6' : '#ffffff'; 
+        input.style.cursor = isLocked ? 'not-allowed' : 'text';
+
+        if (isLocked) {
+            input.value = IUT_AMIENS.label;
+            hidden.value = IUT_AMIENS.coords;
+        } else {
+            if (val !== null) input.value = val;
+            if (co !== null) hidden.value = co;
+        }
+    }
+
+    function applyConstraint(source) {
+        if (isProgrammatic) return;
+
+        if (source === 'depart') {
+            if (departInput.value.trim() !== '') {
+                updateField(arriveeInput, coordsArrivee, true);
+            } else {
+                updateField(arriveeInput, coordsArrivee, false, '');
+            }
+        } else {
+            if (arriveeInput.value.trim() !== '') {
+                updateField(departInput, coordsDepart, true);
+            } else {
+                updateField(departInput, coordsDepart, false, '');
+            }
+        }
+        verifierEtTracerRoute();
+    }
+
+    if (departInput) departInput.addEventListener('input', () => applyConstraint('depart'));
+    if (arriveeInput) arriveeInput.addEventListener('input', () => applyConstraint('arrivee'));
+
+    function setupAutocomplete(idInput, idList, idHidden) {
+        const input = document.getElementById(idInput);
+        const list = document.getElementById(idList);
+        const hidden = document.getElementById(idHidden);
+        const errorId = 'error-' + idInput; // ex: error-depart
+
+        if (!input) return;
+
+        let timeout = null;
+
+        input.addEventListener('input', function () {
+            // >>> AJOUT : Nettoyage erreur dès la frappe
+            clearInputError(input, errorId);
+
+            if (isProgrammatic || input.readOnly) return;
+
+            hidden.value = ""; 
+
+            const q = this.value;
+            clearTimeout(timeout);
+
+            if (q.length < 3) {
+                list.classList.add('hidden');
+                return;
+            }
+
+            timeout = setTimeout(() => {
+                fetch(`https://api-adresse.data.gouv.fr/search/?q=${q}&limit=5`)
+                    .then(r => r.json())
+                    .then(d => {
+                        list.innerHTML = '';
+                        if (!d.features || d.features.length === 0) {
+                            list.classList.add('hidden');
+                            return;
+                        }
+                        list.classList.remove('hidden');
+
+                        d.features.forEach(f => {
+                            const li = document.createElement('li');
+                            li.className = "px-4 py-3 hover:bg-gray-100 cursor-pointer border-b text-sm";
+                            li.textContent = f.properties.label;
+
+                            li.onclick = () => {
+                                isProgrammatic = true; 
+                                input.value = f.properties.label;
+                                hidden.value = f.geometry.coordinates;
+                                
+                                // >>> AJOUT : Validation OK, on nettoie l'erreur
+                                clearInputError(input, errorId);
+                                list.classList.add('hidden');
+                                
+                                isProgrammatic = false;
+
+                                applyConstraint(idInput === 'depart' ? 'depart' : 'arrivee');
+                                verifierEtTracerRoute();
+                            };
+
+                            list.appendChild(li);
+                        });
+                    })
+                    .catch(() => list.classList.add('hidden'));
+            }, 300);
+        });
+
+        document.addEventListener('click', e => {
+            if (e.target !== input && e.target !== list) {
+                list.classList.add('hidden');
+            }
+        });
+    }
+
+        
+
+    setupAutocomplete('depart', 'liste-depart', 'coords_depart');
+    setupAutocomplete('arrivee', 'liste-arrivee', 'coords_arrivee');
+
+    if (inverserBtn) {
+        inverserBtn.addEventListener('click', () => {
+            isProgrammatic = true; 
+
+            const dV = departInput.value, dC = coordsDepart.value, dR = departInput.readOnly;
+            const aV = arriveeInput.value, aC = coordsArrivee.value, aR = arriveeInput.readOnly;
+
+            updateField(departInput, coordsDepart, aR, aV, aC);
+            updateField(arriveeInput, coordsArrivee, dR, dV, dC);
+
+            isProgrammatic = false;
+            verifierEtTracerRoute();
+        });
+    }
+
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            let hasError = false;
+
+            // Vérification DÉPART
+            if (!departInput.readOnly && departInput.value && !coordsDepart.value) {
+                showInputError(departInput, 'error-depart');
+                hasError = true;
+            } else {
+                clearInputError(departInput, 'error-depart');
+            }
+
+            // Vérification ARRIVÉE
+            if (!arriveeInput.readOnly && arriveeInput.value && !coordsArrivee.value) {
+                showInputError(arriveeInput, 'error-arrivee');
+                hasError = true;
+            } else {
+                clearInputError(arriveeInput, 'error-arrivee');
+            }
+
+            if (hasError) {
+                e.preventDefault(); 
+            }
+        });
+    }
+
+    //FONCTIONS CARTE (ROUTE & MODALES)
+
+    // Modales UI
     window.closeModal = id => {
         document.getElementById(id).classList.add('hidden');
     };
@@ -69,123 +260,57 @@ document.addEventListener('DOMContentLoaded', () => {
             : "Voir tout (" + (hidden.length + 1) + ")";
     };
 
-    //AUTOCOMPLETE 
-    function setFieldToIUT(inputId, hiddenId) {
-        document.getElementById(inputId).value = IUT_AMIENS.label;
-        document.getElementById(hiddenId).value = IUT_AMIENS.coords;
-    }
-
-    function setupAutocomplete(idInput, idList, idHidden, otherInputId, otherHiddenId) {
-        const input = document.getElementById(idInput);
-        const list = document.getElementById(idList);
-        const hidden = document.getElementById(idHidden);
-
-        if (!input) return;
-
-        let timeout = null;
-
-        input.addEventListener('input', function () {
-            const q = this.value;
-            clearTimeout(timeout);
-
-            if (q.length < 3) {
-                list.classList.add('hidden');
-                return;
-            }
-
-            timeout = setTimeout(() => {
-                fetch(`https://api-adresse.data.gouv.fr/search/?q=${q}&limit=5`)
-                    .then(r => r.json())
-                    .then(d => {
-                        list.innerHTML = '';
-                        if (!d.features || d.features.length === 0) {
-                            list.classList.add('hidden');
-                            return;
-                        }
-
-                        list.classList.remove('hidden');
-
-                        d.features.forEach(f => {
-                            const li = document.createElement('li');
-                            li.className = "px-4 py-3 hover:bg-gray-100 cursor-pointer border-b text-sm";
-                            li.textContent = f.properties.label;
-
-                            li.onclick = () => {
-                                input.value = f.properties.label;
-                                hidden.value = f.geometry.coordinates;
-                                list.classList.add('hidden');
-
-                                const isIUT = f.properties.label
-                                    .toLowerCase()
-                                    .includes('iut amiens') ||
-                                    f.properties.label
-                                        .toLowerCase()
-                                        .includes('avenue des facultés');
-
-                                if (!isIUT) {
-                                    setFieldToIUT(otherInputId, otherHiddenId);
-                                } else {
-                                    document.getElementById(otherInputId).value = '';
-                                    document.getElementById(otherHiddenId).value = '';
-                                }
-
-                                verifierEtTracerRoute();
-                            };
-
-                            list.appendChild(li);
-                        });
-                    })
-                    .catch(() => list.classList.add('hidden'));
-            }, 300);
-        });
-
-        document.addEventListener('click', e => {
-            if (e.target !== input && e.target !== list) {
-                list.classList.add('hidden');
-            }
-        });
-    }
-
-    setupAutocomplete('depart', 'liste-depart', 'coords_depart', 'arrivee', 'coords_arrivee');
-    setupAutocomplete('arrivee', 'liste-arrivee', 'coords_arrivee', 'depart', 'coords_depart');
-
-    //ROUTE PRINCIPALE
+    // Calcul et affichage de la route principale
     async function getRoute(start, end) {
         const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]},${start[1]};${end[0]},${end[1]}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
-        const json = await (await fetch(url)).json();
+        
+        try {
+            const json = await (await fetch(url)).json();
+            if (!json.routes || !json.routes.length) return;
 
-        if (!json.routes || !json.routes.length) return;
+            const route = json.routes[0].geometry.coordinates;
+            const geojson = {
+                type: 'Feature',
+                geometry: { type: 'LineString', coordinates: route }
+            };
 
-        const route = json.routes[0].geometry.coordinates;
-        const geojson = {
-            type: 'Feature',
-            geometry: { type: 'LineString', coordinates: route }
-        };
+            if (map.getSource('route')) {
+                map.getSource('route').setData(geojson);
+            } else {
+                map.addLayer({
+                    id: 'route',
+                    type: 'line',
+                    source: { type: 'geojson', data: geojson },
+                    layout: { 'line-join': 'round', 'line-cap': 'round' },
+                    paint: { 'line-width': 5, 'line-opacity': 0.8 }
+                });
+            }
 
-        if (map.getSource('route')) {
-            map.getSource('route').setData(geojson);
-        } else {
-            map.addLayer({
-                id: 'route',
-                type: 'line',
-                source: { type: 'geojson', data: geojson },
-                layout: { 'line-join': 'round', 'line-cap': 'round' },
-                paint: { 'line-width': 5, 'line-opacity': 0.8 }
-            });
+            const bounds = new mapboxgl.LngLatBounds(start, start);
+            route.forEach(c => bounds.extend(c));
+            map.fitBounds(bounds, { padding: 50 });
+        } catch (e) {
+            console.error("Erreur calcul itinéraire:", e);
         }
-
-        const bounds = new mapboxgl.LngLatBounds(start, start);
-        route.forEach(c => bounds.extend(c));
-        map.fitBounds(bounds, { padding: 50 });
     }
 
     function verifierEtTracerRoute() {
         const d = document.getElementById('coords_depart').value;
         const a = document.getElementById('coords_arrivee').value;
 
-        if (!d || !a) return;
-
+        // Nettoyer les marqueurs existants
         document.querySelectorAll('.mapboxgl-marker').forEach(m => m.remove());
+
+        if (!d || !a) {
+             // Si pas de trajet complet, on supprime la route existante si elle existe
+            if (map.getSource('route')) {
+                map.getSource('route').setData({
+                    type: 'Feature',
+                    geometry: { type: 'LineString', coordinates: [] }
+                });
+            }
+            return;
+        }
 
         const start = d.split(',').map(Number);
         const end = a.split(',').map(Number);
@@ -198,7 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     map.on('load', verifierEtTracerRoute);
 
-    //CARTES DES TRAJETS 
+    //CARTES DES MINI-TRAJETS
     const mapsInstances = {};
 
     window.toggleTrajetMap = async (id, dTxt, aTxt) => {
@@ -222,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const lower = adresse.toLowerCase();
             if (lower.includes('iut amiens') || lower.includes('avenue des facultés')) {
-                return [2.263592, 49.873836];
+                return [2.263592, 49.873836]; 
             }
 
             const r = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(adresse)}&limit=1`);
