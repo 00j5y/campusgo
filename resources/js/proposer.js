@@ -52,7 +52,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    //FONCTIONS UTILITAIRES
     
     // Gère l'état visuel et logique d'un champ 
     function setFieldState(input, hiddenInput, isBlocked, value = '', coords = '') {

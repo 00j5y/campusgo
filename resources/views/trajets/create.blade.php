@@ -261,7 +261,9 @@
     </form>
 </main>
 
-{{-- SCRIPTS--}}
+@endsection
+@section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/fr.js"></script>
+@vite(['resources/js/proposer.js'])
 @endsection
