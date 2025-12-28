@@ -121,9 +121,12 @@
                     <svg class="w-4 h-4 mr-1 text-vert-principale" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg>
                     Lieu de Départ
                 </label>
-                <input type="text" name="lieu_depart" id="lieu_depart" placeholder="Entrez votre adresse de départ" 
+                <input type="text" name="lieu_depart" id="lieu_depart" value="{{ old('lieu_depart') }}" placeholder="Entrez votre adresse de départ" 
                 class="w-full border border-gray-300 rounded-md shadow-sm p-3 " required>
                 <p class="text-xs text-gris1 mt-1">Exemple : 15 Rue des Étudiants, Amiens</p>
+                @error('lieu_depart')
+                <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             <!-- Inverser le lieu de départ et le lieu d'arrivée -->
@@ -141,7 +144,7 @@
                     <svg class="w-4 h-4 mr-1 text-vert-principale" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg>
                     Lieu d'Arrivée
                 </label>
-                <input type="text" name="lieu_arrivee" id="lieu_arrivee" placeholder="Entrez votre adresse d'arrivée" class="w-full border rounded-md shadow-sm p-3 border-gray-300" required>
+                <input type="text" name="lieu_arrivee" id="lieu_arrivee" value="{{ old('lieu_arrivee') }}" placeholder="Entrez votre adresse d'arrivée" class="w-full border rounded-md shadow-sm p-3 border-gray-300" required>
                 @error('lieu_arrivee_min')
                 <p class="text-red-500 text-xs italic mt-1">Le lieu de départ et le lieu d'arrivée ne peuvent pas être identiques.</p>
                 @enderror
@@ -155,7 +158,7 @@
                         <svg class="w-4 h-4 mr-1 text-vert-principale" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                         Date
                     </label>
-                    <input type="date" name="date_depart" id="date_depart" class="w-full border border-gray-300 rounded-md shadow-sm p-3 " required>
+                    <input type="date" name="date_depart" id="date_depart" value="{{ old('date_depart') }}" class="w-full border border-gray-300 rounded-md shadow-sm p-3 " required>
                     @error('date_depart')
                     <p class="text-red-500 text-xs italic mt-1">Le champ « Date » doit correspondre à une date suppérieur ou égale à celle d'aujourd'hui.</p>
                     @enderror
@@ -168,7 +171,7 @@
                         <svg class="w-4 h-4 mr-1 text-vert-principale" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         Heure de Départ
                     </label>
-                    <input type="time" name="heure_depart" id="heure_depart" class="w-full border border-gray-300 rounded-md shadow-sm p-3 " required>
+                    <input type="time" name="heure_depart" id="heure_depart" value="{{ old('heure_depart') }}" class="w-full border border-gray-300 rounded-md shadow-sm p-3 " required>
                 </div>
             </div>
 
@@ -181,16 +184,21 @@
                     Nombre de Places Disponibles
                 </label>
                 <select name="places_disponibles" id="places_disponibles" class="w-full border border-gray-300 rounded-md shadow-sm p-3 " required>
-                    <option value="" disabled selected>Sélectionnez le nombre de place</option>
-                    <option value="1">1 place</option>
-                    <option value="2">2 places</option>
-                    <option value="3">3 places</option>
-                    <option value="4">4 places</option>
-                    <option value="5">5 places</option>
-                    <option value="6">6 places</option>
-                    <option value="7">7 places</option>
+                    <option value="" disabled {{ old('places_disponibles') ? '' : 'selected' }}>Sélectionnez le nombre de place</option>
+                    <option value="1" {{ old('places_disponibles') == '1' ? 'selected' : '' }}>1 place</option>
+                    <option value="2" {{ old('places_disponibles') == '2' ? 'selected' : '' }}>2 places</option>
+                    <option value="3" {{ old('places_disponibles') == '3' ? 'selected' : '' }}>3 places</option>
+                    <option value="4" {{ old('places_disponibles') == '4' ? 'selected' : '' }}>4 places</option>
+                    <option value="5" {{ old('places_disponibles') == '5' ? 'selected' : '' }}>5 places</option>
+                    <option value="6" {{ old('places_disponibles') == '6' ? 'selected' : '' }}>6 places</option>
+                    <option value="7" {{ old('places_disponibles') == '7' ? 'selected' : '' }}>7 places</option>
                 </select>
+                @error('places_disponibles')
+                <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                @enderror
             </div>
+            
+            
 
 
         <div class="mb-6">
@@ -250,9 +258,6 @@
                     </a>
                 </div>
                 
-                @error('id_vehicule')
-                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
             @endif
         </div>
             

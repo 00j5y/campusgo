@@ -50,9 +50,15 @@ class TrajetController extends Controller
         if (!Auth::check()) {
             return redirect()->route('login');
         }
+        $vehicule = Vehicule::where('id', $request->id_vehicule)
+                        ->where('id_utilisateur', Auth::id())
+                        ->first();
+
+        $limitePlaces = $vehicule ? (int)$vehicule->nombre_place : 0;
 
         $lieuDepartMin = strtolower($request->input('lieu_depart'));
         $lieuArriveeMin = strtolower($request->input('lieu_arrivee')); 
+
 
         $request->merge([
         'lieu_depart_min' => $lieuDepartMin,
@@ -68,14 +74,14 @@ class TrajetController extends Controller
                 'max:100',
                 function ($attribute, $value, $fail) use ($request) {
                     if (strtolower($value) === strtolower($request->lieu_depart)) {
-                        $fail('Le lieu de départ et le lieu d\'arrivée doivent être différents.');
+                        $fail('Le lieu de départ et le lieu d\'arrivée ne peuvent pas être identiques.');
                     }
                 },
             ],
 
             'date_depart' => 'required|date|after_or_equal:today',
             'heure_depart' => 'required',
-            'places_disponibles' => 'required|integer|min:1|max:7',
+            'places_disponibles' => "required|integer|min:1|max:{$limitePlaces}",
             'id_vehicule' => 'required|exists:vehicule,id', 
         ], [
             'lieu_depart.required' => 'Le lieu de départ est obligatoire.',
@@ -84,13 +90,13 @@ class TrajetController extends Controller
             'lieu_arrivee.required' => 'Le lieu d\'arrivée est obligatoire.',
             
             'date_depart.required' => 'La date de départ est requise.',
-            'date_depart.after_or_equal' => 'Vous ne pouvez pas proposer un trajet dans le passé.',
+            'date_depart.after_or_equal' => 'Le champ « Date » doit correspondre à une date suppérieur ou égale à celle d\'aujourd\'hui.',
             
             'heure_depart.required' => 'L\'heure de départ est requise.',
             
             'places_disponibles.required' => 'Merci d\'indiquer le nombre de places.',
             'places_disponibles.min' => 'Il faut au moins 1 place disponible.',
-            'places_disponibles.max' => 'Maximum 7 places autorisées.',
+            'places_disponibles.max' => "Maximum {$limitePlaces} places autorisées.",
             
             'id_vehicule.required' => 'Vous devez sélectionner un véhicule.',
             'id_vehicule.exists' => 'Le véhicule sélectionné est invalide.',

@@ -1,7 +1,7 @@
 //public/js/proposer.js
 
 document.addEventListener('DOMContentLoaded', function() {
-    const iutAddress = "IUT Amiens, Avenue des Facultés";
+    const iutAdresse = "IUT Amiens, Avenue des Facultés";
     const departInput = document.getElementById('lieu_depart');
     const arriveeInput = document.getElementById('lieu_arrivee');
     const inverserButton = document.getElementById('btn-inverser-lieux');
@@ -15,25 +15,28 @@ document.addEventListener('DOMContentLoaded', function() {
         
         //Si c'est le champ IUT (bloqué), forcer la valeur IUT
         if (isIUTBlocked) {
-            input.value = iutAddress;
+            input.value = iutAdresse;
         } else {
             //Si ce n'est pas bloqué, utiliser la valeur fournie (saisie utilisateur)
             input.value = valueToSet || ''; 
         }
     }
     
-    //Initialisation de l'état : Les deux champs sont vides et modifiables
+    //Sauvegarde les champs arrivée et départ en cas d'erreurs (old())
     function initializeFields() {
-        if (arriveeInput) {
-            setInputState(arriveeInput, false, ''); 
+        if (departInput.value.trim() !== '' && departInput.value.trim() !== iutAdresse) {
+            setInputState(arriveeInput, true);
+        } 
+        else if (arriveeInput.value.trim() !== '' && arriveeInput.value.trim() !== iutAdresse) {
+            setInputState(departInput, true);
         }
-        if (departInput) {
+        else {
+            setInputState(arriveeInput, false, ''); 
             setInputState(departInput, false, '');
         }
     }
     
     //Logique d'Auto-Remplissage et d'Interversion 
-
     function handleInput(event) {
         if (isProgrammaticChange) return;
 
@@ -148,8 +151,8 @@ document.addEventListener('DOMContentLoaded', function() {
             isProgrammaticChange = true;
             
             //Déterminer quel champ était l'IUT dans le trajet précédent
-            const dernierDepartEstIUT = depart.toLowerCase() === iutAddress.toLowerCase();
-            const dernierArriveeEstIUT = arrivee.toLowerCase() === iutAddress.toLowerCase();
+            const dernierDepartEstIUT = depart.toLowerCase() === iutAdresse.toLowerCase();
+            const dernierArriveeEstIUT = arrivee.toLowerCase() === iutAdresse.toLowerCase();
             
             //Application de la Contrainte IUT et remplissage des champs de Lieu
             if (dernierDepartEstIUT) {
