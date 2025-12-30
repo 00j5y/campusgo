@@ -7,6 +7,7 @@ use Illuminate\View\View;
 use App\Models\Trajet;
 use App\Models\Avis;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class ReviewController extends Controller
 {
@@ -17,17 +18,24 @@ class ReviewController extends Controller
     {
         $userId = Auth::id();
 
-        $reviews = Avis::where('id_destinataire', $userId)
-                       ->with('auteur')
-                       ->orderBy('created_at', 'desc') // Les plus récents en premier
-                       ->get();
+        $avisRecus = Avis::where('id_destinataire', $userId)
+                     ->with('auteur', 'trajet')
+                     ->orderBy('created_at', 'desc')
+                     ->get();
+
+        // les avis émis anonymement ne peuvent donc pas êtres vus       
+        $avisEmis = Avis::where('id_auteur', $userId)
+                    ->with('destinataire', 'trajet')
+                    ->orderBy('created_at', 'desc')
+                    ->get();
 
         // calcul de la moyenne et du total
-        $total = $reviews->count();
-        $average = $total > 0 ? round($reviews->avg('note'), 1) : 0;
+        $total = $avisRecus->count();
+        $average = $total > 0 ? round($avisRecus->avg('note'), 1) : 0;
 
         return view('reviews.index', [
-            'reviews' => $reviews,
+            'avisRecus' => $avisRecus,
+            'avisEmis' => $avisEmis,
             'average' => $average,
             'total'   => $total
         ]);
@@ -60,17 +68,26 @@ class ReviewController extends Controller
             'commentaire' => 'nullable|string|max:1000',
         ]);
 
-        $trajet = Trajet::findOrFail($validated['trajet_id']);
+        $userId = Auth::id();
+        $trajetId = $validated['trajet_id'];
+
+        $trajet = Trajet::findOrFail($trajetId);
+
+        // pour éviter le spam, on utilise une clé en cache
+        $cacheKey = "avis_donne_u{$userId}_t{$trajetId}";
+
+        // On vérifie si cette clé existe déjà dans la mémoire du serveur
+        if (Cache::has($cacheKey)) {
+            return back()->with('error', 'Vous avez déjà donné votre avis sur ce trajet.');
+        }
+
+        if ($trajet->aDejaUnAvis()) {
+            return back()->with('error', 'Vous avez déjà donné votre avis sur ce trajet.');
+        }
         
         $idFantome = 999; 
 
-        if ($request->has('anonymous')) {
-            // Si la case est cochée, l'avis deviens anonyme
-            $idAuteur = $idFantome;
-        } else {
-            // Sinon, utilisateur connecté
-            $idAuteur = Auth::id();
-        }
+        $idAuteur = $request->has('anonymous') ? $idFantome : Auth::id();
 
         $idDestinataire = $trajet->id_utilisateur;
 
@@ -90,6 +107,22 @@ class ReviewController extends Controller
         $avis->id_destinataire = $idDestinataire;
         $avis->save();
 
+        Cache::put($cacheKey, true, now()->addYear());
+
         return redirect()->route('historique-trajet')->with('success', 'Avis publié !');
+    }
+
+    public function destroy($id)
+    {
+    $avis = Avis::findOrFail($id);
+
+    // Seul l'auteur peut supprimer son avis
+    if ($avis->id_auteur !== Auth::id()) {
+        return back()->with('error', 'Action non autorisée.');
+    }
+
+    $avis->delete();
+
+    return back()->with('success', 'Votre avis a été supprimé.');
     }
 }

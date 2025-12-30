@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 return new class extends Migration
 {
@@ -24,6 +26,17 @@ return new class extends Migration
             $table->boolean('est_admin')->default(false);
             $table->timestamps();
         });
+
+        // Insertion de l'utilisateur anonyme
+        DB::table('utilisateur')->insert([
+            'id' => 999,
+            'prenom' => 'Utilisateur',
+            'nom' => 'Anonyme',
+            'email' => 'anonyme@campusgo.fr',
+            'mdp' => Hash::make(Str::random(32)),//pour éviter toute connexion
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
         // Table Historique Connexions
         Schema::create('historique_connexions', function (Blueprint $table) {
