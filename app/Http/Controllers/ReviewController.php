@@ -62,25 +62,34 @@ class ReviewController extends Controller
 
         $trajet = Trajet::findOrFail($validated['trajet_id']);
         
-        $idAuteur = Auth::id();
-        
+        $idFantome = 999; 
+
+        if ($request->has('anonymous')) {
+            // Si la case est cochée, l'avis deviens anonyme
+            $idAuteur = $idFantome;
+        } else {
+            // Sinon, utilisateur connecté
+            $idAuteur = Auth::id();
+        }
+
         $idDestinataire = $trajet->id_utilisateur;
 
-        // pour ne pas se noter soi-même
-        if ($idAuteur == $idDestinataire) {
+        // Pour ne pas se noter soir même
+        if (Auth::id() == $idDestinataire) {
             return back()->with('error', 'Vous ne pouvez pas vous noter vous-même.');
         }
 
-        // créer l'avis
         $avis = new Avis();
         $avis->note = $validated['note'];
         $avis->commentaire = $validated['commentaire'];
         $avis->id_trajet = $validated['trajet_id'];
-        $avis->id_auteur = $idAuteur;
+        
+        // Enregistrement du bon id
+        $avis->id_auteur = $idAuteur; 
+        
         $avis->id_destinataire = $idDestinataire;
         $avis->save();
 
-        return redirect()->route('historique-trajet')
-                         ->with('success', 'Votre avis a bien été publié !');
+        return redirect()->route('historique-trajet')->with('success', 'Avis publié !');
     }
 }

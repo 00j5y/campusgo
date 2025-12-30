@@ -46,45 +46,56 @@
             <div class="space-y-4">
                 @forelse($reviews as $review)
                     <div class="bg-white rounded-xl p-6 border border-gray-100 shadow-sm transition hover:shadow-md">
-                        <div class="flex gap-4">
-                            
-                            {{-- AVATAR (Initiale de l'auteur) --}}
-                            <div class="shrink-0">
-                                <div class="w-12 h-12 bg-vert-principale/10 rounded-full flex items-center justify-center text-vert-principale font-bold text-lg border border-vert-principale/20">
-                                    {{-- On vérifie si l'auteur existe (au cas où un utilisateur est supprimé) --}}
+                    <div class="flex gap-4">
+                        
+                        {{-- LOGIQUE D'AFFICHAGE (Remplacez 999 par votre ID fantôme) --}}
+                        @php $estAnonyme = ($review->id_auteur == 999); @endphp
+
+                        {{-- 1. AVATAR --}}
+                        <div class="shrink-0">
+                            <div class="w-12 h-12 {{ $estAnonyme ? 'bg-gray-200 text-gray-500' : 'bg-vert-principale/10 text-vert-principale' }} rounded-full flex items-center justify-center font-bold text-lg border border-transparent">
+                                @if($estAnonyme)
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                @else
+                                    {{-- On vérifie que l'auteur existe encore --}}
                                     {{ $review->auteur ? substr($review->auteur->prenom, 0, 1) : '?' }}
-                                </div>
-                            </div>
-                            
-                            <div class="flex-1">
-                                <div class="flex justify-between items-start mb-1">
-                                    {{-- NOM DE L'AUTEUR --}}
-                                    <h3 class="font-bold text-noir text-lg">
-                                        {{ $review->auteur ? $review->auteur->prenom : 'Utilisateur supprimé' }}
-                                    </h3>
-                                    
-                                    {{-- DATE (Formatée "Il y a X jours") --}}
-                                    {{-- diffForHumans() gère automatiquement "il y a X temps" --}}
-                                    <span class="text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded-md border border-gray-100">
-                                        {{ $review->created_at->diffForHumans() }}
-                                    </span>
-                                </div>
-                                
-                                {{-- ÉTOILES INDIVIDUELLES --}}
-                                <div class="flex text-yellow-400 text-sm mb-3">
-                                    @for($i = 0; $i < 5; $i++)
-                                        {{-- On compare avec $review->note (colonne BDD) --}}
-                                        <span>{{ $i < $review->note ? '★' : '☆' }}</span>
-                                    @endfor
-                                </div>
-                                
-                                {{-- COMMENTAIRE --}}
-                                <p class="text-gray-600 leading-relaxed">
-                                    "{{ $review->commentaire }}"
-                                </p>
+                                @endif
                             </div>
                         </div>
+                        
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start mb-1">
+                                
+                                {{-- 2. NOM --}}
+                                <h3 class="font-bold text-noir text-lg">
+                                    @if($estAnonyme)
+                                        <span class="italic text-gray-500">Utilisateur Anonyme</span>
+                                    @else
+                                        {{ $review->auteur ? $review->auteur->prenom : 'Utilisateur supprimé' }}
+                                    @endif
+                                </h3>
+                                
+                                <span class="text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded-md border border-gray-100">
+                                    {{ $review->created_at->diffForHumans() }}
+                                </span>
+                            </div>
+                            
+                            {{-- Étoiles --}}
+                            <div class="flex text-yellow-400 text-sm mb-3">
+                                @for($i = 0; $i < 5; $i++)
+                                    <span>{{ $i < $review->note ? '★' : '☆' }}</span>
+                                @endfor
+                            </div>
+                            
+                            <p class="text-gray-600 leading-relaxed">
+                                {{ $review->commentaire }}
+                            </p>
+
+                        </div>
                     </div>
+                </div>
                 @empty
                     {{-- SI AUCUN AVIS --}}
                     <div class="text-center py-16 bg-white rounded-xl border border-dashed border-gray-300">
