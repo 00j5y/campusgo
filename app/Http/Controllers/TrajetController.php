@@ -136,7 +136,7 @@ class TrajetController extends Controller
         return view('trajets.confirmation', compact('message'));
     }
 
-    public function mesTrajets()
+    public function historique()
     {
         $userId = Auth::id();
 
@@ -147,7 +147,8 @@ class TrajetController extends Controller
             ->toArray();
 
         // Trajets à venir (conducteur ou passager)
-        $trajetsAvenir = Trajet::where(function ($query) use ($userId, $idsReservations) {
+        $trajetsAvenir = Trajet::with('conducteur')
+            ->where(function ($query) use ($userId, $idsReservations) {
                 $query->where('id_utilisateur', $userId)
                       ->orWhereIn('id', $idsReservations);
             })
@@ -163,7 +164,8 @@ class TrajetController extends Controller
             ->get();
 
         // Trajets passés (conducteur ou passager)
-        $trajetsPasses = Trajet::where(function ($query) use ($userId, $idsReservations) {
+        $trajetsPasses = Trajet::with('conducteur')
+            ->where(function ($query) use ($userId, $idsReservations) {
                 $query->where('id_utilisateur', $userId)
                       ->orWhereIn('id', $idsReservations);
             })
