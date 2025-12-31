@@ -258,4 +258,23 @@ class ProfileController extends Controller
 
         return back()->with('status', 'preference-updated');
     }
+
+    public function destroyPhoto()
+    {
+        $user = Auth::user();
+
+        if ($user->photo) {
+
+            if (Storage::disk('public')->exists($user->photo)) {
+                Storage::disk('public')->delete($user->photo);
+            }
+            
+            $user->photo = null;
+            $user->save();
+            
+            return back()->with('success', 'Votre photo de profil a été supprimée.');
+        }
+
+        return back()->with('error', 'Aucune photo à supprimer.');
+    }
 }

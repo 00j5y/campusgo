@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/mon-profil/modifier', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/mon-profil', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/mon-profil', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::delete('/profile/photo', [ProfileController::class, 'destroyPhoto'])->name('profile.photo.destroy');
 
     Route::get('/vehicule/ajouter', [App\Http\Controllers\VehiculeController::class, 'create'])->name('vehicule.create');
     Route::patch('/profil/preference/toggle', [ProfileController::class, 'togglePreference'])->name('preference.toggle');
