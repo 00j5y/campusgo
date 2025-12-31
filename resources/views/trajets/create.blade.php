@@ -120,10 +120,13 @@
                         <svg class="w-4 h-4 mr-1 text-vert-principale" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg>
                         Lieu de Départ
                     </label>
-                    <input type="text" name="lieu_depart" id="lieu_depart" autocomplete="off" placeholder="Entrez votre adresse de départ" class="w-full border border-gray-300 rounded-md shadow-sm p-3 focus:ring-1 focus:ring-vert-principale focus:border-vert-principale transition" required>
+                    <input type="text" name="lieu_depart" id="lieu_depart" autocomplete="off" value="{{ old('lieu_depart') }}" placeholder="Entrez votre adresse de départ" class="w-full border border-gray-300 rounded-md shadow-sm p-3 focus:ring-1 focus:ring-vert-principale focus:border-vert-principale transition" required>
                     <ul id="liste-depart" class="absolute w-full bg-white border mt-1 max-h-60 overflow-auto shadow-lg hidden z-50 rounded-lg left-0"></ul>
                     <p id="error-lieu-depart" class="text-red-500 text-xs mt-1 hidden"></p> 
-                </div>
+                    @error('lieu_depart')
+                <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                @enderror
+            </div>
 
                 {{--BOUTON INVERSER--}}
                 <div class="flex justify-center -my-2 relative z-10">
@@ -140,7 +143,7 @@
                         <svg class="w-4 h-4 mr-1 text-vert-principale" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg>
                         Lieu d'Arrivée
                     </label>
-                    <input type="text" name="lieu_arrivee" id="lieu_arrivee" autocomplete="off" placeholder="Entrez votre adresse d'arrivée" class="w-full border rounded-md shadow-sm p-3 border-gray-300 focus:ring-1 focus:ring-vert-principale focus:border-vert-principale transition" required>
+                    <input type="text" name="lieu_arrivee" id="lieu_arrivee" autocomplete="off" value="{{ old('lieu_arrivee') }}" placeholder="Entrez votre adresse d'arrivée" class="w-full border rounded-md shadow-sm p-3 border-gray-300 focus:ring-1 focus:ring-vert-principale focus:border-vert-principale transition" required>
                     <ul id="liste-arrivee" class="absolute w-full bg-white border mt-1 max-h-60 overflow-auto shadow-lg hidden z-50 rounded-lg left-0"></ul>
                     <p id="error-lieu-arrivee" class="text-red-500 text-xs mt-1 hidden"></p>
 
@@ -155,7 +158,7 @@
                     <div>
                         <label for="date_depart" class="font-bold text-noir text-sm mb-2 block">Date</label>
                         <div class="relative">
-                            <input type="text" name="date_depart" id="date_depart" placeholder="Sélectionner une date" class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 focus:border-vert-principale focus:outline-none cursor-pointer" required>
+                            <input type="text" name="date_depart" id="date_depart" value="{{ old('date_depart') }}" placeholder="Sélectionner une date" class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 focus:border-vert-principale focus:outline-none cursor-pointer" required>
                             <div class="absolute right-4 top-3.5 pointer-events-none text-gray-400">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                             </div>
@@ -168,7 +171,7 @@
                     <div>
                         <label for="heure_depart" class="font-bold text-noir text-sm mb-2 block">Heure de Départ</label>
                         <div class="relative">
-                            <input type="text" name="heure_depart" id="heure_depart" placeholder="Saisissez une heure" class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 focus:border-vert-principale focus:outline-none cursor-pointer" required>
+                            <input type="text" name="heure_depart" id="heure_depart" value="{{ old('heure_depart') }}" placeholder="Saisissez une heure" class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 focus:border-vert-principale focus:outline-none cursor-pointer" required>
                             <div class="absolute right-4 top-3.5 pointer-events-none text-gray-400">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             </div>
@@ -182,12 +185,16 @@
                         <svg class="w-4 h-4 mr-1 text-vert-principale" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-5a3 3 0 00-3-3H9a3 3 0 00-3 3v5H1V7a3 3 0 013-3h16a3 3 0 013 3v13H17zM12 11a4 4 0 100-8 4 4 0 000 8z"></path></svg>
                         Nombre de Places Disponibles
                     </label>
-                    <select name="places_disponibles" id="places_disponibles" class="w-full border border-gray-300 rounded-md shadow-sm p-3 " required>
-                        <option value="" disabled selected>Sélectionnez le nombre de place</option>
-                        @foreach(range(1, 7) as $places)
-                            <option value="{{ $places }}">{{ $places }} place{{ $places > 1 ? 's' : '' }}</option>
-                        @endforeach
-                    </select>
+                        <select name="places_disponibles" id="places_disponibles" class="w-full border border-gray-300 rounded-md shadow-sm p-3 " required>
+                            <option value="" disabled {{ old('places_disponibles') ? '' : 'selected' }}>Sélectionnez le nombre de place</option>
+                            <option value="1" {{ old('places_disponibles') == '1' ? 'selected' : '' }}>1 place</option>
+                            <option value="2" {{ old('places_disponibles') == '2' ? 'selected' : '' }}>2 places</option>
+                            <option value="3" {{ old('places_disponibles') == '3' ? 'selected' : '' }}>3 places</option>
+                            <option value="4" {{ old('places_disponibles') == '4' ? 'selected' : '' }}>4 places</option>
+                            <option value="5" {{ old('places_disponibles') == '5' ? 'selected' : '' }}>5 places</option>
+                            <option value="6" {{ old('places_disponibles') == '6' ? 'selected' : '' }}>6 places</option>
+                            <option value="7" {{ old('places_disponibles') == '7' ? 'selected' : '' }}>7 places</option>
+                        </select>
                 </div>
 
                 {{--SELECTION VEHICULE--}}

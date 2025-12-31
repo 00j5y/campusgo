@@ -73,6 +73,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    //Sauvegarde les champs arrivée et départ en cas d'erreurs (old())
+    function initializeFields() {
+        if (departInput.value.trim() !== '' && departInput.value.trim() !== iutAdresse) {
+            setInputState(arriveeInput, true);
+        } 
+        else if (arriveeInput.value.trim() !== '' && arriveeInput.value.trim() !== iutAdresse) {
+            setInputState(departInput, true);
+        }
+        else {
+            setInputState(arriveeInput, false, ''); 
+            setInputState(departInput, false, '');
+        }
+    }
+
     //AUTOCOMPLETE
     function setupAutocomplete(inputId, listId, hiddenId) {
         const input = document.getElementById(inputId);
