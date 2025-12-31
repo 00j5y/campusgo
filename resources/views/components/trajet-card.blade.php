@@ -26,10 +26,19 @@
             {{-- INFO CONDUCTEUR (Affichage simple sans lien) --}}
             @if($trajet->conducteur)
             <div class="flex items-center gap-2 mt-2 pt-2 border-t border-gray-100">
-                {{-- Avatar (Initiales) --}}
-                <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-[10px] font-bold text-gray-600">
-                    {{ substr($trajet->conducteur->prenom, 0, 1) }}{{ substr($trajet->conducteur->nom, 0, 1) }}
-                </div>
+                
+                {{-- LOGIQUE AVATAR --}}
+                @if($trajet->conducteur->photo)
+                    {{-- 1. Si Photo --}}
+                    <img src="{{ asset('storage/' . $trajet->conducteur->photo) }}" 
+                         alt="{{ $trajet->conducteur->prenom }}" 
+                         class="w-6 h-6 rounded-full object-cover border border-gray-200">
+                @else
+                    {{-- 2. Si Pas de Photo (Vos initiales) --}}
+                    <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-[10px] font-bold text-gray-600">
+                        {{ substr($trajet->conducteur->prenom, 0, 1) }}{{ substr($trajet->conducteur->nom, 0, 1) }}
+                    </div>
+                @endif
                 
                 {{-- Nom (Texte simple) --}}
                 <p class="text-xs text-gray-500">
@@ -72,10 +81,40 @@
                 </button>
                 
                 @if($etat !== 'passe')
+                    {{-- Si le trajet est À VENIR -> Bouton Annuler --}}
                     <button onclick="openAnnulerModal('{{ route('annuler', $trajet->id) }}')" 
                             class="cursor-pointer w-full bg-[#FF5A5F] hover:bg-[#E0484D] text-white font-bold py-2 px-4 rounded-lg transition text-sm text-center">
                         Annuler
                     </button>
+                @else
+                {{-- Si le trajet est PASSÉ --}}
+                    
+                {{-- Cas 1 : Je suis le conducteur (Auto-notation interdite) --}}
+                @if(Auth::id() === $trajet->id_utilisateur)
+
+                    <button onclick="alert('Vous ne pouvez pas vous noter vous-même sur votre propre trajet.');" 
+                            class="cursor-pointer w-full border border-gray-300 text-gray-400 font-bold py-2 px-4 rounded-lg transition text-sm text-center flex items-center justify-center gap-2 hover:bg-gray-50 opacity-70">
+                        <i class="fa-regular fa-star"></i> Noter
+                    </button>
+
+                {{-- Cas 2 : J'ai déjà laissé un avis (Doublon interdit) --}}
+                @elseif($trajet->aDejaUnAvis())
+
+                    <button onclick="alert('Oups ! Vous avez déjà donné votre avis sur ce trajet.');" 
+                            class="cursor-pointer w-full border border-gray-300 text-gray-400 font-bold py-2 px-4 rounded-lg transition text-sm text-center flex items-center justify-center gap-2 hover:bg-gray-50">
+                        <i class="fa-solid fa-check"></i> Déjà noté
+                    </button>
+
+                {{-- Cas 3 : Tout est OK, je peux noter --}}
+                @else
+
+                    <a href="{{ route('reviews.create', ['id_trajet' => $trajet->id]) }}" 
+                    class="cursor-pointer w-full border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white font-bold py-2 px-4 rounded-lg transition text-sm text-center flex items-center justify-center gap-2">
+                        <i class="fa-regular fa-star"></i> Noter
+                    </a>
+
+                @endif
+
                 @endif
             @endif
         </div>

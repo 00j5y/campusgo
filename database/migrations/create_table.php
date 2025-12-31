@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 return new class extends Migration
 {
@@ -25,7 +27,18 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Table Historique Connexions (AJOUTÉ)
+        // Insertion de l'utilisateur anonyme
+        DB::table('utilisateur')->insert([
+            'id' => 999,
+            'prenom' => 'Utilisateur',
+            'nom' => 'Anonyme',
+            'email' => 'anonyme@campusgo.fr',
+            'mdp' => Hash::make(Str::random(32)),//pour éviter toute connexion
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Table Historique Connexions
         Schema::create('historique_connexions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_utilisateur')
@@ -69,6 +82,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        // Table Préférence
         Schema::create('preference', function (Blueprint $table) {
             $table->id();
             $table->boolean('accepte_animaux')->default(false);
@@ -77,7 +91,6 @@ return new class extends Migration
             $table->boolean('accepte_discussion')->default(true);
             
             $table->boolean('telephone_public')->default(false);
-            $table->boolean('trajets_publics')->default(true);
 
             $table->foreignId('id_utilisateur')
                 ->constrained('utilisateur')

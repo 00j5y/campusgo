@@ -2,7 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Avis;
+use Illuminate\Support\Facades\Cache;
 
 class Trajet extends Model
 {
@@ -34,5 +38,26 @@ class Trajet extends Model
     public function conducteur()
     {
         return $this->belongsTo(User::class, 'id_utilisateur', 'id');
+    }
+
+    /**
+     * Vérifie si l'utilisateur connecté a déjà donné un avis sur ce trajet
+     */
+    public function aDejaUnAvis()
+    {
+        if (!Auth::check()) {
+            return false;
+        }
+
+        $id_utilisateur = Auth::id();
+
+        $cacheKey = "avis_donne_u{$id_utilisateur}_t{$this->id}";
+        if (Cache::has($cacheKey)) {
+            return true; // Il a déjà voté selon le cache
+        }
+
+        return Avis::where('id_trajet', $this->id)
+                   ->where('id_auteur', Auth::id())
+                   ->exists();
     }
 }
