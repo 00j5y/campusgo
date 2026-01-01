@@ -55,37 +55,47 @@ class ProfileController extends Controller
 
             $user = $request->user();
 
+                // 2. Mise à jour des infos textuelles
+                $user->prenom = Str::title($validated['firstname']);
+                $user->nom = Str::upper($validated['lastname']);
 
-            $user->prenom = Str::title($validated['firstname']); 
-            $user->nom = Str::upper($validated['lastname']);
-
-            if ($request->filled('num_tel')) {
-                $user->num_tel = preg_replace('/[^0-9]/', '', $request->input('num_tel'));
-            } else {
-                $user->num_tel = null; // Si le champ est vide, on met NULL en BDD
-            }
-
-            if ($request->hasFile('photo')) {
-                if ($user->photo) {
-                    Storage::disk('public')->delete($user->photo);
+                if ($request->filled('num_tel')) {
+                    $user->num_tel = preg_replace('/[^0-9]/', '', $request->input('num_tel'));
+                } else {
+                    $user->num_tel = null;
+                }
+                
+                // on regarde si l'utilisateur a demandé la suppression
+                if ($request->input('delete_photo') == '1') {
+                    if ($user->photo && Storage::disk('public')->exists($user->photo)) {
+                        Storage::disk('public')->delete($user->photo);
                     }
-            
-            // Enregistrer la nouvelle photo
-            $path = $request->file('photo')->store('avatars', 'public');
-            $user->photo = $path;
-        }
+                    $user->photo = null;
+                }
 
-            $user->save();
+                // on regarde si une NOUVELLE photo est envoyée
+                if ($request->hasFile('photo')) {
+                    // Si une photo existait encore (et n'a pas été supprimée juste avant), on l'efface
+                    if ($user->photo && Storage::disk('public')->exists($user->photo)) {
+                        Storage::disk('public')->delete($user->photo);
+                    }
+                    
+                    // enregistrement de la nouvelle photo
+                    $path = $request->file('photo')->store('avatars', 'public');
+                    $user->photo = $path;
+                }
+
+                $user->save();
 
             // On utilise updateOrCreate pour créer la ligne si elle n'existe pas encore
             $user->preference()->updateOrCreate(
-                ['id_utilisateur' => $user->id], // Condition de recherche
+                ['id_utilisateur' => $user->id],
                 [
                     // Colonne BDD (minuscule) => Valeur Formulaire (Majuscule)
                     'accepte_animaux'    => $request->Accepte_animaux,
                     'accepte_fumeurs'    => $request->Accepte_fumeurs,
                     'accepte_musique'    => $request->Accepte_musique,
-                    'accepte_discussion' => 3, // Valeur par défaut
+                    'accepte_discussion' => $validated['accepte_discussion'],
                 ]
             );
 
@@ -93,7 +103,7 @@ class ProfileController extends Controller
         }
 
     /**
-     * Delete the user's account.
+     * Supprime le compte utilisateur
      */
     public function destroy(Request $request): RedirectResponse
     {
