@@ -265,6 +265,7 @@
                 </div>
             </div>
         </div>
+        <input type="hidden" name="duree_trajet" id="duree_trajet" value="">
     </form>
 </main>
 

@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     //VARIABLES
     const IUT_LABEL = "IUT Amiens, Avenue des Facultés";
     const IUT_COORDS = "2.263592,49.873836";
+    const MAPBOX_TOKEN = "pk.eyJ1IjoiZ2FieXNjb3RlIiwiYSI6ImNtaXlueXBycDBlMnIzZnM3NDF0aWZ4emIifQ.Kv51hN4zyQ9O2AZLlbSdZg";
 
     const departInput = document.getElementById('lieu_depart');
     const arriveeInput = document.getElementById('lieu_arrivee');
@@ -131,6 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 if(hidden) hidden.value = f.geometry.coordinates;
                                 list.classList.add('hidden');
                                 isProgrammaticChange = false;
+                                calculateDuration();
                                 
                                 // On applique la contrainte IUT 
                                 handleConstraint(input === departInput ? 'depart' : 'arrivee');
@@ -176,6 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 setFieldState(departInput, coordsDepart, false, '');
             }
         }
+        setTimeout(calculateDuration, 500);
     }
 
     if(departInput) departInput.addEventListener('input', () => handleConstraint('depart'));
@@ -324,5 +327,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 localStorage.removeItem('trajet_temp_data');
             }, 100);
         } catch(e) { console.error(e); }
+    }
+    async function calculateDuration() {
+        const cDep = document.getElementById('coords_depart')?.value;
+        const cArr = document.getElementById('coords_arrivee')?.value;
+        const hiddenDuree = document.getElementById('duree_trajet');
+
+        if (!cDep || !cArr || !hiddenDuree) return;
+
+        const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${cDep};${cArr}?geometries=geojson&access_token=${MAPBOX_TOKEN}`;
+
+        try {
+            const req = await fetch(url);
+            const json = await req.json();
+            if (json.routes && json.routes.length > 0) {
+                hiddenDuree.value = json.routes[0].duration; // Durée en secondes
+            }
+        } catch (e) { console.error(e); }
     }
 });

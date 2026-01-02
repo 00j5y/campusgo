@@ -101,6 +101,21 @@ class TrajetController extends Controller
             'id_vehicule.required' => 'Vous devez sélectionner un véhicule.',
             'id_vehicule.exists' => 'Le véhicule sélectionné est invalide.',
         ]);
+        $heureArriveeCalcul = '00:00:00'; 
+        if ($request->filled('duree_trajet')) {
+            try {
+                $dateComplete = Carbon::createFromFormat(
+                    'Y-m-d H:i', 
+                    $request->date_depart . ' ' . $request->heure_depart
+                );
+                
+                $dateArrivee = $dateComplete->addSeconds((int)$request->duree_trajet);
+                
+                $dateArrivee->second(0); 
+
+                $heureArriveeCalcul = $dateArrivee->format('H:i:s');
+            } catch (\Exception $e) {}
+        }
 
         //Enregistrement du Trajet
         $trajet = Trajet::create([
@@ -112,7 +127,7 @@ class TrajetController extends Controller
             'heure_depart' => $validatedData['heure_depart'],
             'place_disponible' => $validatedData['places_disponibles'],
             'prix' => 0,
-            'heure_arrivee' => '00:00:00', 
+            'heure_arrivee' => $heureArriveeCalcul, 
         ]);
         
         //Redirection après publication
