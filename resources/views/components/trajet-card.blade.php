@@ -41,25 +41,33 @@
 
             {{-- INFO CONDUCTEUR --}}
             @if($trajet->conducteur)
-            <div class="flex items-center gap-2 mt-2 pt-2 border-t border-gray-100">
+            <div class="mt-2 pt-2 border-t border-gray-100">
                 
-                {{-- LOGIQUE AVATAR --}}
-                @if($trajet->conducteur->photo)
-                    {{-- Si Photo --}}
-                    <img src="{{ asset('storage/' . $trajet->conducteur->photo) }}" 
-                         alt="{{ $trajet->conducteur->prenom }}" 
-                         class="w-6 h-6 rounded-full object-cover border border-gray-200">
-                @else
-                    {{-- Si Pas de Photo --}}
-                    <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-[10px] font-bold text-gray-600">
-                        {{ substr($trajet->conducteur->prenom, 0, 1) }}{{ substr($trajet->conducteur->nom, 0, 1) }}
+                {{-- LIEN GLOBAL VERS LE PROFIL --}}
+                <a href="{{ route('profile.public', $trajet->conducteur->id) }}" class="flex items-center gap-2 group hover:bg-gray-50 p-1 rounded-lg transition-colors cursor-pointer">
+                    
+                    {{-- LOGIQUE AVATAR --}}
+                    @if($trajet->conducteur->photo)
+                        <img src="{{ asset('storage/' . $trajet->conducteur->photo) }}" 
+                             alt="{{ $trajet->conducteur->prenom }}" 
+                             class="w-8 h-8 rounded-full object-cover border border-gray-200 group-hover:border-vert-principale transition-colors">
+                    @else
+                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-[10px] font-bold text-gray-600 group-hover:bg-gray-300 transition-colors">
+                            {{ substr($trajet->conducteur->prenom, 0, 1) }}{{ substr($trajet->conducteur->nom, 0, 1) }}
+                        </div>
+                    @endif
+                    
+                    {{-- Nom --}}
+                    <div class="flex flex-col">
+                        <p class="text-sm font-bold text-noir group-hover:text-vert-principale transition-colors">
+                            {{ $trajet->conducteur->prenom }} {{ substr($trajet->conducteur->nom, 0, 1) }}.
+                        </p>
+                        <p class="text-[10px] text-gray-400 group-hover:text-vert-principale/70">
+                            Voir le profil
+                        </p>
                     </div>
-                @endif
-                
-                {{-- Nom --}}
-                <p class="text-xs text-gray-500">
-                    Proposé par <span class="font-bold text-noir">{{ $trajet->conducteur->prenom }} {{ $trajet->conducteur->nom }}</span>
-                </p>
+                </a>
+
             </div>
             @endif
 
