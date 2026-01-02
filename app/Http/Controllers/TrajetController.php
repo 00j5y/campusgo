@@ -83,6 +83,7 @@ class TrajetController extends Controller
             'heure_depart' => 'required',
             'places_disponibles' => "required|integer|min:1|max:{$limitePlaces}",
             'id_vehicule' => 'required|exists:vehicule,id', 
+            'prix' => 'required|numeric|min:0|max:100',
         ], [
             'lieu_depart.required' => 'Le lieu de départ est obligatoire.',
             'lieu_depart.max' => 'Le lieu de départ ne doit pas dépasser 100 caractères.',
@@ -100,6 +101,12 @@ class TrajetController extends Controller
             
             'id_vehicule.required' => 'Vous devez sélectionner un véhicule.',
             'id_vehicule.exists' => 'Le véhicule sélectionné est invalide.',
+
+            'prix.required' => 'Le prix est obligatoire (mettez 0 pour gratuit).',
+            'prix.numeric' => 'Le prix doit être un nombre valide.',
+            'prix.min' => 'Le prix ne peut pas être négatif.',
+
+            
         ]);
         $heureArriveeCalcul = '00:00:00'; 
         if ($request->filled('duree_trajet')) {
@@ -126,7 +133,7 @@ class TrajetController extends Controller
             'date_depart' => $validatedData['date_depart'],
             'heure_depart' => $validatedData['heure_depart'],
             'place_disponible' => $validatedData['places_disponibles'],
-            'prix' => 0,
+            'prix' => $validatedData['prix'],
             'heure_arrivee' => $heureArriveeCalcul, 
         ]);
         

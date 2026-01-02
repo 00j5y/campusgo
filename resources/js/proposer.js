@@ -5,7 +5,8 @@ window.saveFormData = function() {
         lieu_arrivee: document.getElementById('lieu_arrivee')?.value,
         date_depart: document.getElementById('date_depart')?.value,
         heure_depart: document.getElementById('heure_depart')?.value,
-        places_disponibles: document.getElementById('places_disponibles')?.value
+        places_disponibles: document.getElementById('places_disponibles')?.value,
+        prix: document.getElementById('prix')?.value
     };
     localStorage.setItem('trajet_temp_data', JSON.stringify(formData));
 };
@@ -296,6 +297,23 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    async function calculateDuration() {
+        const cDep = document.getElementById('coords_depart')?.value;
+        const cArr = document.getElementById('coords_arrivee')?.value;
+        const hiddenDuree = document.getElementById('duree_trajet');
+
+        if (!cDep || !cArr || !hiddenDuree) return;
+
+        const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${cDep};${cArr}?geometries=geojson&access_token=${MAPBOX_TOKEN}`;
+
+        try {
+            const req = await fetch(url);
+            const json = await req.json();
+            if (json.routes && json.routes.length > 0) {
+                hiddenDuree.value = json.routes[0].duration; // Durée en secondes
+            }
+        } catch (e) { console.error(e); }
+    }
 
     //RESTAURATION DES DONNÉES
     const savedData = localStorage.getItem('trajet_temp_data');
@@ -315,6 +333,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const places = document.getElementById('places_disponibles');
                 if (places && data.places_disponibles) places.value = data.places_disponibles;
 
+                const prixInput = document.getElementById('prix');
+                if (prixInput && data.prix) prixInput.value = data.prix;
+
                 if(departInput && departInput.value === IUT_LABEL) {
                     setFieldState(departInput, coordsDepart, true);
                     setFieldState(arriveeInput, coordsArrivee, false, data.lieu_arrivee);
@@ -328,21 +349,5 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 100);
         } catch(e) { console.error(e); }
     }
-    async function calculateDuration() {
-        const cDep = document.getElementById('coords_depart')?.value;
-        const cArr = document.getElementById('coords_arrivee')?.value;
-        const hiddenDuree = document.getElementById('duree_trajet');
-
-        if (!cDep || !cArr || !hiddenDuree) return;
-
-        const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${cDep};${cArr}?geometries=geojson&access_token=${MAPBOX_TOKEN}`;
-
-        try {
-            const req = await fetch(url);
-            const json = await req.json();
-            if (json.routes && json.routes.length > 0) {
-                hiddenDuree.value = json.routes[0].duration; // Durée en secondes
-            }
-        } catch (e) { console.error(e); }
-    }
+    
 });

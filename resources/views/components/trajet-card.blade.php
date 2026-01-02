@@ -28,7 +28,14 @@
                 </span>
                 
                 @if($mode === 'search')
-                    <span class="text-[#2E7D32] font-bold ml-2">{{ number_format($trajet->prix, 2) }}€</span>
+                    {{-- Si le prix est 0, on écrit "Gratuit", sinon on affiche le montant --}}
+                    <span class="text-[#2E7D32] font-bold ml-auto">
+                        @if($trajet->prix == 0)
+                            Gratuit
+                        @else
+                            {{ number_format($trajet->prix, 2, ',', ' ') }} €
+                        @endif
+                    </span>
                 @endif
             </div>
 

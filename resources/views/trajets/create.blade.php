@@ -178,24 +178,53 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+    
                 {{--NOMBRE DE PLACES--}}
-                <div class="mt-6">
+                <div>
                     <label for="places_disponibles" class="block text-sm font-medium text-noir mb-1 flex items-center">
+                        {{-- Ton icône Places --}}
                         <svg class="w-4 h-4 mr-1 text-vert-principale" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-5a3 3 0 00-3-3H9a3 3 0 00-3 3v5H1V7a3 3 0 013-3h16a3 3 0 013 3v13H17zM12 11a4 4 0 100-8 4 4 0 000 8z"></path></svg>
                         Nombre de Places Disponibles
                     </label>
-                        <select name="places_disponibles" id="places_disponibles" class="w-full border border-gray-300 rounded-md shadow-sm p-3 " required>
-                            <option value="" disabled {{ old('places_disponibles') ? '' : 'selected' }}>Sélectionnez le nombre de place</option>
-                            <option value="1" {{ old('places_disponibles') == '1' ? 'selected' : '' }}>1 place</option>
-                            <option value="2" {{ old('places_disponibles') == '2' ? 'selected' : '' }}>2 places</option>
-                            <option value="3" {{ old('places_disponibles') == '3' ? 'selected' : '' }}>3 places</option>
-                            <option value="4" {{ old('places_disponibles') == '4' ? 'selected' : '' }}>4 places</option>
-                            <option value="5" {{ old('places_disponibles') == '5' ? 'selected' : '' }}>5 places</option>
-                            <option value="6" {{ old('places_disponibles') == '6' ? 'selected' : '' }}>6 places</option>
-                            <option value="7" {{ old('places_disponibles') == '7' ? 'selected' : '' }}>7 places</option>
-                        </select>
+                    <select name="places_disponibles" id="places_disponibles" class="w-full border border-gray-300 rounded-md shadow-sm p-3 focus:border-vert-principale focus:ring-vert-principale" required>
+                        <option value="" disabled {{ old('places_disponibles') ? '' : 'selected' }}>Sélectionnez le nombre</option>
+                        <option value="1" {{ old('places_disponibles') == '1' ? 'selected' : '' }}>1 place</option>
+                        <option value="2" {{ old('places_disponibles') == '2' ? 'selected' : '' }}>2 places</option>
+                        <option value="3" {{ old('places_disponibles') == '3' ? 'selected' : '' }}>3 places</option>
+                        <option value="4" {{ old('places_disponibles') == '4' ? 'selected' : '' }}>4 places</option>
+                        <option value="5" {{ old('places_disponibles') == '5' ? 'selected' : '' }}>5 places</option>
+                        <option value="6" {{ old('places_disponibles') == '6' ? 'selected' : '' }}>6 places</option>
+                        <option value="7" {{ old('places_disponibles') == '7' ? 'selected' : '' }}>7 places</option>
+                    </select>
                 </div>
+
+                {{-- PRIX --}}
+                <div>
+                    <label for="prix" class="block text-sm font-medium text-noir mb-1 flex items-center">
+                        {{-- Icône Euro (Même style que ton icône places) --}}
+                        <svg class="w-4 h-4 mr-1 text-vert-principale" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 15.536c-1.171 1.952-3.07 1.952-4.242 0-1.172-1.953-1.172-5.119 0-7.072 1.171-1.952 3.07-1.952 4.242 0M8 10.5h4m-4 3h4"></path>
+                        </svg>
+                        Prix par passager (€)
+                    </label>
+                <div class="relative">
+                    <input 
+                        type="number" 
+                        name="prix" 
+                        id="prix" 
+                        min="0" 
+                        step="0.50" 
+                        placeholder="0 (Gratuit)" 
+                        value="{{ old('prix') }}"
+                        class="w-full border border-gray-300 rounded-md shadow-sm p-3 focus:border-vert-principale focus:ring-vert-principale placeholder-gray-400" 
+                        required
+                    >
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Indiquez 0 pour un trajet gratuit.</p>
+            </div>
+
+        </div>
 
                 {{--SELECTION VEHICULE--}}
                 <div class="mb-6 mt-6">
