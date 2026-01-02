@@ -83,7 +83,7 @@ class TrajetController extends Controller
             'heure_depart' => 'required',
             'places_disponibles' => "required|integer|min:1|max:{$limitePlaces}",
             'id_vehicule' => 'required|exists:vehicule,id', 
-            'prix' => 'required|numeric|min:0|max:100',
+            'prix' => 'required|integer|min:0|max:100',
         ], [
             'lieu_depart.required' => 'Le lieu de départ est obligatoire.',
             'lieu_depart.max' => 'Le lieu de départ ne doit pas dépasser 100 caractères.',
@@ -103,8 +103,9 @@ class TrajetController extends Controller
             'id_vehicule.exists' => 'Le véhicule sélectionné est invalide.',
 
             'prix.required' => 'Le prix est obligatoire (mettez 0 pour gratuit).',
-            'prix.numeric' => 'Le prix doit être un nombre valide.',
+            'prix.integer' => 'Le prix doit être un nombre entier (pas de centimes).',
             'prix.min' => 'Le prix ne peut pas être négatif.',
+            'prix.max' => 'Le prix ne peut pas dépasser 100€.',
 
             
         ]);

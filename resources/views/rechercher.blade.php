@@ -73,24 +73,24 @@
                 </div>
                 <div>
                     <label class="font-bold text-noir text-sm mb-2 block">Horaire</label>
-                    <div class="flex w-full">
-                        <div class="relative">
-                            <select 
-                                name="type_horaire" 
-                                style="-webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: none;"
-                                class="h-full bg-gray-50 border border-r-0 border-gray-200 rounded-l-xl pl-4 pr-8 py-3 text-sm focus:border-vert-principale focus:outline-none cursor-pointer text-gray-700"
-                            >
-                                <option value="depart" {{ request('type_horaire') == 'depart' ? 'selected' : '' }}>Départ</option>
-                                <option value="arrivee" {{ request('type_horaire') == 'arrivee' ? 'selected' : '' }}>Arrivée</option>
-                            </select>
-                
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                                <i class="fa-solid fa-chevron-down text-xs"></i>
+                    <div class="flex w-full relative z-30 h-[50px]">
+                        
+                        <div class="relative h-full" id="custom-select-container">
+                            <input type="hidden" name="type_horaire" id="type_horaire_input" value="{{ request('type_horaire', 'depart') }}">
+                            
+                            <button type="button" id="dropdown-trigger" class="h-full bg-gray-50 border border-r-0 border-gray-200 rounded-l-xl pl-4 pr-8 text-sm focus:border-vert-principale focus:ring-1 focus:ring-vert-principale focus:outline-none cursor-pointer text-gray-700 flex items-center min-w-[110px] transition-all">
+                                <span id="dropdown-label">{{ request('type_horaire') == 'arrivee' ? 'Arrivée' : 'Départ' }}</span>
+                                <i class="fa-solid fa-chevron-down text-xs absolute right-3 text-gray-400"></i>
+                            </button>
+            
+                            <div id="dropdown-menu" class="hidden absolute top-full left-0 mt-2 w-full bg-white border border-gray-100 rounded-xl shadow-xl z-50 overflow-hidden animate-fade-in-down">
+                                <div class="dropdown-option px-4 py-3 text-sm text-gray-700 hover:bg-[#2E7D32] hover:text-white cursor-pointer transition-colors" data-value="depart">Départ</div>
+                                <div class="dropdown-option px-4 py-3 text-sm text-gray-700 hover:bg-[#2E7D32] hover:text-white cursor-pointer transition-colors" data-value="arrivee">Arrivée</div>
                             </div>
                         </div>
-            
-                        <div class="relative w-full flex-1">
-                            <input type="text" id="heure" name="heure" value="{{ request('heure') }}" placeholder="Sélectionner une heure" class="w-full h-full bg-gray-50 border border-gray-200 rounded-r-xl py-3 px-4 focus:border-vert-principale focus:outline-none cursor-pointer">
+                        
+                        <div class="relative w-full flex-1 h-full">
+                            <input type="text" id="heure" name="heure" value="{{ request('heure') }}" placeholder="Sélectionner une heure" class="w-full h-full bg-gray-50 border border-gray-200 rounded-r-xl  px-4 focus:border-vert-principale focus:outline-none cursor-pointer">
                             <i class="fa-regular fa-clock absolute right-4 top-3.5 text-gray-400 pointer-events-none"></i>
                         </div>
                     </div>

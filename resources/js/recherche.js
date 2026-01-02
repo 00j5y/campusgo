@@ -11,6 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const coordsArrivee = document.getElementById('coords_arrivee');
     const inverserBtn = document.getElementById('btn-inverser-recherche');
     const form = document.getElementById('form-recherche');
+    const dropdownTrigger = document.getElementById('dropdown-trigger');
+    const dropdownMenu = document.getElementById('dropdown-menu');
+    const typeHoraireInput = document.getElementById('type_horaire_input');
+    const dropdownLabel = document.getElementById('dropdown-label');
+    const dropdownOptions = document.querySelectorAll('.dropdown-option');
 
     // Variable pour éviter les boucles infinies lors des mises à jour automatiques
     let isProgrammatic = false;
@@ -402,5 +407,40 @@ document.addEventListener('DOMContentLoaded', () => {
             miniMap.fitBounds(bounds, { padding: 40 });
         });
     };
+    if (dropdownTrigger && dropdownMenu) {
+        const icon = dropdownTrigger.querySelector('i');
+
+        // 1. Ouvrir / Fermer le menu au clic
+        dropdownTrigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('hidden');
+            // Rotation de la flèche
+            if (icon) {
+                icon.style.transform = dropdownMenu.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+            }
+        });
+
+        // 2. Sélectionner une option
+        dropdownOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                const value = this.dataset.value; 
+                const text = this.innerText;      
+
+                if(typeHoraireInput) typeHoraireInput.value = value;
+                if(dropdownLabel) dropdownLabel.innerText = text;
+
+                dropdownMenu.classList.add('hidden');
+                if (icon) icon.style.transform = 'rotate(0deg)';
+            });
+        });
+
+        // 3. Fermer si on clique ailleurs
+        document.addEventListener('click', function(e) {
+            if (!dropdownTrigger.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.add('hidden');
+                if (icon) icon.style.transform = 'rotate(0deg)';
+            }
+        });
+    }
 
 });

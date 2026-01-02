@@ -13,30 +13,40 @@
                 </div>
             </div>
 
-            {{-- INFOS DATE / HEURE / PRIX --}}
-            <div class="flex items-center gap-4 text-sm text-gray-600">
-                <span><i class="far fa-calendar"></i> {{ \Carbon\Carbon::parse($trajet->date_depart)->format('d/m/Y') }}</span>
-                <span class="flex items-center whitespace-nowrap">
-                    <i class="far fa-clock mr-1"></i> 
-                    {{ \Carbon\Carbon::parse($trajet->heure_depart)->format('H:i') }}
-    
-                    {{-- Affiche l'arrivée seulement si elle existe --}}
-                    @if(!empty($trajet->heure_arrivee) && $trajet->heure_arrivee != '00:00:00')
-                        <span class="mx-2 text-gray-400 text-xs"><i class="fa-solid fa-arrow-right"></i></span>
-                        {{ \Carbon\Carbon::parse($trajet->heure_arrivee)->format('H:i') }}
-                    @endif
-                </span>
+           {{-- INFOS DATE / HEURE / PRIX --}}
+            <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mt-1">
+                {{-- Date --}}
+                <span><i class="far fa-calendar mr-1"></i> {{ \Carbon\Carbon::parse($trajet->date_depart)->format('d/m/Y') }}</span>
                 
-                @if($mode === 'search')
-                    {{-- Si le prix est 0, on écrit "Gratuit", sinon on affiche le montant --}}
-                    <span class="text-[#2E7D32] font-bold ml-auto">
+                <div class="flex items-center gap-3">
+                    
+                    {{-- Heure : Départ ➝ Arrivée --}}
+                    <span class="flex items-center bg-gray-50 px-2 py-0.5 rounded border border-gray-100">
+                        <i class="far fa-clock mr-2 text-vert-principale"></i> 
+                        
+                        {{-- Heure Départ --}}
+                        <span class="font-bold text-gray-700">
+                            {{ \Carbon\Carbon::parse($trajet->heure_depart)->format('H:i') }}
+                        </span>
+                        
+                        {{-- Heure Arrivée --}}
+                        @if(!empty($trajet->heure_arrivee) && $trajet->heure_arrivee != '00:00:00')
+                            <i class="fa-solid fa-arrow-right mx-2 text-gray-400 text-[10px]"></i>
+                            <span class="text-gray-500 font-medium">
+                                {{ \Carbon\Carbon::parse($trajet->heure_arrivee)->format('H:i') }}
+                            </span>
+                        @endif
+                    </span>
+
+                    {{-- Prix --}}
+                    <span class="text-[#2E7D32] font-bold text-base">
                         @if($trajet->prix == 0)
                             Gratuit
                         @else
-                            {{ number_format($trajet->prix, 2, ',', ' ') }} €
+                            {{ number_format($trajet->prix, 0, ',', ' ') }} €
                         @endif
                     </span>
-                @endif
+                </div>
             </div>
 
             {{-- INFO CONDUCTEUR --}}
