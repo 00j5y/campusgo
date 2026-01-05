@@ -18,11 +18,15 @@
             <div class="lg:col-span-1">
                 <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 flex flex-col items-center text-center">
                     
-                    <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-beige-principale flex items-center justify-center mb-4">
+                    <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-gray-200 flex items-center justify-center mb-4">
                         @if($user->photo)
+                            {{-- CAS 1 : Photo existante --}}
                             <img src="{{ asset('storage/' . $user->photo) }}" alt="Avatar" class="w-full h-full object-cover">
                         @else
-                            <img src="{{ asset('images/accueil/icones/personne-convivialite-vert.png') }}" alt="Avatar par défaut" class="w-10 h-10 object-contain">
+                            {{-- CAS 2 : Initiales --}}
+                            <span class="text-3xl font-bold text-gray-500 uppercase select-none">
+                                {{ substr($user->prenom, 0, 1) }}{{ substr($user->nom, 0, 1) }}
+                            </span>
                         @endif
                     </div>
                     
