@@ -53,6 +53,13 @@ class RechercheController extends Controller
             $dateDepart = $request->input('date');
 
             $query = Trajet::query();
+            $query->where(function ($q) {
+                $q->where('date_depart', '>', Carbon::now()->toDateString())
+                  ->orWhere(function ($subQ) {
+                      $subQ->where('date_depart', Carbon::now()->toDateString())
+                           ->where('heure_depart', '>', Carbon::now()->toTimeString());
+                  });
+            });
 
             if ($villeDepart) {
                 $query->where('lieu_depart', 'like', '%' . $villeDepart . '%');
@@ -70,6 +77,24 @@ class RechercheController extends Controller
                 } catch (\Exception $e) {
                     // date invalide ignorée
                 }
+            }
+            $typeHoraire = $request->input('type_horaire', 'depart');
+            $heureInput = $request->input('heure');
+
+            if ($heureInput) {
+                if ($typeHoraire === 'arrivee') {
+                    // Recherche par arrivée
+                    $query->where('heure_arrivee', '<=', $heureInput)
+                          ->where('heure_arrivee', '!=', '00:00:00') 
+                          ->orderBy('heure_arrivee', 'desc');
+                } else {
+                    // Recherche par départ (standard) 
+                    $query->where('heure_depart', '>=', $heureInput)
+                          ->orderBy('heure_depart', 'asc');
+                }
+            } else {
+                // Pas d'heure précisée 
+                $query->orderBy('date_depart')->orderBy('heure_depart');
             }
 
             $resultats = $query->with('conducteur')->orderBy('date_depart')->get();
