@@ -13,41 +13,75 @@
                 </div>
             </div>
 
-            {{-- INFOS DATE / HEURE / PRIX --}}
-            <div class="flex items-center gap-4 text-sm text-gray-600">
-                <span><i class="far fa-calendar"></i> {{ \Carbon\Carbon::parse($trajet->date_depart)->format('d/m/Y') }}</span>
-                <span><i class="far fa-clock"></i> {{ \Carbon\Carbon::parse($trajet->heure_depart)->format('H:i') }}</span>
+           {{-- INFOS DATE / HEURE / PRIX --}}
+            <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mt-1">
+                {{-- Date --}}
+                <span><i class="far fa-calendar mr-1"></i> {{ \Carbon\Carbon::parse($trajet->date_depart)->format('d/m/Y') }}</span>
                 
-                @if($mode === 'search')
-                    <span class="text-[#2E7D32] font-bold ml-2">{{ number_format($trajet->prix, 2) }}€</span>
-                @endif
+                <div class="flex items-center gap-3">
+                    
+                    {{-- Heure : Départ ➝ Arrivée --}}
+                    <span class="flex items-center bg-gray-50 px-2 py-0.5 rounded border border-gray-100">
+                        <i class="far fa-clock mr-2 text-vert-principale"></i> 
+                        
+                        {{-- Heure Départ --}}
+                        <span class="font-bold text-gray-700">
+                            {{ \Carbon\Carbon::parse($trajet->heure_depart)->format('H:i') }}
+                        </span>
+                        
+                        {{-- Heure Arrivée --}}
+                        @if(!empty($trajet->heure_arrivee) && $trajet->heure_arrivee != '00:00:00')
+                            <i class="fa-solid fa-arrow-right mx-2 text-gray-400 text-[10px]"></i>
+                            <span class="text-gray-500 font-medium">
+                                {{ \Carbon\Carbon::parse($trajet->heure_arrivee)->format('H:i') }}
+                            </span>
+                        @endif
+                    </span>
+
+                    {{-- Prix --}}
+                    <span class="text-[#2E7D32] font-bold text-base">
+                        @if($trajet->prix == 0)
+                            Gratuit
+                        @else
+                            {{ number_format($trajet->prix, 0, ',', ' ') }} €
+                        @endif
+                    </span>
+                </div>
             </div>
 
-            {{-- INFO CONDUCTEUR (Affichage simple sans lien) --}}
+            {{-- INFO CONDUCTEUR --}}
             @if($trajet->conducteur)
-            <div class="flex items-center gap-2 mt-2 pt-2 border-t border-gray-100">
+            <div class="mt-2 pt-2 border-t border-gray-100">
                 
-                {{-- LOGIQUE AVATAR --}}
-                @if($trajet->conducteur->photo)
-                    {{-- 1. Si Photo --}}
-                    <img src="{{ asset('storage/' . $trajet->conducteur->photo) }}" 
-                         alt="{{ $trajet->conducteur->prenom }}" 
-                         class="w-6 h-6 rounded-full object-cover border border-gray-200">
-                @else
-                    {{-- 2. Si Pas de Photo (Vos initiales) --}}
-                    <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-[10px] font-bold text-gray-600">
-                        {{ substr($trajet->conducteur->prenom, 0, 1) }}{{ substr($trajet->conducteur->nom, 0, 1) }}
+                {{-- LIEN GLOBAL VERS LE PROFIL --}}
+                <a href="{{ route('profile.public', $trajet->conducteur->id) }}" class="flex items-center gap-2 group hover:bg-gray-50 p-1 rounded-lg transition-colors cursor-pointer">
+                    
+                    {{-- LOGIQUE AVATAR --}}
+                    @if($trajet->conducteur->photo)
+                        <img src="{{ asset('storage/' . $trajet->conducteur->photo) }}" 
+                             alt="{{ $trajet->conducteur->prenom }}" 
+                             class="w-8 h-8 rounded-full object-cover border border-gray-200 group-hover:border-vert-principale transition-colors">
+                    @else
+                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-[10px] font-bold text-gray-600 group-hover:bg-gray-300 transition-colors">
+                            {{ substr($trajet->conducteur->prenom, 0, 1) }}{{ substr($trajet->conducteur->nom, 0, 1) }}
+                        </div>
+                    @endif
+                    
+                    {{-- Nom --}}
+                    <div class="flex flex-col">
+                        <p class="text-sm font-bold text-noir group-hover:text-vert-principale transition-colors">
+                            {{ $trajet->conducteur->prenom }} {{ substr($trajet->conducteur->nom, 0, 1) }}.
+                        </p>
+                        <p class="text-[10px] text-gray-400 group-hover:text-vert-principale/70">
+                            Voir le profil
+                        </p>
                     </div>
-                @endif
-                
-                {{-- Nom (Texte simple) --}}
-                <p class="text-xs text-gray-500">
-                    Proposé par <span class="font-bold text-noir">{{ $trajet->conducteur->prenom }} {{ $trajet->conducteur->nom }}</span>
-                </p>
+                </a>
+
             </div>
             @endif
 
-            {{-- BADGES (Pour Mes Trajets) --}}
+            {{-- BADGES --}}
             @if($mode === 'perso')
                 <div class="flex gap-2 mt-2">
                     @if(Auth::check() && $trajet->id_utilisateur == Auth::id()) 
@@ -89,7 +123,7 @@
                 @else
                 {{-- Si le trajet est PASSÉ --}}
                     
-                {{-- Cas 1 : Je suis le conducteur (Auto-notation interdite) --}}
+                {{-- Je suis le conducteur (Auto-notation interdite) --}}
                 @if(Auth::id() === $trajet->id_utilisateur)
 
                     <button onclick="alert('Vous ne pouvez pas vous noter vous-même sur votre propre trajet.');" 
@@ -97,7 +131,7 @@
                         <i class="fa-regular fa-star"></i> Noter
                     </button>
 
-                {{-- Cas 2 : J'ai déjà laissé un avis (Doublon interdit) --}}
+                {{-- J'ai déjà laissé un avis (Doublon interdit) --}}
                 @elseif($trajet->aDejaUnAvis())
 
                     <button onclick="alert('Oups ! Vous avez déjà donné votre avis sur ce trajet.');" 
@@ -105,7 +139,7 @@
                         <i class="fa-solid fa-check"></i> Déjà noté
                     </button>
 
-                {{-- Cas 3 : Tout est OK, je peux noter --}}
+                {{-- Tout est OK, je peux noter --}}
                 @else
 
                     <a href="{{ route('reviews.create', ['id_trajet' => $trajet->id]) }}" 

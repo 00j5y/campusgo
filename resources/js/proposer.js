@@ -5,7 +5,8 @@ window.saveFormData = function() {
         lieu_arrivee: document.getElementById('lieu_arrivee')?.value,
         date_depart: document.getElementById('date_depart')?.value,
         heure_depart: document.getElementById('heure_depart')?.value,
-        places_disponibles: document.getElementById('places_disponibles')?.value
+        places_disponibles: document.getElementById('places_disponibles')?.value,
+        prix: document.getElementById('prix')?.value
     };
     localStorage.setItem('trajet_temp_data', JSON.stringify(formData));
 };
@@ -15,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     //VARIABLES
     const IUT_LABEL = "IUT Amiens, Avenue des Facultés";
     const IUT_COORDS = "2.263592,49.873836";
+    const MAPBOX_TOKEN = "pk.eyJ1IjoiZ2FieXNjb3RlIiwiYSI6ImNtaXlueXBycDBlMnIzZnM3NDF0aWZ4emIifQ.Kv51hN4zyQ9O2AZLlbSdZg";
 
     const departInput = document.getElementById('lieu_depart');
     const arriveeInput = document.getElementById('lieu_arrivee');
@@ -131,6 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 if(hidden) hidden.value = f.geometry.coordinates;
                                 list.classList.add('hidden');
                                 isProgrammaticChange = false;
+                                calculateDuration();
                                 
                                 // On applique la contrainte IUT 
                                 handleConstraint(input === departInput ? 'depart' : 'arrivee');
@@ -176,6 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 setFieldState(departInput, coordsDepart, false, '');
             }
         }
+        setTimeout(calculateDuration, 500);
     }
 
     if(departInput) departInput.addEventListener('input', () => handleConstraint('depart'));
@@ -293,6 +297,23 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    async function calculateDuration() {
+        const cDep = document.getElementById('coords_depart')?.value;
+        const cArr = document.getElementById('coords_arrivee')?.value;
+        const hiddenDuree = document.getElementById('duree_trajet');
+
+        if (!cDep || !cArr || !hiddenDuree) return;
+
+        const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${cDep};${cArr}?geometries=geojson&access_token=${MAPBOX_TOKEN}`;
+
+        try {
+            const req = await fetch(url);
+            const json = await req.json();
+            if (json.routes && json.routes.length > 0) {
+                hiddenDuree.value = json.routes[0].duration; // Durée en secondes
+            }
+        } catch (e) { console.error(e); }
+    }
 
     //RESTAURATION DES DONNÉES
     const savedData = localStorage.getItem('trajet_temp_data');
@@ -312,6 +333,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const places = document.getElementById('places_disponibles');
                 if (places && data.places_disponibles) places.value = data.places_disponibles;
 
+                const prixInput = document.getElementById('prix');
+                if (prixInput && data.prix) prixInput.value = data.prix;
+
                 if(departInput && departInput.value === IUT_LABEL) {
                     setFieldState(departInput, coordsDepart, true);
                     setFieldState(arriveeInput, coordsArrivee, false, data.lieu_arrivee);
@@ -325,4 +349,5 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 100);
         } catch(e) { console.error(e); }
     }
+    
 });
