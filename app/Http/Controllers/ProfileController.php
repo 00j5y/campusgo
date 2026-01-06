@@ -36,21 +36,7 @@ class ProfileController extends Controller
                 'Accepte_fumeurs' => ['boolean'],
                 'Accepte_musique' => ['boolean'],
                 'accepte_discussion' => ['required', 'integer', 'min:1', 'max:5'],
-            ],[
-                'firstname.required' => "Votre prénom est obligatoire.",
-                'firstname.max'      => "Ce prénom est un peu trop long.",
-                
-                'lastname.required' => "Votre nom est obligatoire.",
-                'lastname.max'      => "Ce nom est un peu trop long.",
-                
-                'photo.image' => "Le fichier doit être une image (JPG, PNG, etc.).",
-                'photo.max'   => "L'image est trop lourde. La taille maximale est de 2 Mo.",
-                
-                'num_tel.regex' => "Numéro invalide. Format attendu : 06 12 34 56 78.",
-                
-                'accepte_discussion.required' => "Veuillez sélectionner votre niveau de discussion.",
-                'accepte_discussion.min'      => "Valeur de discussion incorrecte.",
-                'accepte_discussion.max'      => "Valeur de discussion incorrecte.",
+                'delete_photo' => ['nullable', 'boolean'],
             ]);
 
             $user = $request->user();
@@ -109,9 +95,6 @@ class ProfileController extends Controller
     {
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
-        ],[
-            'password.required' => 'Le mot de passe est obligatoire.',
-            'password.current_password' => 'Le mot de passe est incorrect.',
         ]);
 
         $user = $request->user();
@@ -178,10 +161,6 @@ class ProfileController extends Controller
         $validated = $request->validate([
             'current_password' => ['required', 'current_password'],
             'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
-        ], [
-            'current_password.current_password' => 'Le mot de passe actuel est incorrect.',
-            'password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
-            'password.min' => 'Le mot de passe doit contenir au moins :min caractères.',
         ]);
 
         $request->user()->update([

@@ -161,6 +161,17 @@ return [
         'lieu_arrivee_min' => [ 
             'not_in' => 'Le lieu de départ et le lieu d\'arrivée ne peuvent pas être identiques.', 
         ],
+        
+        // --- AJOUTEZ CECI POUR VOS VÉHICULES ---
+        'NombrePlace' => [
+            'max' => "C'est un bus ? Maximum :max places autorisées.",
+            'min' => "Il faut au moins :min place passager disponible.",
+        ],
+        'immatriculation' => [
+            'regex' => "Format invalide. Exemple attendu : AA-123-AA.",
+        ],
+        // ----------------------------------------
+
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
@@ -189,6 +200,20 @@ return [
         'content'   => 'contenu',
         'message'   => 'message',
         'accepte_discussion' => 'niveau de discussion',
+        'Marque'          => 'marque',
+        'Modele'          => 'modèle',
+        'Couleur'         => 'couleur',
+        'NombrePlace'     => 'nombre de places',
+        'immatriculation' => 'immatriculation',
+        'lieu_depart'        => 'lieu de départ',
+        'lieu_arrivee'       => 'lieu d\'arrivée',
+        'date_depart'        => 'date de départ',
+        'heure_depart'       => 'heure de départ',
+        'places_disponibles' => 'nombre de places',
+        'id_vehicule'        => 'véhicule',
+        'note'               => 'note',
+        'commentaire'        => 'commentaire',
+        'current_password'   => 'mot de passe actuel',
     ],
 
 ];

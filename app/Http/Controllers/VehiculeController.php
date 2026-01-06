@@ -6,6 +6,7 @@ use App\Models\Vehicule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Http\Requests\StoreVehiculeRequest;
 
 class VehiculeController extends Controller
 {
@@ -15,33 +16,9 @@ class VehiculeController extends Controller
         return view('vehicule.create');
     }
 
-   public function store(Request $request)
+   public function store(StoreVehiculeRequest $request)
     {
-        // 1. Validation
-        $request->validate([
-            'Marque' => 'required|string|max:20',
-            'Modele' => 'required|string|max:20',
-            'Couleur' => 'required|string|max:20',
-            'immatriculation' => 'required|string|regex:/^[A-Za-z]{2}[-\s]?[0-9]{3}[-\s]?[A-Za-z]{2}$/',
-            'NombrePlace' => 'required|integer|min:1|max:9',
-        ],
-        [
-            'Marque.required' => "Veuillez renseigner la marque du véhicule.",
-            'Marque.max'      => "La marque est trop longue (20 caractères max).",
-            
-            'Modele.required' => "Veuillez renseigner le modèle du véhicule.",
-            'Modele.max'      => "Le modèle est trop long (20 caractères max).",
-            
-            'Couleur.required' => "Veuillez indiquer la couleur.",
-            'Couleur.max'      => "Le nom de la couleur est trop long.",
-            
-            'NombrePlace.required' => "Le nombre de places est obligatoire.",
-            'NombrePlace.min'      => "Il faut au moins 1 place passager disponible.",
-            'NombrePlace.max'      => "C'est un bus ? Maximum 9 places autorisées.",
-            
-            'immatriculation.required' => "L'immatriculation est obligatoire.",
-            'immatriculation.regex'    => "Format invalide. Exemple attendu : AA-123-AA.",
-        ]);
+
 
         $cleanImmat = preg_replace('/[^A-Za-z0-9]/', '', $request->input('immatriculation'));
 
@@ -59,14 +36,11 @@ class VehiculeController extends Controller
 
         $vehicule->save();
 
-        if ($request->input('source') === 'trajet') {
-                return redirect()->route('trajets.create')
-                                ->with('success', 'Véhicule ajouté ! Vous pouvez continuer votre trajet.')
-                                ->with('new_vehicule_id', $vehicule->id);
-            }
+        $redirect = ($request->input('source') === 'trajet') 
+            ? redirect()->route('trajets.create')->with('new_vehicule_id', $vehicule->id)
+            : redirect()->route('profile.show');
 
-        return redirect()->route('profile.show')
-                        ->with('success', 'Véhicule ajouté avec succès.');
+        return $redirect->with('success', 'Votre véhicule a été ajouté au garage !');
     }
 
     public function destroy($id)
@@ -79,6 +53,6 @@ class VehiculeController extends Controller
 
             $vehicule->delete();
 
-            return back()->with('status', 'vehicle-deleted');
+            return back()->with('success', 'Le véhicule a été supprimé avec succès.');
         }
 }

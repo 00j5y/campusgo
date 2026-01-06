@@ -15,6 +15,9 @@
     @include('components.navbar')
 
     <main>
+        <div class="container mx-auto px-4 mt-4">
+            @include('components.flash-message')
+        </div>
         @yield('content')
     </main>
 

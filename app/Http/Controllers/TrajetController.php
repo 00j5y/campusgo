@@ -104,29 +104,8 @@ class TrajetController extends Controller
             'places_disponibles' => "required|integer|min:1|max:{$limitePlaces}",
             'id_vehicule' => 'required|exists:vehicule,id', 
             'prix' => 'required|integer|min:0|max:100',
-        ], [
-            'lieu_depart.required' => 'Le lieu de départ est obligatoire.',
-            'lieu_depart.max' => 'Le lieu de départ ne doit pas dépasser 100 caractères.',
-            
-            'lieu_arrivee.required' => 'Le lieu d\'arrivée est obligatoire.',
-            
-            'date_depart.required' => 'La date de départ est requise.',
-            'date_depart.after_or_equal' => 'La date doit être égale ou postérieure à aujourd\'hui.',
-            
-            'heure_depart.required' => 'L\'heure de départ est requise.',
-            
-            'places_disponibles.required' => 'Merci d\'indiquer le nombre de places.',
-            'places_disponibles.min' => 'Il faut au moins 1 place disponible.',
-            'places_disponibles.max' => "Maximum {$limitePlaces} places autorisées.",
-            
-            'id_vehicule.required' => 'Vous devez sélectionner un véhicule.',
-            'id_vehicule.exists' => 'Le véhicule sélectionné est invalide.',
-
-            'prix.required' => 'Le prix est obligatoire (mettez 0 pour gratuit).',
-            'prix.integer' => 'Le prix doit être un nombre entier.',
-            'prix.min' => 'Le prix ne peut pas être négatif.',
-            'prix.max' => 'Le prix ne peut pas dépasser 100€.',
         ]);
+
         $heureArriveeCalcul = '00:00:00'; 
         if ($request->filled('duree_trajet')) {
             try {
@@ -155,11 +134,8 @@ class TrajetController extends Controller
             'prix' => $validatedData['prix'],
             'heure_arrivee' => $heureArriveeCalcul, 
         ]);
-        
-        //Redirection après publication
-        $request->session()->flash('success_message', 'Votre trajet a été publié avec succès!');
 
-        return redirect()->route('trajets.confirmation');
+        return redirect()->route('trajets.confirmation')->with('success', 'Votre trajet a été publié avec succès !');
     }
 
     //Confirmation de la création du trajet
