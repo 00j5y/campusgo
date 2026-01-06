@@ -13,8 +13,8 @@ return [
     |
     */
 
-    'failed' => 'Les identifiants sont incorrectes.',
-    'password' => 'Le mot de passe fourni est incorrect..',
+    'failed' => 'Les identifiants sont incorrects.',
+    'password' => 'Le mot de passe fourni est incorrect.',
     'throttle' => 'Trop de tentatives de connexion. Veuillez réessayer dans :seconds secondes.',
 
 ];
