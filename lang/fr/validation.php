@@ -214,6 +214,8 @@ return [
         'note'               => 'note',
         'commentaire'        => 'commentaire',
         'current_password'   => 'mot de passe actuel',
+        'password'         => 'nouveau mot de passe',
+        'password_confirmation' => 'confirmation du mot de passe',
     ],
 
 ];

@@ -28,7 +28,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('accueil'));
+        return redirect()->intended(route('accueil', absolute: false))
+                     ->with('success', 'Ravi de vous revoir ! Connexion réussie.');
     }
 
     /**
@@ -42,6 +43,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/')
+             ->with('success', 'Vous avez été déconnecté avec succès.');
     }
 }

@@ -5,8 +5,6 @@
 @section('content')
 <div class="bg-gray-50 min-h-screen py-12">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-
-        <x-flash-message />
         
         <div class="mb-10">
             <h1 class="text-3xl font-bold text-noir">Mon Profil</h1>

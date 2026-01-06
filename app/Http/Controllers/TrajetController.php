@@ -143,7 +143,7 @@ class TrajetController extends Controller
         if(!Auth::check()){
             return redirect()->route('login');
         }
-        $message = session('success_message');
+        $message = session('success');
 
         //Evite d'acceder à la page si on n'a pas créé de trajet 
         if(!$message){

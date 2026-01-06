@@ -6,6 +6,7 @@
     <main>
         <section class="relative bg-linear-to-br from-vert-principale/20 via-beige-second/50 to-beige-principale/50 pt-12 pb-20 lg:pt-20 lg:pb-28 overflow-hidden">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
                     <div class="max-w-2xl">
                         <div class="inline-flex items-center gap-2 bg-vert-principale/20 px-4 py-1.5 rounded-full mb-6">

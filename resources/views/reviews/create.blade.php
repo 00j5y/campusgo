@@ -16,7 +16,7 @@
 
         <div class="max-w-3xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-            {{-- COLONNE GAUCHE : RÉCAPITULATIF TRAJET --}}
+            {{-- COLONNE GAUCHE --}}
             <div class="lg:col-span-1 space-y-6">
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                     <div class="flex items-center gap-4 mb-6">
@@ -28,7 +28,6 @@
                             <p class="font-bold text-noir text-lg">{{ $trajet->conducteur->prenom }} {{ $trajet->conducteur->nom }}</p>
                         </div>
                     </div>
-                    
                     <div class="space-y-4 relative pl-4 border-l-2 border-gray-100">
                         <div class="relative">
                             <div class="absolute -left-[21px] top-1.5 w-3 h-3 rounded-full bg-vert-principale"></div>
@@ -37,17 +36,6 @@
                         <div class="relative">
                             <div class="absolute -left-[21px] top-1.5 w-3 h-3 rounded-full bg-noir"></div>
                             <p class="font-semibold text-noir">{{ $trajet->lieu_arrivee }}</p>
-                        </div>
-                    </div>
-
-                    <div class="mt-6 pt-6 border-t border-gray-100 flex justify-between items-center text-sm">
-                        <div class="flex items-center gap-2 text-gris1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            {{ \Carbon\Carbon::parse($trajet->heure_depart)->format('H:i') }}
-                        </div>
-                        <div class="flex items-center gap-2 text-gris1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                            {{ \Carbon\Carbon::parse($trajet->date_depart)->format('d/m/Y') }}
                         </div>
                     </div>
                 </div>
@@ -94,7 +82,9 @@
                         <textarea name="commentaire" id="commentaire" rows="4" 
                             class="w-full rounded-lg border-gray-300 focus:border-vert-principale focus:ring-vert-principale shadow-sm placeholder-gray-400"
                             placeholder="Partagez votre expérience de covoiturage..."></textarea>
-                        <p class="text-xs text-gray-400 mt-2">Soyez constructif et respectueux dans vos commentaires.</p>
+                        @error('commentaire')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div class="pt-4">
@@ -106,20 +96,9 @@
                         <button type="submit" class="w-full bg-vert-principale hover:bg-vert-principal-h text-white py-3 rounded-lg font-bold shadow-md transition-colors text-lg">
                             Publier l'avis
                         </button>
-
-                        <div class="mt-4 text-center">
-                            <a href="#" class="text-sm text-gray-400 hover:text-red-500 hover:underline">Signaler un problème</a>
-                        </div>
                     </div>
-
                 </form>
-
-                <div class="mt-6 flex gap-3 text-xs text-gray-400 bg-blue-50 p-4 rounded-xl">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    <p>Vos avis sont essentiels pour maintenir la confiance et la qualité. Ils sont vérifiés et modérés pour garantir leur authenticité.</p>
-                </div>
             </div>
-
         </div>
     </div>
 </div>

@@ -15,13 +15,6 @@
                 <p class="text-gray-500">Gérez vos covoiturages passés et à venir.</p>
             </div>
 
-            {{--Notifications--}}
-            @if(session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6">
-                    <i class="fa-solid fa-check-circle mr-2"></i> {{ session('success') }}
-                </div>
-            @endif
-
             {{--SYSTÈME D'ONGLETS--}}
             <div class="bg-gray-200 p-1 rounded-xl flex mb-8">
                 <button id="btn-avenir" onclick="window.changerOnglet('avenir')" class="cursor-pointer flex-1 py-2 rounded-lg font-bold text-sm transition-all bg-white text-[#2E7D32] shadow-sm">

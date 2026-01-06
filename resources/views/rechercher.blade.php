@@ -17,17 +17,6 @@
             <p class="text-gris1">Trouvez un covoiturage en quelques clics.</p>
         </div>
 
-        @if(session('success'))
-            <div class="max-w-4xl mx-auto mb-6 bg-green-100 border border-green-400 text-vert-principale px-4 py-3 rounded relative">
-                <i class="fa-solid fa-check-circle mr-2"></i> {{ session('success') }}
-            </div>
-        @endif
-        @if(session('error'))
-            <div class="max-w-4xl mx-auto mb-6 bg-red-100 border border-rouge text-rouge px-4 py-3 rounded relative">
-                <i class="fa-solid fa-circle-exclamation mr-2"></i> {{ session('error') }}
-            </div>
-        @endif
-
         {{--FORMULAIRE DE RECHERCHE--}}
         <div class="bg-white rounded-3xl shadow-xl p-8 max-w-4xl mx-auto mb-12 relative z-10">
             <form id="form-recherche" action="{{ route('rechercher') }}" method="GET" autocomplete="off" class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -180,7 +169,6 @@
 </main>
 
 
-{{-- Modale Réservation --}}
 <div id="modal-reserver" class="fixed inset-0 hidden z-50" aria-labelledby="modal-title-reserver" role="dialog" aria-modal="true">
     <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" onclick="closeModal('modal-reserver')"></div>
     <div class="fixed inset-0 z-10 w-screen overflow-y-auto flex items-center justify-center p-4">
@@ -200,7 +188,6 @@
     </div>
 </div>
 
-{{-- Modale Annulation --}}
 <div id="modal-annuler" class="fixed inset-0 hidden z-50" aria-labelledby="modal-title-annuler" role="dialog" aria-modal="true">
     <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" onclick="closeModal('modal-annuler')"></div>
     <div class="fixed inset-0 z-10 w-screen overflow-y-auto flex items-center justify-center p-4">

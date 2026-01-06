@@ -18,16 +18,7 @@
 
         <div class="max-w-4xl mx-auto">
             
-            @if ($errors->any())
-                <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-                    <strong class="font-bold">Oups !</strong>
-                    <ul class="mt-2 list-disc list-inside text-sm">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+            <x-flash-message />
             
             <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="space-y-8">
                 @csrf
@@ -39,43 +30,46 @@
                         
                         <div class="relative w-24 h-24 group">
     
-                <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-gray-200 flex items-center justify-center relative">
-                    
-                    {{-- 1. L'IMAGE (Cachée par défaut si pas de photo) --}}
-                    <img id="img_photo_preview" 
-                        src="{{ $user->photo ? asset('storage/' . $user->photo) : '#' }}" 
-                        class="{{ $user->photo ? 'block' : 'hidden' }} w-full h-full object-cover absolute inset-0 z-10 bg-gray-200">
+                            <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-gray-200 flex items-center justify-center relative">
+                                
+                                {{-- 1. L'IMAGE --}}
+                                <img id="img_photo_preview" 
+                                    src="{{ $user->photo ? asset('storage/' . $user->photo) : '#' }}" 
+                                    class="{{ $user->photo ? 'block' : 'hidden' }} w-full h-full object-cover absolute inset-0 z-10 bg-gray-200">
 
-                    {{-- 2. LES INITIALES (Visibles par défaut si pas de photo) --}}
-                    <span id="initials_placeholder" 
-                        class="{{ $user->photo ? 'hidden' : 'flex' }} w-full h-full items-center justify-center text-3xl font-bold text-gray-500 uppercase select-none z-0">
-                        {{ substr($user->prenom, 0, 1) }}{{ substr($user->nom, 0, 1) }}
-                    </span>
+                                {{-- 2. LES INITIALES --}}
+                                <span id="initials_placeholder" 
+                                    class="{{ $user->photo ? 'hidden' : 'flex' }} w-full h-full items-center justify-center text-3xl font-bold text-gray-500 uppercase select-none z-0">
+                                    {{ substr($user->prenom, 0, 1) }}{{ substr($user->nom, 0, 1) }}
+                                </span>
 
-                    {{-- 3. BOUTON SUPPRESSION --}}
-                    <div id="btn_photo_delete" 
-                        class="{{ !$user->photo ? 'hidden' : '' }} absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20 cursor-pointer">
-                        <button type="button" class="text-white hover:text-red-400 transform hover:scale-110 transition-transform" title="Supprimer la photo">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
+                                {{-- 3. BOUTON SUPPRESSION --}}
+                                <div id="btn_photo_delete" 
+                                    class="{{ !$user->photo ? 'hidden' : '' }} absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20 cursor-pointer">
+                                    <button type="button" class="text-white hover:text-red-400 transform hover:scale-110 transition-transform" title="Supprimer la photo">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
 
-                {{-- LABEL CAMÉRA --}}
-                <label for="input_photo_upload" class="absolute bottom-0 right-0 bg-vert-principale text-white p-2 rounded-full cursor-pointer hover:bg-vert-principal-h transition shadow-md z-30 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                </label>
-                
-                <input type="file" name="photo" id="input_photo_upload" class="hidden" accept="image/*">
-                <input type="hidden" name="delete_photo" id="input_delete_photo" value="0">
-            </div>
+                            {{-- LABEL CAMÉRA --}}
+                            <label for="input_photo_upload" class="absolute bottom-0 right-0 bg-vert-principale text-white p-2 rounded-full cursor-pointer hover:bg-vert-principal-h transition shadow-md z-30 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                            </label>
+                            
+                            <input type="file" name="photo" id="input_photo_upload" class="hidden" accept="image/*">
+                            <input type="hidden" name="delete_photo" id="input_delete_photo" value="0">
+                        </div>
 
                         <div>
                             <h2 class="text-xl font-bold text-noir">Photo de profil</h2>
                             <p class="text-sm text-gris1">Cliquez sur la caméra pour changer.</p>
                             <p class="text-xs text-gris1 mt-1">Formats : JPG, PNG. Max 2Mo.</p>
+                            @error('photo')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
                     
@@ -125,13 +119,10 @@
     </div>
 </div>
 
-{{-- FORMULAIRE CACHÉ pour la suppression de la photo --}}
 <form id="form_photo_delete" action="{{ route('profile.photo.destroy') }}" method="POST" style="display: none;">
     @csrf
     @method('DELETE')
 </form>
 
-{{-- APPEL DU SCRIPT AVEC ANTI-CACHE --}}
 <script src="{{ asset('js/profile.js') }}?v={{ time() }}"></script>
-
 @endsection

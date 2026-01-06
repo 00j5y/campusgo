@@ -85,7 +85,7 @@ class ProfileController extends Controller
                 ]
             );
 
-            return redirect()->route('profile.show')->with('status', 'profile-updated');
+            return redirect()->route('profile.show')->with('success', 'Votre profil a été modifié avec succès.');
         }
 
     /**
@@ -140,7 +140,7 @@ class ProfileController extends Controller
         $pref->$field = ! $pref->$field;
         $pref->save();
 
-        return back();
+        return back()->with('success', 'Préférence mise à jour.');
     }
 
 
@@ -167,7 +167,7 @@ class ProfileController extends Controller
             'mdp' => Hash::make($validated['password']),
         ]);
 
-        return back()->with('status', 'password-updated');
+        return back()->with('success', 'Votre mot de passe a été modifié avec succès.');
     }
 
     /**
@@ -222,11 +222,10 @@ class ProfileController extends Controller
 
         // Checkbox cochée = true, sinon false
         $pref->telephone_public = $request->has('telephone_public');
-        $pref->trajets_publics = $request->has('trajets_publics');
         
         $pref->save();
 
-        return back()->with('status', 'setup-updated');
+        return back()->with('success', 'Vos préférences ont été mises à jour avec succès.');
     }
 
     public function updateDiscussion(Request $request)
@@ -245,7 +244,7 @@ class ProfileController extends Controller
         $pref->accepte_discussion = $request->input('accepte_discussion');
         $pref->save();
 
-        return back()->with('status', 'preference-updated');
+        return back()->with('success', 'Vos préférences de discussion ont été mises à jour avec succès.');
     }
 
     public function destroyPhoto()
@@ -261,7 +260,7 @@ class ProfileController extends Controller
             $user->photo = null;
             $user->save();
             
-            return back()->with('success', 'Votre photo de profil a été supprimée.');
+            return back()->with('success', 'Votre photo de profil a été supprimée avec succès.');
         }
 
         return back()->with('error', 'Aucune photo à supprimer.');
