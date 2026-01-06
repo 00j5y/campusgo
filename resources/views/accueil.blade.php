@@ -19,7 +19,7 @@
                         </h1>
 
                         <p class="text-lg text-gris1 mb-8 leading-relaxed max-w-lg">
-                            Campus'Go est la plateforme de covoiturage dédiée aux étudiants, enseignants et personnel de l'IUT d'Amiens. Partagez vos trajets, réduisez vos coûts et contribuez à un campus plus écologique.
+                            Campus'Go, c'est LA plateforme de covoiturage dédiée aux étudiants, enseignants et personnel de l'IUT d'Amiens. Partagez vos trajets, réduisez vos coûts et contribuez à un campus plus écologique.
                         </p>
 
                         <div class="flex flex-col sm:flex-row gap-4 mb-12">
@@ -49,19 +49,19 @@
                     </div>
 
                     <div class="relative w-full flex justify-end items-center pl-4 lg:pl-0 transition-transform duration-500 ease-in-out hover:scale-105">
-                    <div class="relative w-full lg:w-[95%] h-[350px] sm:h-[450px] lg:h-[550px] rounded-3xl lg:rounded-[50px] overflow-hidden shadow-2xl">
-                        <img src="{{ asset('images/accueil/voiture.png') }}" alt="Étudiants en covoiturage" class="w-full h-full object-cover">   
-                    </div>
-                    <div class="absolute bottom-8 left-8 lg:p-b-16 xl:left-12 z-30 bg-white p-4 pr-8 rounded-2xl shadow-xl flex items-center gap-4 animate-fade-in-up max-w-[280px]">
-                        <div class="w-12 h-12 rounded-full bg-vert-second flex items-center justify-center">
-                            <img src="{{ asset('images/accueil/icones/feuille.png') }}" alt="icon" class="size-5.5">
+                        <div class="relative w-full lg:w-[95%] h-[350px] sm:h-[450px] lg:h-[550px] rounded-3xl lg:rounded-[50px] overflow-hidden shadow-2xl">
+                            <img src="{{ asset('images/accueil/voiture.png') }}" alt="Étudiants en covoiturage" class="w-full h-full object-cover">   
                         </div>
-                        <div>
-                            <p class="text-sm text-gris1">Économie moyenne</p>
-                            <p class="text-xl font-bold text-gray-900">45€/mois</p>
+                        <div class="absolute bottom-8 left-8 lg:p-b-16 xl:left-12 z-30 bg-white p-4 pr-8 rounded-2xl shadow-xl flex items-center gap-4 animate-fade-in-up max-w-[280px]">
+                            <div class="w-12 h-12 rounded-full bg-vert-second flex items-center justify-center">
+                                <img src="{{ asset('images/accueil/icones/feuille.png') }}" alt="icon" class="size-5.5">
+                            </div>
+                            <div>
+                                <p class="text-sm text-gris1">Économie moyenne</p>
+                                <p class="text-xl font-bold text-gray-900">45€/mois</p>
+                            </div>
                         </div>
                     </div>
-                </div>
                 </div>
             </div>
         </section>
@@ -70,7 +70,7 @@
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
 
                 <div class="text-center mb-16">
-                    <h2 class="text-lg font-semibold text-noir mb-2">Comment ça marche ?</h2>
+                    <h2 class="text-3xl md:text-4xl font-semibold text-noir mb-6">Comment ça marche ?</h2>
                     <p class="text-2xl lg:text-3xl text-gris1 font-medium">Trois étapes simples pour commencer votre covoiturage</p>
                 </div>
 
@@ -114,7 +114,7 @@
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 
                 <div class="text-center mb-16">
-                    <h2 class="text-lg font-semibold text-noir mb-2">Pourquoi choisir Campus'Go ?</h2>
+                    <h2 class="text-3xl md:text-4xl font-semibold text-noir mb-6">Pourquoi choisir Campus'Go ?</h2>
                     <p class="text-2xl lg:text-3xl text-gris1 font-medium">Des avantages pour vous et pour la planète</p>
                 </div>
 
@@ -175,7 +175,7 @@
                     </div>
 
                     <div class="w-full lg:w-1/2">
-                        <h2 class="text-sm font-semibold text-gris1 mb-4 tracking-wide">Une plateforme pensée pour vous</h2>
+                        <h2 class="text-3xl md:text-4xl font-semibold text-noir mb-6">Une plateforme pensée pour vous</h2>
                         
                         <p class="text-lg text-gris1 mb-8 leading-relaxed">
                             Campus'Go a été conçu spécifiquement pour la communauté de </br> l'IUT d'Amiens avec des fonctionnalités adaptées à vos besoins.
@@ -236,7 +236,7 @@
                 <div class="flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-10">
                     
                     <div class="w-full lg:w-5/12 flex flex-col justify-center">
-                        <h2 class="text-lg font-semibold text-gris1 mb-4">Rejoignez une communauté engagée</h2>
+                        <h2 class="text-3xl md:text-4xl font-semibold text-noir mb-6">Rejoignez une communauté engagée</h2>
                         
                         <p class="text-lg text-gris1 mb-8 leading-relaxed">
                             Plus de 250 étudiants, enseignants et membres du personnel de l'IUT d'Amiens utilisent déjà Campus'Go pour leurs trajets quotidiens.
@@ -293,7 +293,7 @@
             <div class="container mx-auto">
                 <div class="rounded-4xl bg-linear-to-r from-vert-principale/20 to-beige-second/30 px-6 py-16 md:py-20 text-center relative overflow-hidden">
                     
-                    <div class="relative z-10 max-w-3xl mx-auto">
+                    <div class="relative z-10 max-w-3xl mx-auto" x-data="{ open: false }">
                         <h2 class="text-3xl md:text-4xl font-semibold text-noir mb-6">
                             Prêt à commencer votre aventure ?
                         </h2>
@@ -303,18 +303,61 @@
                         </p>
 
                         <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                            <a href="#" class="inline-flex justify-center items-center gap-2 bg-vert-principale hover:bg-vert-principal-h text-white px-8 py-3.5 rounded-lg font-medium transition-colors shadow-sm">
-                                Commencer maintenant
-                                <img src="{{ asset('images/accueil/icones/fleche-droite.png') }}" alt="Fleche pointant vers la droite blanche" class="size-6 pt-0.5">
-                            </a>
-                            
-                            <a href="#" class="inline-flex justify-center items-center bg-white text-noir px-8 py-3.5 rounded-lg font-medium transition-colors shadow-sm">
-                                En savoir plus
-                            </a>
+                            <button 
+                                @click="open = !open" 
+                                class="inline-flex justify-center items-center gap-2 bg-vert-principale hover:bg-vert-principal-h text-white px-8 py-3.5 rounded-lg font-medium transition-colors shadow-sm cursor-pointer">
+                                
+                                <span x-text="open ? 'Moins de détails' : 'En savoir plus'"></span>
+                                
+                                <img src="{{ asset('images/accueil/icones/fleche-droite.png') }}" 
+                                     alt="Fleche" 
+                                     class="size-6 pt-0.5 transition-transform duration-300"
+                                     :class="open ? 'rotate-90' : ''">
+                            </button>
+                        </div>
+
+                        <div x-show="open" 
+                             x-transition:enter="transition ease-out duration-300"
+                             x-transition:enter-start="opacity-0 transform -translate-y-2"
+                             x-transition:enter-end="opacity-100 transform translate-y-0"
+                             class="mt-8 text-left bg-white rounded-2xl p-6 lg:p-8 shadow-xl max-w-2xl mx-auto">
+                             
+                             <div class="space-y-6">
+                                <div class="flex gap-4 items-start">
+                                    <div class="w-10 h-10 rounded-full bg-vert-principale flex items-center justify-center shrink-0 text-white">
+                                        <img src="{{ asset('images/accueil/icones/cochon-economie.png') }}" alt="Icone Pourcentage" class="size-5 brightness-0 invert">
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-noir">Payez entre vous !</h3>
+                                        <p class="text-sm text-gris1 mt-1">Campus'Go ne prend aucun pourcentage sur vos transactions ! Le prix est purement indicatif. Payez directement le conducteur !</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex gap-4 items-start">
+                                    <div class="w-10 h-10 rounded-full bg-vert-principale flex items-center justify-center shrink-0 text-white">
+                                        <img src="{{ asset('images/accueil/icones/personne-convivialite-blanc.png') }}" alt="Recherche" class="size-5">
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-noir">Recherche intuitive :</h3>
+                                        <p class="text-sm text-gris1 mt-1">Recherchez dès a présent le trajet de votre choix, même sans compte ! Obligatoirement en partant ou en arrivant à l'IUT.</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex gap-4 items-start">
+                                    <div class="w-10 h-10 rounded-full bg-vert-principale flex items-center justify-center shrink-0 text-white">
+                                        <img src="{{ asset('images/accueil/icones/voiture-blanc.png') }}" alt="Proposer un trajet" class="size-5">
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-noir">Proposez un trajet dès maintenant !</h3>
+                                        <p class="text-sm text-gris1 mt-1">Vous pouvez proposer votre trajet personnalisé directement après avoir créé un compte.</p>
+                                    </div>
+                                </div>
+                             </div>
                         </div>
                     </div>
 
                 </div>
             </div>
         </section>
+    </main>
 @endsection
