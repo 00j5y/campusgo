@@ -29,10 +29,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let isProgrammaticChange = false; // Pour éviter les boucles infinies
 
-    //CONFIGURATION Calendriers
+    // --- CONFIGURATION CALENDRIERS (MODIFIÉ) ---
     let datePicker = null;
     let timePicker = null;
 
+    // 1. Initialisation de l'heure d'abord (pour pouvoir la piloter)
+    if(document.getElementById("heure_depart")) {
+        timePicker = flatpickr("#heure_depart", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            time_24hr: true,
+            disableMobile: "true"
+        });
+    }
+
+    // 2. Initialisation de la date avec logique de contrôle d'heure
     if(document.getElementById("date_depart")) {
         datePicker = flatpickr("#date_depart", {
             locale: "fr",
@@ -40,19 +52,48 @@ document.addEventListener('DOMContentLoaded', function() {
             dateFormat: "Y-m-d",
             altInput: true,
             altFormat: "d/m/Y",  
-            disableMobile: true,
-            allowInput: true
-        });
-    }
+            disableMobile: "true", // Important pour que flatpickr gère la logique sur mobile aussi
+            allowInput: true,
+            onChange: function(selectedDates, dateStr, instance) {
+                // Si le timePicker n'existe pas ou aucune date sélectionnée, on arrête
+                if (!timePicker || selectedDates.length === 0) return;
 
-    if(document.getElementById("heure_depart")) {
-        timePicker = flatpickr("#heure_depart", {
-            enableTime: true,
-            noCalendar: true,
-            dateFormat: "H:i",
-            time_24hr: true,
+                const selectedDate = selectedDates[0];
+                const now = new Date();
+
+                // Vérifie si la date choisie est strictement "Aujourd'hui"
+                const isToday = selectedDate.getDate() === now.getDate() &&
+                                selectedDate.getMonth() === now.getMonth() &&
+                                selectedDate.getFullYear() === now.getFullYear();
+
+                if (isToday) {
+                    // C'est aujourd'hui : on bloque les heures passées
+                    const currentHour = now.getHours();
+                    const currentMinute = now.getMinutes();
+                    
+                    // Définit l'heure min à "Maintenant"
+                    timePicker.set('minTime', `${currentHour}:${currentMinute}`);
+
+                    // Si une heure était déjà saisie et qu'elle est maintenant dans le passé, on l'efface
+                    if (timePicker.selectedDates.length > 0) {
+                        const selectedTime = timePicker.selectedDates[0];
+                        // Création d'objets Date comparables
+                        const timeToCheck = new Date(); 
+                        timeToCheck.setHours(selectedTime.getHours(), selectedTime.getMinutes(), 0, 0);
+                        
+                        // Comparaison simple
+                        if (timeToCheck < now) {
+                            timePicker.clear();
+                        }
+                    }
+                } else {
+                    // Ce n'est pas aujourd'hui : aucune restriction d'heure
+                    timePicker.set('minTime', null);
+                }
+            }
         });
     }
+    // --- FIN CONFIGURATION CALENDRIERS ---
 
     
     // Gère l'état visuel et logique d'un champ 
@@ -77,15 +118,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     //Sauvegarde les champs arrivée et départ en cas d'erreurs (old())
     function initializeFields() {
-        if (departInput.value.trim() !== '' && departInput.value.trim() !== iutAdresse) {
-            setInputState(arriveeInput, true);
+        if (departInput.value.trim() !== '' && departInput.value.trim() !== IUT_LABEL) { // Correction variable iutAdresse -> IUT_LABEL
+            setFieldState(arriveeInput, coordsArrivee, true);
         } 
-        else if (arriveeInput.value.trim() !== '' && arriveeInput.value.trim() !== iutAdresse) {
-            setInputState(departInput, true);
+        else if (arriveeInput.value.trim() !== '' && arriveeInput.value.trim() !== IUT_LABEL) {
+             setFieldState(departInput, coordsDepart, true);
         }
         else {
-            setInputState(arriveeInput, false, ''); 
-            setInputState(departInput, false, '');
+            // Initialisation par défaut si nécessaire
         }
     }
 
@@ -231,11 +271,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 if (prevDate && datePicker) {
-                    // Si la date est passée, Flatpickr l'ignorera 
-                    datePicker.setDate(prevDate, true);
+                    // Si la date est passée, Flatpickr l'ignorera grâce au minDate: "today"
+                    // Mais on doit déclencher la logique de validation d'heure si c'est aujourd'hui
+                    datePicker.setDate(prevDate, true); // le 'true' déclenche onChange
                 }
                 
                 if (prevHeure && timePicker) {
+                    // On essaie de mettre l'heure. Si le onChange ci-dessus a mis une restriction
+                    // et que l'heure est passée, Flatpickr gérera l'affichage/validité
                     timePicker.setDate(prevHeure, true);
                 }
 
@@ -327,7 +370,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.lieu_depart && departInput) departInput.value = data.lieu_depart;
                 if (data.lieu_arrivee && arriveeInput) arriveeInput.value = data.lieu_arrivee;
                 
-                if (data.date_depart && datePicker) datePicker.setDate(data.date_depart);
+                // On utilise setDate(..., true) pour déclencher le onChange et recalculer les heures min
+                if (data.date_depart && datePicker) datePicker.setDate(data.date_depart, true);
                 if (data.heure_depart && timePicker) timePicker.setDate(data.heure_depart);
                 
                 const places = document.getElementById('places_disponibles');

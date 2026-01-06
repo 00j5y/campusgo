@@ -1,6 +1,15 @@
 @props(['trajet', 'mode', 'etat' => null])
 
-<div class="bg-white border border-[#2E7D32] rounded-2xl p-6 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md">
+@php
+    // Détection du trajet "vide" dans l'historique
+    $isTrajetVide = ($mode === 'perso' && $etat === 'passe' && Auth::id() === $trajet->id_utilisateur && $trajet->passagers->count() === 0);
+
+    $cardClasses = $isTrajetVide 
+        ? 'bg-gray-100 border-gray-300 opacity-60 grayscale cursor-not-allowed' // Style Gris
+        : 'bg-white border-[#2E7D32] hover:shadow-md cursor-pointer'; // Style Normal (Vert)
+@endphp
+
+<div class="{{ $cardClasses }} border rounded-2xl p-6 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md">
     <div class="flex flex-col md:flex-row justify-between items-start">
         
         <div class="flex-grow space-y-3">
@@ -49,14 +58,10 @@
                 </div>
             </div>
 
-            {{-- INFO CONDUCTEUR --}}
-            @if($trajet->conducteur)
+            {{-- INFO CONDUCTEUR (Visible pour les autres) --}}
+            @if($trajet->conducteur && Auth::id() !== $trajet->id_utilisateur)
             <div class="mt-2 pt-2 border-t border-gray-100">
-                
-                {{-- LIEN GLOBAL VERS LE PROFIL --}}
                 <a href="{{ route('profile.public', $trajet->conducteur->id) }}" class="flex items-center gap-2 group hover:bg-gray-50 p-1 rounded-lg transition-colors cursor-pointer">
-                    
-                    {{-- LOGIQUE AVATAR --}}
                     @if($trajet->conducteur->photo)
                         <img src="{{ asset('storage/' . $trajet->conducteur->photo) }}" 
                              alt="{{ $trajet->conducteur->prenom }}" 
@@ -67,32 +72,74 @@
                         </div>
                     @endif
                     
-                    {{-- Nom --}}
                     <div class="flex flex-col">
                         <p class="text-sm font-bold text-noir group-hover:text-vert-principale transition-colors">
                             {{ $trajet->conducteur->prenom }} {{ substr($trajet->conducteur->nom, 0, 1) }}.
                         </p>
                         <p class="text-[10px] text-gray-400 group-hover:text-vert-principale/70">
-                            Voir le profil
+                            Voir le profil conducteur
                         </p>
                     </div>
                 </a>
-
             </div>
             @endif
 
             {{-- BADGES --}}
             @if($mode === 'perso')
                 <div class="flex gap-2 mt-2">
-                    @if(Auth::check() && $trajet->id_utilisateur == Auth::id()) 
-                        <span class="bg-[#2E7D32] text-white text-[10px] font-bold px-2 py-1 rounded">Conducteur (Moi)</span>
+                    @if($isTrajetVide)
+                        {{-- Badge Spécial Trajet Vide --}}
+                        <span class="bg-gray-400 text-white text-[10px] font-bold px-2 py-1 rounded">
+                            Aucun passager
+                        </span>
                     @else
-                        <span class="bg-[#F59E0B] text-white text-[10px] font-bold px-2 py-1 rounded">Passager</span>
+                        {{-- Badges Normaux --}}
+                        @if(Auth::check() && $trajet->id_utilisateur == Auth::id()) 
+                            <span class="bg-[#2E7D32] text-white text-[10px] font-bold px-2 py-1 rounded">Conducteur (Moi)</span>
+                        @else
+                            <span class="bg-[#F59E0B] text-white text-[10px] font-bold px-2 py-1 rounded">Passager</span>
+                        @endif
+                        
+                        <span class="text-gray-500 text-xs flex items-center gap-1">
+                            <i class="fa-solid fa-user-group"></i> {{ $trajet->place_disponible }} places
+                        </span>
                     @endif
+                </div>
+            @endif
+
+            {{-- LISTE DES PASSAGERS (Visible uniquement par le conducteur) --}}
+            {{-- On vérifie si l'utilisateur est connecté + est le conducteur + Il y a des passagers --}}
+            @if(Auth::check() && Auth::id() === $trajet->id_utilisateur && $trajet->passagers->count() > 0)
+                <div class="mt-4 pt-3 border-t border-gray-100">
+                    <p class="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wide">
+                        <i class="fa-solid fa-users text-[#2E7D32] mr-1"></i> Vos Passagers :
+                    </p>
                     
-                    <span class="text-gray-500 text-xs flex items-center gap-1">
-                        <i class="fa-solid fa-user-group"></i> {{ $trajet->place_disponible }} places
-                    </span>
+                    <div class="flex flex-wrap gap-3">
+                        {{-- On boucle sur 'passagers' défini dans le modèle Trajet --}}
+                        @foreach($trajet->passagers as $passager)
+                            <a href="{{ route('profile.public', $passager->id) }}" 
+                               class="flex items-center gap-2 bg-gray-50 hover:bg-[#2E7D32]/10 border border-gray-200 hover:border-[#2E7D32] pr-3 pl-1 py-1 rounded-full transition-all group cursor-pointer">
+                                
+                                {{-- Avatar Passager --}}
+                                @if($passager->photo)
+                                    <img src="{{ asset('storage/' . $passager->photo) }}" 
+                                         alt="{{ $passager->prenom }}" 
+                                         class="w-6 h-6 rounded-full object-cover">
+                                @else
+                                    <div class="w-6 h-6 rounded-full bg-gray-200 group-hover:bg-[#2E7D32] group-hover:text-white flex items-center justify-center text-[9px] font-bold text-gray-600 transition-colors">
+                                        {{ substr($passager->prenom, 0, 1) }}
+                                    </div>
+                                @endif
+
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-gray-700 group-hover:text-[#2E7D32]">
+                                        {{ $passager->prenom }} {{ substr($passager->nom, 0, 1) }}.
+                                    </span>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
                 </div>
             @endif
         </div>
@@ -123,31 +170,31 @@
                 @else
                 {{-- Si le trajet est PASSÉ --}}
                     
-                {{-- Je suis le conducteur (Auto-notation interdite) --}}
-                @if(Auth::id() === $trajet->id_utilisateur)
+                    {{-- Je suis le conducteur (Auto-notation interdite) --}}
+                    @if(Auth::id() === $trajet->id_utilisateur)
 
-                    <button onclick="alert('Vous ne pouvez pas vous noter vous-même sur votre propre trajet.');" 
-                            class="cursor-pointer w-full border border-gray-300 text-gray-400 font-bold py-2 px-4 rounded-lg transition text-sm text-center flex items-center justify-center gap-2 hover:bg-gray-50 opacity-70">
-                        <i class="fa-regular fa-star"></i> Noter
-                    </button>
+                        <button onclick="alert('Vous ne pouvez pas vous noter vous-même sur votre propre trajet.');" 
+                                class="cursor-pointer w-full border border-gray-300 text-gray-400 font-bold py-2 px-4 rounded-lg transition text-sm text-center flex items-center justify-center gap-2 hover:bg-gray-50 opacity-70">
+                            <i class="fa-regular fa-star"></i> Noter
+                        </button>
 
-                {{-- J'ai déjà laissé un avis (Doublon interdit) --}}
-                @elseif($trajet->aDejaUnAvis())
+                    {{-- J'ai déjà laissé un avis (Doublon interdit) --}}
+                    @elseif($trajet->aDejaUnAvis())
 
-                    <button onclick="alert('Oups ! Vous avez déjà donné votre avis sur ce trajet.');" 
-                            class="cursor-pointer w-full border border-gray-300 text-gray-400 font-bold py-2 px-4 rounded-lg transition text-sm text-center flex items-center justify-center gap-2 hover:bg-gray-50">
-                        <i class="fa-solid fa-check"></i> Déjà noté
-                    </button>
+                        <button onclick="alert('Oups ! Vous avez déjà donné votre avis sur ce trajet.');" 
+                                class="cursor-pointer w-full border border-gray-300 text-gray-400 font-bold py-2 px-4 rounded-lg transition text-sm text-center flex items-center justify-center gap-2 hover:bg-gray-50">
+                            <i class="fa-solid fa-check"></i> Déjà noté
+                        </button>
 
-                {{-- Tout est OK, je peux noter --}}
-                @else
+                    {{-- Tout est OK, je peux noter --}}
+                    @else
 
-                    <a href="{{ route('reviews.create', ['id_trajet' => $trajet->id]) }}" 
-                    class="cursor-pointer w-full border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white font-bold py-2 px-4 rounded-lg transition text-sm text-center flex items-center justify-center gap-2">
-                        <i class="fa-regular fa-star"></i> Noter
-                    </a>
+                        <a href="{{ route('reviews.create', ['id_trajet' => $trajet->id]) }}" 
+                        class="cursor-pointer w-full border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white font-bold py-2 px-4 rounded-lg transition text-sm text-center flex items-center justify-center gap-2">
+                            <i class="fa-regular fa-star"></i> Noter
+                        </a>
 
-                @endif
+                    @endif
 
                 @endif
             @endif

@@ -80,7 +80,27 @@ class TrajetController extends Controller
             ],
 
             'date_depart' => 'required|date|after_or_equal:today',
-            'heure_depart' => 'required',
+            
+            'heure_depart' => [
+                'required',
+                function ($attribute, $value, $fail) use ($request) {
+                    // On récupère la date choisie
+                    $dateDepart = $request->input('date_depart');
+                    
+                    if ($dateDepart) {
+                        // On crée une date complète
+                        $trajetDate = \Carbon\Carbon::parse($dateDepart . ' ' . $value);
+
+                        // On crée la limite de 5 minutes à partir de maintenant
+                        $limite = \Carbon\Carbon::now()->addMinutes(5)->startOfMinute();
+                                    
+                        // Si le trajet est passé
+                        if ($trajetDate->lessThan($limite)) {
+                            $fail('Le trajet doit débuter au moins 5 minutes après l\'heure actuelle.');
+                        }
+                    }
+                },
+            ],
             'places_disponibles' => "required|integer|min:1|max:{$limitePlaces}",
             'id_vehicule' => 'required|exists:vehicule,id', 
             'prix' => 'required|integer|min:0|max:100',
@@ -91,7 +111,7 @@ class TrajetController extends Controller
             'lieu_arrivee.required' => 'Le lieu d\'arrivée est obligatoire.',
             
             'date_depart.required' => 'La date de départ est requise.',
-            'date_depart.after_or_equal' => 'Le champ « Date » doit correspondre à une date suppérieur ou égale à celle d\'aujourd\'hui.',
+            'date_depart.after_or_equal' => 'La date doit être égale ou postérieure à aujourd\'hui.',
             
             'heure_depart.required' => 'L\'heure de départ est requise.',
             
@@ -103,11 +123,9 @@ class TrajetController extends Controller
             'id_vehicule.exists' => 'Le véhicule sélectionné est invalide.',
 
             'prix.required' => 'Le prix est obligatoire (mettez 0 pour gratuit).',
-            'prix.integer' => 'Le prix doit être un nombre entier (pas de centimes).',
+            'prix.integer' => 'Le prix doit être un nombre entier.',
             'prix.min' => 'Le prix ne peut pas être négatif.',
             'prix.max' => 'Le prix ne peut pas dépasser 100€.',
-
-            
         ]);
         $heureArriveeCalcul = '00:00:00'; 
         if ($request->filled('duree_trajet')) {

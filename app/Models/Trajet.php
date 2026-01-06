@@ -60,4 +60,11 @@ class Trajet extends Model
                    ->where('id_auteur', Auth::id())
                    ->exists();
     }
+
+    public function passagers()
+    {
+        return $this->belongsToMany(User::class, 'reserver', 'id_trajet', 'id_utilisateur')
+                    ->withTimestamps();
+    }
+
 }
