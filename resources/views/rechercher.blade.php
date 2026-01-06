@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="https://npmcdn.com/flatpickr/dist/themes/airbnb.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-<main class="bg-white min-h-screen py-12 relative">
+<main class="bg-gray-50 min-h-screen py-12 relative">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         
         {{--EN-TÊTE & NOTIFICATIONS--}}
