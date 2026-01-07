@@ -52,8 +52,7 @@ class ReviewController extends Controller
             $cible = \App\Models\User::findOrFail($id_candidat);
         } else {
             // Sinon par défaut, on note le conducteur
-            $cible = $trajet->conducteur; // Assurez-vous d'avoir la relation 'conducteur' ou 'utilisateur' dans Trajet
-            // Si vous utilisez 'utilisateur' dans le modèle Trajet, mettez : $trajet->utilisateur
+            $cible = $trajet->conducteur;
         }
 
         // 2. Vérifications de sécurité
@@ -68,7 +67,7 @@ class ReviewController extends Controller
     {
         $validated = $request->validate([
             'trajet_id'       => 'required|exists:trajet,id',
-            'destinataire_id' => 'required|exists:utilisateur,id', // On valide le champ caché
+            'destinataire_id' => 'required|exists:utilisateur,id',
             'note'            => 'required|integer|min:1|max:5',
             'commentaire'     => 'nullable|string|max:1000',
         ]);
@@ -77,7 +76,6 @@ class ReviewController extends Controller
         $trajetId = $validated['trajet_id'];
         $destinataireId = $validated['destinataire_id'];
         
-        // Vérif anti-triche : on ne se note pas soi-même
         if ($userId == $destinataireId) {
             return back()->with('error', 'Vous ne pouvez pas vous noter vous-même.');
         }

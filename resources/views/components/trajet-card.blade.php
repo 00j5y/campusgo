@@ -92,7 +92,7 @@
             @endif
         </div>
 
-        {{-- BOUTONS D'ACTION (CORRIGÉS) --}}
+        {{-- BOUTONS D'ACTION --}}
         <div class="mt-4 md:mt-0 flex flex-col gap-2 w-full md:w-[160px]">
             @if($mode === 'search')
                 @if(Auth::id() !== $trajet->id_utilisateur)

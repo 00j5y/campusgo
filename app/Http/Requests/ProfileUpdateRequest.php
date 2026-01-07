@@ -43,14 +43,4 @@ class ProfileUpdateRequest extends FormRequest
         ];
     }
 
-    /**
-     * Messages d'erreur personnalisés
-     */
-    public function messages(): array
-    {
-        return [
-            'email.ends_with' => "L'inscription est réservée aux adresses de l'université (@u-picardie.fr).",
-            'num_tel.regex'   => "Le format du numéro de téléphone est invalide.",
-        ];
-    }
 }

@@ -8,7 +8,7 @@ class StoreVehiculeRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // Autoriser tout utilisateur connecté (géré par le middleware)
+        return true;
     }
 
     public function rules(): array

@@ -158,23 +158,22 @@ return [
     */
 
     'custom' => [
+        'email' => [
+            'ends_with' => "L'inscription est réservée aux adresses de l'université (@u-picardie.fr ou @etud.u-picardie.fr).",
+        ],
+        'num_tel' => [
+            'regex' => "Le format du numéro de téléphone est invalide (ex: 06 12 34 56 78).",
+        ],
         'lieu_arrivee_min' => [ 
             'not_in' => 'Le lieu de départ et le lieu d\'arrivée ne peuvent pas être identiques.', 
         ],
-        
-        // --- AJOUTEZ CECI POUR VOS VÉHICULES ---
         'NombrePlace' => [
             'max' => "C'est un bus ? Maximum :max places autorisées.",
             'min' => "Il faut au moins :min place passager disponible.",
         ],
         'immatriculation' => [
             'unique' => 'Ce numéro d\'immatriculation est déjà enregistré sur notre site.',
-            'regex' => "Format invalide. Exemple attendu : AA-123-AA.",
-        ],
-        // ----------------------------------------
-
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+            'regex'  => "Format invalide. Exemple attendu : AA-123-AA.",
         ],
     ],
 

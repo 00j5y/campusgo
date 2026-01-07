@@ -22,7 +22,6 @@ class VehiculeController extends Controller
 
         $cleanImmat = preg_replace('/[^A-Za-z0-9]/', '', $request->input('immatriculation'));
 
-        // 2. Création
         $vehicule = new Vehicule();
         
         $vehicule->marque = Str::title($request->Marque);

@@ -57,7 +57,7 @@
                 <i class="fa-solid {{ $currentIcon }} text-2xl {{ $style['icon_text'] }}"></i>
             </div>
 
-{{-- Titre et Message --}}
+            {{-- Titre et Message --}}
             <h3 class="text-xl font-bold mb-2 text-gray-800">{{ $title }}</h3>
             <p class="text-gray-500 text-sm mb-6">{{ $message }}</p>
 
@@ -69,7 +69,7 @@
                     {{ $slot }}
                 </div>
 
-                {{-- ZONE DES BOUTONS (On remet le flex ici pour qu'ils soient côte à côte) --}}
+                {{-- ZONE DES BOUTONS --}}
                 <div class="flex gap-3 justify-center w-full">
                     <button type="button" onclick="closeModal('{{ $id }}')" class="cursor-pointer flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-3 rounded-xl font-bold transition">
                         {{ $cancelText }}
