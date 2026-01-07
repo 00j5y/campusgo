@@ -53,13 +53,22 @@
         </div>
     </main>
     
-    <x-popup
-        id="modal-annuler"
-        title="Annuler le trajet ?"
-        message="Êtes-vous sûr de vouloir annuler ce trajet ? Cette action est irréversible."
+    <x-popup 
+        id="modal-delete-trip"
+        title="Supprimer le trajet ?"
+        message="Êtes-vous sûr de vouloir supprimer ce trajet ? Cette action est irréversible."
+        type="danger" 
+        confirmText="Oui, supprimer"
+        method="DELETE"
+    />
+
+    {{-- Modale Annulation (Passager) --}}
+    <x-popup 
+        id="modal-cancel-reservation"
+        title="Annuler la réservation ?"
+        message="Voulez-vous vraiment annuler votre place sur ce trajet ?"
         type="danger" 
         confirmText="Oui, annuler"
-        method="DELETE"
     />
 
     <div id="mapbox-config" class="hidden" data-token="pk.eyJ1IjoiZ2FieXNjb3RlIiwiYSI6ImNtaXlueXBycDBlMnIzZnM3NDF0aWZ4emIifQ.Kv51hN4zyQ9O2AZLlbSdZg"></div>

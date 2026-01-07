@@ -173,23 +173,36 @@
     id="modal-reserver"
     title="Confirmer la réservation"
     message="Voulez-vous réserver ce trajet ?"
-    type="success"    {{-- Active le thème Vert --}}
+    type="success"
     confirmText="Réserver"
     cancelText="Retour"
-    icon="fa-check"   {{-- Icône spécifique --}}
+    icon="fa-check"
 />
 
 <x-popup 
-    id="modal-annuler"
-    title="Annuler le trajet ?"
-    message="Êtes-vous sûr de vouloir continuer cette action ?"
-    type="danger"     {{-- Active le thème Rouge --}}
-    confirmText="Confirmer"
-    cancelText="Retour"
+    id="modal-delete-trip"
+    title="Supprimer le trajet ?"
+    message="Êtes-vous sûr de vouloir supprimer ce trajet ? Cette action est irréversible."
+    type="danger" 
+    confirmText="Oui, supprimer"
+    method="DELETE"
 />
 
+<x-popup 
+    id="modal-cancel-reservation"
+    title="Annuler la réservation ?"
+    message="Voulez-vous vraiment annuler votre place sur ce trajet ?"
+    type="danger" 
+    confirmText="Oui, annuler"
+/>
+
+{{-- Mapbox --}}
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.9.4/mapbox-gl.js"></script>
+
+{{-- Flatpickr (Calendrier) --}}
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/fr.js"></script>
+
 @vite(['resources/js/recherche.js'])
+
 @endsection

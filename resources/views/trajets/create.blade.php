@@ -243,10 +243,13 @@
                     @else
                         <div class="relative">
                             <select name="id_vehicule" id="vehicule_id" class="w-full bg-gray-50 border border-gray-200 appearance-none bg-none" required>
-                                <option value="" disabled selected>Sélectionnez votre véhicule</option>
+                                <option value="" disabled {{ $vehicules->count() == 1 ? '' : 'selected' }}>Sélectionnez votre véhicule</option>
+                                
                                 @foreach ($vehicules as $vehicule)
                                     <option value="{{ $vehicule->id }}" 
-                                        {{ session('new_vehicule_id') == $vehicule->id ? 'selected' : (old('id_vehicule') == $vehicule->id ? 'selected' : '') }}>
+                                        {{-- La condition magique : Si nouveau OU Si old input OU Si c'est le seul véhicule --}}
+                                        {{ (session('new_vehicule_id') == $vehicule->id) || (old('id_vehicule') == $vehicule->id) || ($vehicules->count() == 1) ? 'selected' : '' }}>
+                                        
                                         {{ $vehicule->marque }} {{ $vehicule->modele }} ({{ $vehicule->immatriculation }})
                                     </option>
                                 @endforeach
