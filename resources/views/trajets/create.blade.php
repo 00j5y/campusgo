@@ -88,8 +88,8 @@
             </h2>
             <p class="text-sm text-gris1 mb-6">Toutes les informations sont nécessaires pour publier votre trajet</p>
 
-            <input type="hidden" id="coords_depart" name="coords_depart">
-            <input type="hidden" id="coords_arrivee" name="coords_arrivee">
+            <input type="hidden" id="coords_depart" name="coords_depart" value="{{ old('coords_depart') }}">
+            <input type="hidden" id="coords_arrivee" name="coords_arrivee" value="{{ old('coords_arrivee') }}">
 
             <div class="space-y-6">
                 

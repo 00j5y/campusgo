@@ -44,7 +44,7 @@
 @endphp
 
 <div id="{{ $id }}" class="fixed inset-0 z-[9999] hidden modal-component" aria-labelledby="modal-title-{{ $id }}" role="dialog" aria-modal="true">
-    {{-- Backdrop (Fond sombre flouté) --}}
+
     <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" onclick="closeModal('{{ $id }}')"></div>
 
     {{-- Conteneur Modal --}}
@@ -57,26 +57,28 @@
                 <i class="fa-solid {{ $currentIcon }} text-2xl {{ $style['icon_text'] }}"></i>
             </div>
 
-            {{-- Titre et Message --}}
+{{-- Titre et Message --}}
             <h3 class="text-xl font-bold mb-2 text-gray-800">{{ $title }}</h3>
             <p class="text-gray-500 text-sm mb-6">{{ $message }}</p>
 
-            {{-- Formulaire d'action --}}
-            <form id="form-{{ $id }}" action="{{ $action }}" method="POST" class="flex gap-3 justify-center w-full">
+            <form id="form-{{ $id }}" action="{{ $action }}" method="POST" class="w-full block">
                 @csrf
                 <input type="hidden" name="_method" value="{{ strtoupper($method) }}">
 
-                <div class="mb-6 text-left">
+                <div class="mb-6 text-left w-full">
                     {{ $slot }}
                 </div>
 
-                <button type="button" onclick="closeModal('{{ $id }}')" class="cursor-pointer flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-3 rounded-xl font-bold transition">
-                    {{ $cancelText }}
-                </button>
-                
-                <button type="submit" class="cursor-pointer flex-1 {{ $style['btn_bg'] }} px-4 py-3 rounded-xl font-bold transition shadow-lg">
-                    {{ $confirmText }}
-                </button>
+                {{-- ZONE DES BOUTONS (On remet le flex ici pour qu'ils soient côte à côte) --}}
+                <div class="flex gap-3 justify-center w-full">
+                    <button type="button" onclick="closeModal('{{ $id }}')" class="cursor-pointer flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-3 rounded-xl font-bold transition">
+                        {{ $cancelText }}
+                    </button>
+                    
+                    <button type="submit" class="cursor-pointer flex-1 {{ $style['btn_bg'] }} px-4 py-3 rounded-xl font-bold transition shadow-lg">
+                        {{ $confirmText }}
+                    </button>
+                </div>
             </form>
         </div>
     </div>

@@ -169,43 +169,24 @@
 </main>
 
 
-<div id="modal-reserver" class="fixed inset-0 hidden z-50" aria-labelledby="modal-title-reserver" role="dialog" aria-modal="true">
-    <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" onclick="closeModal('modal-reserver')"></div>
-    <div class="fixed inset-0 z-10 w-screen overflow-y-auto flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full text-center transform transition-all scale-100">
-            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
-                <i class="fa-solid fa-check text-2xl text-vert-principale"></i>
-            </div>
-            <h3 class="text-xl font-bold mb-2 text-gray-800">Confirmer la réservation</h3>
-            <p class="text-gray-500 text-sm mb-6">Voulez-vous réserver ce trajet ?</p>
-            
-            <form id="form-reserver" action="" method="POST" class="flex gap-3 justify-center w-full">
-                @csrf 
-                <button type="button" onclick="closeModal('modal-reserver')" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-3 rounded-xl font-bold transition">Retour</button>
-                <button type="submit" class="flex-1 bg-vert-principale hover:bg-[#1b5e20] text-white px-4 py-3 rounded-xl font-bold transition shadow-lg">Réserver</button>
-            </form>
-        </div>
-    </div>
-</div>
+<x-popup 
+    id="modal-reserver"
+    title="Confirmer la réservation"
+    message="Voulez-vous réserver ce trajet ?"
+    type="success"    {{-- Active le thème Vert --}}
+    confirmText="Réserver"
+    cancelText="Retour"
+    icon="fa-check"   {{-- Icône spécifique --}}
+/>
 
-<div id="modal-annuler" class="fixed inset-0 hidden z-50" aria-labelledby="modal-title-annuler" role="dialog" aria-modal="true">
-    <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" onclick="closeModal('modal-annuler')"></div>
-    <div class="fixed inset-0 z-10 w-screen overflow-y-auto flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full text-center transform transition-all scale-100">
-            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-4">
-                <i class="fa-solid fa-triangle-exclamation text-2xl text-red-600"></i>
-            </div>
-            <h3 class="text-xl font-bold mb-2 text-gray-800">Annuler le trajet ?</h3>
-            <p class="text-gray-500 text-sm mb-6">Êtes-vous sûr de vouloir continuer cette action ?</p>
-            
-            <form id="form-annuler" action="" method="POST" class="flex gap-3 justify-center w-full">
-                @csrf 
-                <button type="button" onclick="closeModal('modal-annuler')" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-3 rounded-xl font-bold transition">Retour</button>
-                <button type="submit" class="flex-1 bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-xl font-bold transition shadow-lg">Confirmer</button>
-            </form>
-        </div>
-    </div>
-</div>
+<x-popup 
+    id="modal-annuler"
+    title="Annuler le trajet ?"
+    message="Êtes-vous sûr de vouloir continuer cette action ?"
+    type="danger"     {{-- Active le thème Rouge --}}
+    confirmText="Confirmer"
+    cancelText="Retour"
+/>
 
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.9.4/mapbox-gl.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

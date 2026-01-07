@@ -168,6 +168,7 @@ return [
             'min' => "Il faut au moins :min place passager disponible.",
         ],
         'immatriculation' => [
+            'unique' => 'Ce numéro d\'immatriculation est déjà enregistré sur notre site.',
             'regex' => "Format invalide. Exemple attendu : AA-123-AA.",
         ],
         // ----------------------------------------
