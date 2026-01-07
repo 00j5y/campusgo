@@ -17,13 +17,7 @@
             <div class="lg:col-span-1 space-y-6">
                 <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 flex flex-col items-center text-center">
                     
-                    <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg bg-beige-principale flex items-center justify-center mb-4">
-                        @if($user->photo)
-                            <img src="{{ asset('storage/' . $user->photo) }}" alt="Avatar" class="w-full h-full object-cover">
-                        @else
-                            <img src="{{ asset('images/accueil/icones/personne-convivialite-vert.png') }}" class="w-16 h-16 object-contain">
-                        @endif
-                    </div>
+                    <x-user-avatar :user="$user" class="w-32 h-32 mb-4" textSize="text-4xl" />
                     
                     <h1 class="text-2xl font-bold text-noir">{{ $user->prenom }} {{ $user->nom }}</h1>
                     
@@ -92,7 +86,7 @@
                         
                         <div class="flex flex-col items-center p-4 rounded-xl border {{ $user->preference?->accepte_animaux ? 'border-vert-principale/30 bg-vert-principale/5' : 'border-gray-100 bg-gray-50 opacity-50' }}">
                             <div class="mb-2 {{ $user->preference?->accepte_animaux ? 'text-vert-principale' : 'text-gray-400' }}">
-                                <img src="{{ asset('images/accueil/icones/patte.png') }}" class="w-8 h-8 object-contain">
+                                <img src="{{ asset('images/profil/patte.png') }}" class="w-8 h-8 object-contain">
                             </div>
                             <span class="text-sm font-medium {{ $user->preference?->accepte_animaux ? 'text-noir' : 'text-gray-400 decoration-slice' }}">
                                 {{ $user->preference?->accepte_animaux ? 'Animaux acceptés' : 'Pas d\'animaux' }}
@@ -101,7 +95,7 @@
 
                         <div class="flex flex-col items-center p-4 rounded-xl border {{ $user->preference?->accepte_fumeurs ? 'border-vert-principale/30 bg-vert-principale/5' : 'border-gray-100 bg-gray-50 opacity-50' }}">
                             <div class="mb-2 {{ $user->preference?->accepte_fumeurs ? 'text-vert-principale' : 'text-gray-400' }}">
-                                <img src="{{ asset('images/accueil/icones/cigarette.png') }}" class="w-8 h-8 object-contain">
+                                <img src="{{ asset('images/profil/cigarette.png') }}" class="w-8 h-8 object-contain">
                             </div>
                             <span class="text-sm font-medium {{ $user->preference?->accepte_fumeurs ? 'text-noir' : 'text-gray-400' }}">
                                 {{ $user->preference?->accepte_fumeurs ? 'Fumeur accepté' : 'Non fumeur' }}
@@ -110,7 +104,7 @@
 
                         <div class="flex flex-col items-center p-4 rounded-xl border {{ $user->preference?->accepte_musique ? 'border-vert-principale/30 bg-vert-principale/5' : 'border-gray-100 bg-gray-50 opacity-50' }}">
                             <div class="mb-2 {{ $user->preference?->accepte_musique ? 'text-vert-principale' : 'text-gray-400' }}">
-                                <img src="{{ asset('images/accueil/icones/musique.png') }}" class="w-8 h-8 object-contain">
+                                <img src="{{ asset('images/profil/musique.png') }}" class="w-8 h-8 object-contain">
                             </div>
                             <span class="text-sm font-medium {{ $user->preference?->accepte_musique ? 'text-noir' : 'text-gray-400' }}">
                                 {{ $user->preference?->accepte_musique ? 'Musique OK' : 'Pas de musique' }}
@@ -126,7 +120,7 @@
                     @forelse($user->vehicules as $vehicule)
                         <div class="flex items-center gap-4 p-4 rounded-xl border border-gray-100 bg-gray-50">
                             <div class="p-3 bg-white rounded-full shadow-sm">
-                                <img src="{{ asset('images/accueil/icones/voiture.png') }}" class="w-8 h-8 object-contain">
+                                <img src="{{ asset('images/profil/voiture.png') }}" class="w-8 h-8 object-contain">
                             </div>
                             <div>
                                 <p class="font-bold text-noir text-lg">{{ $vehicule->marque }} {{ $vehicule->modele }}</p>
@@ -137,6 +131,44 @@
                         <p class="text-gris1 italic text-center py-4">Cet utilisateur n'a pas renseigné de véhicule.</p>
                     @endforelse
                 </div>
+
+
+                <div class="mt-6 pt-6 border-t border-gray-100">
+                    <h3 class="font-bold text-noir text-sm mb-4 uppercase tracking-wider">Logistique</h3>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        
+                        {{-- Détour --}}
+                        <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-vert-principale shadow-sm">
+                                <img src="{{ asset('images/profil/publique/detour.png') }}" class="w-5 h-5 object-contain">
+                            </div>
+                            <div>
+                                <p class="text-xs text-gris1 font-medium">Détour max accepté</p>
+                                <p class="font-bold text-noir">
+                                    {{ $user->preference?->max_detour ?? 5 }} minutes
+                                </p>
+                            </div>
+                        </div>
+
+                        {{-- Attente --}}
+                        <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-vert-principale shadow-sm">
+                                <img src="{{ asset('images/profil/publique/retard.png') }}" class="w-5 h-5 object-contain">
+                            </div>
+                            <div>
+                                <p class="text-xs text-gris1 font-medium">Attente retardataire</p>
+                                <p class="font-bold text-noir">
+                                    {{ $user->preference?->max_attente ?? 5 }} minutes
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
             </div>
         </div>
     </div>

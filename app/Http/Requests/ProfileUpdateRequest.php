@@ -9,22 +9,48 @@ use Illuminate\Validation\Rule;
 class ProfileUpdateRequest extends FormRequest
 {
     /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true; 
+    }
+
+    /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'firstname' => ['required', 'string', 'max:255'],
+            'lastname'  => ['required', 'string', 'max:255'],
             'email' => [
-                'required',
-                'string',
-                'lowercase',
-                'email',
-                'max:255',
+                'required', 
+                'string', 
+                'email', 
+                'max:255', 
                 Rule::unique(User::class)->ignore($this->user()->id),
+                'ends_with:@u-picardie.fr,@etud.u-picardie.fr' 
             ],
+            'num_tel' => ['nullable', 'string', 'regex:/^0[1-9]([ .-]?[0-9]{2}){4}$/'],
+            'photo'   => ['nullable', 'image', 'max:2048'],
+            
+            'Accepte_animaux'    => ['boolean'],
+            'Accepte_fumeurs'    => ['boolean'],
+            'Accepte_musique'    => ['boolean'],
+            'accepte_discussion' => ['required', 'integer', 'min:1', 'max:5'],
+            'delete_photo'       => ['nullable', 'boolean'],
+        ];
+    }
+
+    /**
+     * Messages d'erreur personnalisés
+     */
+    public function messages(): array
+    {
+        return [
+            'email.ends_with' => "L'inscription est réservée aux adresses de l'université (@u-picardie.fr).",
+            'num_tel.regex'   => "Le format du numéro de téléphone est invalide.",
         ];
     }
 }

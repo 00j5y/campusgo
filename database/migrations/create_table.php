@@ -91,6 +91,9 @@ return new class extends Migration
             $table->boolean('accepte_discussion')->default(true);
             
             $table->boolean('telephone_public')->default(false);
+            $table->integer('max_detour')->nullable()->default(5);
+            $table->integer('max_attente')->nullable()->default(5);
+
 
             $table->foreignId('id_utilisateur')
                 ->constrained('utilisateur')

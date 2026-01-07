@@ -14,8 +14,6 @@
         <p class="mt-2 text-gris1">Remplissez les informations ci-dessous pour publier votre trajet</p>
     </header>
 
-    <x-flash-message />
-
     {{-- FORMULAIRE --}}
     <form id="form-creation" method="POST" action="{{ route('trajets.store') }}">
         @csrf

@@ -16,17 +16,7 @@
             <div class="lg:col-span-1">
                 <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 flex flex-col items-center text-center">
                     
-                    <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-gray-200 flex items-center justify-center mb-4">
-                        @if($user->photo)
-                            {{-- CAS 1 : Photo existante --}}
-                            <img src="{{ asset('storage/' . $user->photo) }}" alt="Avatar" class="w-full h-full object-cover">
-                        @else
-                            {{-- CAS 2 : Initiales --}}
-                            <span class="text-3xl font-bold text-gray-500 uppercase select-none">
-                                {{ substr($user->prenom, 0, 1) }}{{ substr($user->nom, 0, 1) }}
-                            </span>
-                        @endif
-                    </div>
+                    <x-user-avatar :user="$user" class="w-24 h-24 mb-4" textSize="text-3xl" />
                     
                     <h2 class="text-xl font-bold text-noir">{{ $user->prenom }} {{ $user->nom }}</h2>
                     <p class="text-sm text-gris1 mt-1">
@@ -50,7 +40,7 @@
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="font-bold text-xl text-noir flex items-center gap-2">
                             <span class="w-8 h-8 rounded-full bg-beige-principale flex items-center justify-center text-noir">
-                                <img src="{{ asset('images/accueil/icones/user.png') }}" class="size-4">
+                                <img src="{{ asset('images/profil/user.png') }}" class="size-4">
                             </span>
                             Informations Personnelles
                         </h2>
@@ -74,7 +64,7 @@
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-xl font-bold text-noir flex items-center gap-2">
                             <span class="w-10 h-10 rounded-full bg-beige-principale flex items-center justify-center">
-                                <img src="{{ asset('images/accueil/icones/voiture.png') }}" class="size-6">
+                                <img src="{{ asset('images/profil/voiture.png') }}" class="size-6">
                             </span>
                             Mon Véhicule
                         </h2>
@@ -113,7 +103,7 @@
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
                     <h2 class="text-xl font-bold text-noir mb-6 flex items-center gap-2">
                         <span class="w-10 h-10 rounded-full bg-beige-principale flex items-center justify-center text-noir">
-                            <img src="{{ asset('images/accueil/icones/preference.png') }}" class="size-4">
+                            <img src="{{ asset('images/profil/preference.png') }}" class="size-4">
                         </span>
                         Préférences de Covoiturage
                     </h2>

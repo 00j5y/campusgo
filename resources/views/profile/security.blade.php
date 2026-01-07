@@ -35,6 +35,7 @@
                         label="Mot de passe actuel" 
                         type="password" 
                         autocomplete="current-password" 
+                        bag="updatePassword"
                     />
 
                     <x-input-text 
@@ -42,13 +43,15 @@
                         label="Nouveau mot de passe" 
                         type="password" 
                         autocomplete="new-password" 
+                        bag="updatePassword"
                     />
 
                     <x-input-text 
                         name="password_confirmation" 
                         label="Confirmer le nouveau mot de passe" 
                         type="password" 
-                        autocomplete="new-password" 
+                        autocomplete="new-password"
+                        bag="updatePassword"
                     />
                 </div>
 
