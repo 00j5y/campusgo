@@ -74,22 +74,44 @@
 
                     <div class="space-y-4">
                         @forelse($user->vehicules as $vehicule)
+                            {{-- Début de la carte véhicule --}}
                             <div class="bg-gray-50 rounded-xl p-5 border border-gray-100 grid grid-cols-1 sm:grid-cols-2 gap-4 relative group hover:border-vert-principale/50 transition-colors">
+                                
                                 <div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                                    <form action="{{ route('vehicule.destroy', $vehicule->id) }}" method="POST" onsubmit="return confirm('Voulez-vous vraiment supprimer ce véhicule ?');">
-                                        @csrf @method('DELETE')
-                                        <button type="submit" class="text-red-400 hover:text-red-600 p-1.5 bg-white rounded-full shadow-sm hover:shadow-md transition-all" title="Supprimer le véhicule">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                                        </button>
-                                    </form>
+                                    <button 
+                                        type="button" 
+                                        onclick="openModal('modal-delete-vehicule', '{{ route('vehicule.destroy', $vehicule->id) }}')"
+                                        class="text-red-400 hover:text-red-600 p-1.5 bg-white rounded-full shadow-sm hover:shadow-md transition-all cursor-pointer" 
+                                        title="Supprimer le véhicule">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
                                 </div>
-                                <div><p class="text-xs text-gris1 uppercase tracking-wide">Marque et Modèle</p><p class="font-semibold text-noir mt-1">{{ $vehicule->marque }} {{ $vehicule->modele }}</p></div>
-                                <div><p class="text-xs text-gris1 uppercase tracking-wide">Immatriculation</p><p class="font-semibold text-noir mt-1">{{ $vehicule->immatriculation }}</p></div>
-                                <div><p class="text-xs text-gris1 uppercase tracking-wide">Couleur</p><p class="font-semibold text-noir mt-1">{{ $vehicule->couleur }}</p></div>
-                                <div><p class="text-xs text-gris1 uppercase tracking-wide">Nombre de places</p><p class="font-semibold text-noir mt-1">{{ $vehicule->nombre_place }} places</p></div>
-                            </div> 
+
+                                <div>
+                                    <p class="text-xs text-gris1 uppercase tracking-wide">Marque et Modèle</p>
+                                    <p class="font-semibold text-noir mt-1">{{ $vehicule->marque }} {{ $vehicule->modele }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gris1 uppercase tracking-wide">Immatriculation</p>
+                                    <p class="font-semibold text-noir mt-1">{{ $vehicule->immatriculation }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gris1 uppercase tracking-wide">Couleur</p>
+                                    <p class="font-semibold text-noir mt-1">{{ $vehicule->couleur }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gris1 uppercase tracking-wide">Nombre de places</p>
+                                    <p class="font-semibold text-noir mt-1">{{ $vehicule->nombre_place }} places</p>
+                                </div>
+                                
+                            </div>
+
                         @empty
-                            <div class="bg-gray-50 rounded-xl p-8 border border-dashed border-gray-300 text-center"><p class="text-gris1 italic">Aucun véhicule enregistré pour le moment.</p></div>
+                            <div class="bg-gray-50 rounded-xl p-8 border border-dashed border-gray-300 text-center">
+                                <p class="text-gris1 italic">Aucun véhicule enregistré pour le moment.</p>
+                            </div>
                         @endforelse
                     </div>
                     <div class="mt-4">
@@ -220,4 +242,13 @@
         </div>
     </div>
 </div>
+
+<x-popup 
+    id="modal-delete-vehicule"
+    title="Supprimer ce véhicule ?"
+    message="Êtes-vous sûr de vouloir supprimer ce véhicule ? Cette action est irréversible."
+    type="danger"
+    confirmText="Oui, supprimer"
+    method="DELETE"
+/>
 @endsection

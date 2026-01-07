@@ -200,4 +200,17 @@ class TrajetController extends Controller
         return view('historique-trajet', compact('trajetsAvenir', 'trajetsPasses'));
     }
 
+    public function destroy($id)
+    {
+        $trajet = \App\Models\Trajet::findOrFail($id);
+
+        if ($trajet->id_utilisateur != auth()->id()) { 
+            abort(403, 'Vous n\'êtes pas autorisé à supprimer ce trajet.');
+        }
+
+        $trajet->delete();
+
+        return back()->with('success', 'Votre trajet a bien été annulé.');
+    }
+
 }

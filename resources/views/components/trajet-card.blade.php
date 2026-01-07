@@ -163,10 +163,19 @@
                 
                 @if($etat !== 'passe')
                     {{-- Si le trajet est À VENIR -> Bouton Annuler --}}
-                    <button onclick="openAnnulerModal('{{ route('annuler', $trajet->id) }}')" 
-                            class="cursor-pointer w-full bg-[#FF5A5F] hover:bg-[#E0484D] text-white font-bold py-2 px-4 rounded-lg transition text-sm text-center">
-                        Annuler
-                    </button>
+                    @if($trajet->id_utilisateur === Auth::id())
+                        <button 
+                            onclick="openModal('modal-annuler', '{{ route('trajets.destroy', $trajet->id) }}')" 
+                            class="text-red-500 hover:text-red-700 font-bold border border-red-200 bg-red-50 px-3 py-1 rounded-lg">
+                            Supprimer le trajet
+                        </button>
+                    @else
+                        <button 
+                            onclick="openModal('modal-annuler', '{{ route('annuler', $trajet->id) }}')" 
+                            class="text-orange-500 hover:text-orange-700 font-bold border border-orange-200 bg-orange-50 px-3 py-1 rounded-lg">
+                            Annuler ma réservation
+                        </button>
+                    @endif
                 @else
                 {{-- Si le trajet est PASSÉ --}}
                     

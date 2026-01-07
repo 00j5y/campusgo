@@ -65,6 +65,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/laisser-un-avis/{id_trajet}', [App\Http\Controllers\ReviewController::class, 'create'])->name('reviews.create');
     Route::post('/avis', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
     Route::delete('/avis/{id}', [App\Http\Controllers\ReviewController::class, 'destroy'])->name('reviews.destroy');
+
+    Route::delete('/trajets/{id}', [TrajetController::class, 'destroy'])->name('trajets.destroy');
+
 });
 
 require __DIR__.'/auth.php';

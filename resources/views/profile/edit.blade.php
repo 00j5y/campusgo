@@ -87,7 +87,7 @@
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
                      <h2 class="text-xl font-bold text-noir mb-6 flex items-center gap-2">
                         <span class="w-10 h-10 rounded-full bg-beige-principale flex items-center justify-center">
-                            <img src="{{ asset('images/accueil/icones/preference.png') }}" class="size-6">
+                            <img src="{{ asset('images/profil/preference.png') }}" class="size-6">
                         </span>
                         Préférences de Covoiturage
                     </h2>
