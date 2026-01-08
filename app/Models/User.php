@@ -68,4 +68,9 @@ class User extends Authenticatable
     public function trajets() {
         return $this->hasMany(Trajet::class, 'id_utilisateur', 'id');
     }
+
+    public function avisRecus()
+    {
+        return $this->hasMany(Avis::class, 'id_destinataire');
+    }
 }
