@@ -60,4 +60,11 @@ class Trajet extends Model
                    ->where('id_auteur', Auth::id())
                    ->exists();
     }
+
+    // Donne l'utilisateur/conducteur associé au trajet
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_utilisateur');
+    }
+
 }

@@ -16,8 +16,8 @@ class AdminTrajetsController extends Controller
             return redirect('/');
         }
 
-        // Récupération de tous les trajets
-        $trajets = Trajet::all(); 
+        // Récupérer les trajets en pages de 10
+        $trajets = Trajet::with('user')->paginate(10);
 
         // Statistiques pour le tableau de bord
         $stats = [

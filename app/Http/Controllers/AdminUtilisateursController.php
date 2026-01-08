@@ -17,7 +17,9 @@ class AdminUtilisateursController extends Controller
         }
 
         // Récupérer les utilisateurs avec pages de 10
-        $users = User::orderBy('date_creation', 'desc')->paginate(10);
+        $users = User::withCount('trajets') // Compter les trajets associés à chaque utilisateur
+             ->orderBy('date_creation', 'desc')
+             ->paginate(10);
 
         // Statistiques pour le tableau de bord
         $stats = [
