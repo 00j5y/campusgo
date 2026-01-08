@@ -11,68 +11,68 @@ class AdminUtilisateursController extends Controller
 {
     public function index()
     {
-        // 1. Sécurité
+        // Verification que l'utilisateur est admin
         if (Auth::user()->est_admin != 1) {
             return redirect('/');
         }
 
-        // 2. Récupération des utilisateurs
+        // Récupérer les utilisateurs avec pages de 10
         $users = User::orderBy('date_creation', 'desc')->paginate(10);
 
-        // 3. Stats
+        // Statistiques pour le tableau de bord
         $stats = [
             'users' => User::count(),
             'trajets' => Trajet::count(),
         ];
 
-        // 4. Envoi à la vue
+        // Retourner la vue
         return view('adminutilisateurs', compact('users', 'stats'));
 
     }
 
     public function destroy($id){
 
-        // 1. Sécurité
+        // Vérification que l'utilisateur est admin
         if (Auth::user()->est_admin != 1) {
             return redirect('/');
         }
 
-        // 2. On trouve l'utilisateur
+        // Recherche de l'utilisateur
         $user = User::findOrFail($id);
 
-        // 3. Sécurité : On empêche de se supprimer soi-même !
+        // Erreur si destruction de soi-même
         if ($user->id === Auth::id()) {
             return back()->with('error', 'Vous ne pouvez pas supprimer votre propre compte.');
         }
 
-        // 4. On supprime
+        // Suppression de l'utilisateur
         $user->delete();
 
-        // 5. On revient à la liste
+        // Retour à la liste
         return back()->with('success', 'Utilisateur supprimé définitivement.');
     }
 
 
     public function toggleSuspend($id){
 
-        // 1. Sécurité : Seul un admin peut faire ça
+        // Vérification que l'utilisateur est admin
         if (Auth::user()->est_admin != 1) {
             return redirect('/');
         }
 
-        // 2. On récupère l'utilisateur ciblé
+        // Recherche de l'utilisateur
         $user = User::findOrFail($id);
 
-        // 3. Protection : Interdit de se suspendre soi-même (sinon tu perds l'accès admin !)
+        // Erreur si suspension de soi-même
         if ($user->id === Auth::id()) {
             return back()->with('error', 'Vous ne pouvez pas suspendre votre propre compte.');
         }
 
-        // 4. L'Interrupteur : On inverse la valeur ( !0 devient 1, !1 devient 0 )
+        // Inversion de l'état de suspension
         $user->est_suspendu = ! $user->est_suspendu;
         $user->save();
 
-        // 5. Petit message sympa pour confirmer
+        // Confirmation de suspension/réactivation
         $etat = $user->est_suspendu ? 'suspendu' : 'réactivé';
         return back()->with('success', "Le compte a bien été $etat.");
     }

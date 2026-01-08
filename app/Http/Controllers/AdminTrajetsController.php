@@ -11,36 +11,36 @@ class AdminTrajetsController extends Controller
 {
     public function index()
     {
-        // 1. Vérifie que l'utilisateur est admin
+        // Vérification que l'utilisateur est admin
         if (Auth::user()->est_admin != 1) {
             return redirect('/');
         }
 
-        // 2. Récupérer tous les trajets pour ton tableau
+        // Récupération de tous les trajets
         $trajets = Trajet::all(); 
 
-        // 3. Les Stats pour le tableau de bord du layout admin
+        // Statistiques pour le tableau de bord
         $stats = [
             'users' => User::count(),
             'trajets' => Trajet::count(), 
         ];
 
-        // 4. Retourner la vue
+        // Retourner la vue
         return view('admintrajets', compact('trajets', 'stats'));
     }
 
     public function destroy($id){
 
-        // 1. Sécurité
+        // Vérification que l'utilisateur est admin
         if (Auth::user()->est_admin != 1) {
             return redirect('/');
         }
 
-        // 2. Suppression
+        // Suppression du trajet
         $trajet = Trajet::findOrFail($id);
         $trajet->delete();
 
-        // 3. Retour
+        // Confirmation de la suppression
         return back()->with('success', 'Le trajet a bien été supprimé.');
 
     }   

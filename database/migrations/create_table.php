@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 return new class extends Migration
 {
@@ -17,13 +19,37 @@ return new class extends Migration
             $table->id();
             $table->string('prenom', 32);
             $table->string('nom', 32);
-            $table->string('email', 32)->unique();
+            $table->string('email', 100)->unique();
             $table->string('num_tel', 10)->nullable();
             $table->string('mdp');
             $table->timestamp('date_creation')->nullable();
             $table->timestamp('updated_at')->nullable();
-            $table->boolean('est_admin')->default(false);
             $table->boolean('est_suspendu')->default(false);
+            $table->string('photo')->nullable();
+            $table->boolean('est_admin')->default(false);
+            $table->timestamps();
+        });
+
+        // Insertion de l'utilisateur anonyme
+        DB::table('utilisateur')->insert([
+            'id' => 999,
+            'prenom' => 'Utilisateur',
+            'nom' => 'Anonyme',
+            'email' => 'anonyme@campusgo.fr',
+            'mdp' => Hash::make(Str::random(32)),//pour éviter toute connexion
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Table Historique Connexions
+        Schema::create('historique_connexions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('id_utilisateur')
+                  ->constrained('utilisateur')
+                  ->onDelete('cascade');
+            $table->string('adresse_ip', 45)->nullable();
+            $table->string('agent_utilisateur')->nullable();
+            $table->timestamp('date_connexion')->useCurrent();
         });
 
         // Table Véhicule
@@ -37,6 +63,7 @@ return new class extends Migration
             $table->foreignId('id_utilisateur')
                 ->constrained('utilisateur')
                 ->onDelete('cascade');
+            $table->timestamps();
         });
         
         // Table Trajet
@@ -55,15 +82,19 @@ return new class extends Migration
             $table->foreignId('id_utilisateur')
                   ->constrained('utilisateur')
                   ->onDelete('cascade');
+            $table->timestamps();
         });
 
-        // Table préférences
+        // Table Préférence
         Schema::create('preference', function (Blueprint $table) {
             $table->id();
             $table->boolean('accepte_animaux')->default(false);
             $table->boolean('accepte_fumeurs')->default(false);
             $table->boolean('accepte_musique')->default(true);
             $table->boolean('accepte_discussion')->default(true);
+            
+            $table->boolean('telephone_public')->default(false);
+
             $table->foreignId('id_utilisateur')
                 ->constrained('utilisateur')
                 ->onDelete('cascade');
@@ -83,14 +114,15 @@ return new class extends Migration
             $table->foreignId('id_destinataire')
                 ->constrained('utilisateur')
                 ->onDelete('cascade');
+            $table->timestamps();
         });
 
-        // Vérification pour qu'un utilisateur ne puisse pas ce mettre un avis lui même
+        // Vérification anti-avis sur soi-même
         try {
             DB::statement('ALTER TABLE avis ADD CONSTRAINT check_auteur_destinataire CHECK (id_auteur <> id_destinataire)');
         } catch (\Exception $e) {}
 
-        // Relation entre Trajet et Utilisateur 
+        // Relation Trajet <-> Utilisateur (Réservation)
         Schema::create('reserver', function (Blueprint $table) {
             $table->foreignId('id_utilisateur')
                 ->constrained('utilisateur')
@@ -98,6 +130,7 @@ return new class extends Migration
             $table->foreignId('id_trajet')
                 ->constrained('trajet')
                 ->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -111,6 +144,7 @@ return new class extends Migration
         Schema::dropIfExists('preference');
         Schema::dropIfExists('trajet');
         Schema::dropIfExists('vehicule');
+        Schema::dropIfExists('historique_connexions');
         Schema::dropIfExists('utilisateur');
     }
 };

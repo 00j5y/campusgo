@@ -2,20 +2,23 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Vehicule;
+use App\Models\Preference;
+use App\Models\Trajet;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     const CREATED_AT = 'date_creation';
 
     protected $table = 'utilisateur';
 
+    protected $primaryKey = 'id'; 
+    public $incrementing = true;
 
     /**
      * The attributes that are mass assignable.
@@ -27,33 +30,42 @@ class User extends Authenticatable
         'nom',
         'email',
         'mdp',
+        'photo',
+        'num_tel',
+        'est_admin',
+        'created_at',
+        'updated_at'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'mdp',
         'remember_token',
     ];
 
-    public function getAuthPasswordName()
+    public function getAuthPassword()
     {
-        return 'mdp';
+        return $this->mdp;
     }
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+
+    // Un utilisateur a plusieurs véhicules
+    public function vehicules()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'mdp' => 'hashed',
-        ];
+        return $this->hasMany(Vehicule::class, 'id_utilisateur');
+    }
+
+    // Un utilisateur a une préférence
+    public function preference()
+    {
+        return $this->hasOne(Preference::class, 'id_utilisateur');
+    }
+  
+    public function reservations()
+    {
+        return $this->belongsToMany(Trajet::class, 'reserver', 'id_utilisateur', 'id_trajet');
+    }
+
+    public function trajets() {
+        return $this->hasMany(Trajet::class, 'id_utilisateur', 'id');
     }
 }

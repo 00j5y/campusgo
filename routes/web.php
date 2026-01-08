@@ -3,44 +3,80 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\TrajetController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminUtilisateursController;
 use App\Http\Controllers\AdminTrajetsController;
+use App\Http\Controllers\RechercheController;
+
 
 // Page d'accueil
 Route::get('/', [HomeController::class, 'accueil'])->name('accueil');
+
+// Page de recherche de trajets
+Route::get('/rechercher', [RechercheController::class, 'index'])->name('rechercher');
+
+// Route pour RÉSERVER un trajet 
+Route::post('/reserver/{id}', [RechercheController::class, 'reserver'])->name('reserver');
+
+// Route pour ANNULER un trajet 
+Route::post('/annuler/{id}', [RechercheController::class, 'annuler'])->name('annuler');
+
+//Route pour voir ses trajets
+Route::get('/mes-trajets', [TrajetController::class, 'historique'])
+    ->middleware('auth') 
+    ->name('historique-trajet');
+
+// Routes pour la proposition de trajets
+Route::get('proposer-trajet', [HomeController::class, 'create'])->name('trajets.create');
+
+//Proposer-un-Trajet
+Route::get('/proposer-trajet', [TrajetController::class, 'create'])->name('trajets.create');
+Route::post('/proposer-trajets', [TrajetController::class, 'store'])->name('trajets.store');
+Route::get('/trajets-confirmation',[TrajetController::class, 'confirmation'])->name('trajets.confirmation');
 
 // Erreur 404
 Route::fallback(function () {
     return view('errors.404');
 });
 
-/*
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-*/
+    Route::get('/mon-profil', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/mon-profil/modifier', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/mon-profil', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/mon-profil', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 require __DIR__.'/auth.php';
 
+    Route::middleware(['auth'])->get('/admin-utilisateurs', [AdminUtilisateursController::class, 'index'])->name('admin.utilisateurs');
+    Route::middleware(['auth'])->get('/admin-trajets', [AdminTrajetsController::class, 'index'])->name('admin.trajets');
 
-// Route pour la gestion des utilisateurs par l'admin
-Route::middleware(['auth'])->get('/admin-utilisateurs', [AdminUtilisateursController::class, 'index'])->name('admin.utilisateurs');
+    Route::delete('/admin/utilisateurs/{id}', [AdminUtilisateursController::class, 'destroy'])->name('admin.utilisateurs.delete');
+    Route::delete('/admin/trajets/{id}', [AdminTrajetsController::class, 'destroy'])->name('admin.trajets.delete');
+    
+    Route::post('/admin/utilisateurs/{id}/suspend', [AdminUtilisateursController::class, 'toggleSuspend'])->name('admin.utilisateurs.suspend');
 
-// Route pour la gestion des trajets par l'admin
-Route::middleware(['auth'])->get('/admin-trajets', [AdminTrajetsController::class, 'index'])->name('admin.trajets');
+    Route::get('/vehicule/ajouter', [App\Http\Controllers\VehiculeController::class, 'create'])->name('vehicule.create');
+    Route::patch('/profil/preference/toggle', [ProfileController::class, 'togglePreference'])->name('preference.toggle');
 
-// Route pour SUPPRIMER un utilisateur
-Route::delete('/admin/utilisateurs/{id}', [AdminUtilisateursController::class, 'destroy'])->name('admin.utilisateurs.delete');
+    Route::post('/vehicule', [App\Http\Controllers\VehiculeController::class, 'store'])->name('vehicule.store');
+    Route::delete('/vehicule/{id}', [App\Http\Controllers\VehiculeController::class, 'destroy'])->name('vehicule.destroy');
 
-// Route pour SUPPRIMER un trajet
-Route::delete('/admin/trajets/{id}', [AdminTrajetsController::class, 'destroy'])->name('admin.trajets.delete');
+    Route::get('/parametres/securite', [ProfileController::class, 'editSecurity'])->name('profile.security');
+    Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
 
-// Route pour SUSPENDRE/REACTIVER un utilisateur
-Route::post('/admin/utilisateurs/{id}/suspend', [AdminUtilisateursController::class, 'toggleSuspend'])->name('admin.utilisateurs.suspend');
+    Route::get('/membre/{id}', [App\Http\Controllers\ProfileController::class, 'showPublic'])->name('profile.public');
+
+    Route::get('/profile/history', [ProfileController::class, 'history'])->name('profile.history');
+    Route::get('/profile/setup', [ProfileController::class, 'setup'])->name('profile.setup');
+    Route::patch('/profile/setup', [ProfileController::class, 'updateSetup'])->name('profile.setup.update');
+
+    Route::patch('/profile/preference/discussion', [ProfileController::class, 'updateDiscussion'])->name('preference.discussion');
+
+    Route::get('/mes-avis', [App\Http\Controllers\ReviewController::class, 'index'])->name('reviews.index');
+    Route::get('/laisser-un-avis/{id_trajet}', [App\Http\Controllers\ReviewController::class, 'create'])->name('reviews.create')->middleware('auth');
+    Route::post('/avis', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
+    Route::delete('/avis/{id}', [App\Http\Controllers\ReviewController::class, 'destroy'])->name('reviews.destroy');
+});
+
+require __DIR__.'/auth.php';
