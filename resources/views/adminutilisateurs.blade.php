@@ -44,12 +44,17 @@
                             @if($user->date_creation)
                                 {{ \Carbon\Carbon::parse($user->date_creation)->format('d/m/Y') }}
                             @else
-                                <span class="text-gray-400 italic">Date inconnue</span>
+                                <span class="text-gray-500 italic">Date inconnue</span>
                             @endif
                         </td>
 
-                        <td class="px-6 py-4 text-center text-gray-700">
-                            -
+                        <td class="px-6 py-4 text-center text-gray-500">
+                            {{ $user->trajets_count }} 
+                            @if($user->trajets_count > 1)
+                                trajets
+                            @else
+                                trajet
+                            @endif
                         </td>
 
                         <td class="px-6 py-4 text-center text-gray-400">
