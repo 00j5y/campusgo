@@ -57,7 +57,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(Preference::class, 'id_utilisateur');
     }
-  
+
+
     //en tant que passager
     public function reservations()
     {
@@ -88,5 +89,21 @@ class User extends Authenticatable
     public function avisRecus()
     {
         return $this->hasMany(Avis::class, 'id_destinataire');
+    }
+
+    //pour le nb de trajet en dessous la phot de profil dans la page profil
+    public function getTrajetsEffectuesAttribute()
+    {
+        // conducteur dont la date est passée
+        $nbConducteur = $this->trajets()
+                             ->where('date_depart', '<', now())
+                             ->count();
+
+        // passager dont la date est passée
+        $nbPassager = $this->reservations()
+                           ->where('date_depart', '<', now())
+                           ->count();
+
+        return $nbConducteur + $nbPassager;
     }
 }
