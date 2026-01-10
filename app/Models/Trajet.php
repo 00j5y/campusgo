@@ -64,7 +64,7 @@ class Trajet extends Model
     public function passagers()
     {
         return $this->belongsToManyMany(User::class, 'reserver', 'id_trajet', 'reserver', 'id_trajet', 'id_utilisateur')
-                    ->withTimestamps()
+                    ->withTimestamps();
     }
 
 
