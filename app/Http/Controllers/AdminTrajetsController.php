@@ -17,7 +17,7 @@ class AdminTrajetsController extends Controller
         }
 
         // Récupérer les trajets en pages de 10
-        $trajets = Trajet::with('user')->paginate(10);
+        $trajets = Trajet::with('conducteur')->paginate(10);
 
         // Statistiques pour le tableau de bord
         $stats = [
