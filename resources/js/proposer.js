@@ -38,7 +38,10 @@ document.addEventListener('DOMContentLoaded', function() {
             noCalendar: true,
             dateFormat: "H:i",
             time_24hr: true,
-            disableMobile: "true"
+            disableMobile: "true",
+            onChange: function() {
+                updateHeureArrivee();
+            }
         });
     }
 
@@ -299,6 +302,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function updateHeureArrivee() {
+        const heureDepVal = document.getElementById('heure_depart')?.value;
+        const dureeVal = document.getElementById('duree_trajet')?.value;
+        const inputArrivee = document.getElementById('heure_arrivee');
+
+        if (!heureDepVal || !dureeVal || !inputArrivee) return;
+
+        const [h, m] = heureDepVal.split(':');
+        const date = new Date();
+        date.setHours(parseInt(h), parseInt(m), 0);
+
+        date.setSeconds(date.getSeconds() + parseInt(dureeVal));
+
+        const newH = date.getHours().toString().padStart(2, '0');
+        const newM = date.getMinutes().toString().padStart(2, '0');
+
+        inputArrivee.value = `${newH}:${newM}`;
+    }
+
     async function calculateDuration() {
         const cDep = document.getElementById('coords_depart')?.value;
         const cArr = document.getElementById('coords_arrivee')?.value;
@@ -313,6 +335,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const json = await req.json();
             if (json.routes && json.routes.length > 0) {
                 hiddenDuree.value = json.routes[0].duration; 
+                
+                updateHeureArrivee(); 
             }
         } catch (e) { console.error(e); }
     }
