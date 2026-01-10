@@ -100,7 +100,7 @@ class RechercheController extends Controller
             $resultats = $query->with('conducteur')->orderBy('date_depart')->get();
         }
 
-        return view('rechercher', compact(
+        return view('trajets.rechercher', compact(
             'prenom',
             'mesTrajets',
             'rechercheFaite',

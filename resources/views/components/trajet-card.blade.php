@@ -11,7 +11,7 @@
     <div class="flex flex-col md:flex-row justify-between items-start">
         
         <div class="flex-grow space-y-3">
-            {{-- ITINÉRAIRE --}}
+            {{-- 1. ITINÉRAIRE --}}
             <div class="flex items-start gap-3">
                 <i class="fa-solid fa-location-dot text-[#2E7D32] mt-1"></i>
                 <div>
@@ -20,7 +20,7 @@
                 </div>
             </div>
 
-           {{-- INFOS --}}
+           {{-- 2. INFOS --}}
             <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mt-1">
                 <span><i class="far fa-calendar mr-1"></i> {{ \Carbon\Carbon::parse($trajet->date_depart)->format('d/m/Y') }}</span>
                 <div class="flex items-center gap-3">
@@ -38,43 +38,54 @@
                 </div>
             </div>
 
-            {{-- CONDUCTEUR --}}
+            {{-- 3. CONDUCTEUR --}}
             @if($trajet->conducteur && Auth::id() !== $trajet->id_utilisateur)
-            <div class="mt-2 pt-2 border-t border-gray-100">
-                <a href="{{ route('profile.public', $trajet->conducteur->id) }}" class="flex items-center gap-2 group hover:bg-gray-50 p-1 rounded-lg transition-colors cursor-pointer">
-                    <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-[10px] font-bold text-gray-600 overflow-hidden">
-                        @if($trajet->conducteur->photo)
-                            <img src="{{ asset('storage/' . $trajet->conducteur->photo) }}" class="w-full h-full object-cover">
-                        @else
-                            {{ substr($trajet->conducteur->prenom, 0, 1) }}{{ substr($trajet->conducteur->nom, 0, 1) }}
-                        @endif
-                    </div>
-                    <div class="flex flex-col">
-                        <p class="text-sm font-bold text-noir group-hover:text-vert-principale transition-colors">
-                            {{ $trajet->conducteur->prenom }} {{ substr($trajet->conducteur->nom, 0, 1) }}.
-                        </p>
-                    </div>
-                </a>
-            </div>
-            @endif
+                {{-- MODIFICATION ICI : 'justify-between' sépare le conducteur (gauche) du badge (droite) --}}
+                <div class="mt-2 pt-2 border-t border-gray-100 flex justify-between items-center">
+                    
+                    {{-- Profil Conducteur (A GAUCHE) --}}
+                    <a href="{{ route('profile.public', $trajet->conducteur->id) }}" class="flex items-center gap-2 group hover:bg-gray-50 p-1 rounded-lg transition-colors cursor-pointer w-fit">
+                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-[10px] font-bold text-gray-600 overflow-hidden shrink-0">
+                            @if($trajet->conducteur->photo)
+                                <img src="{{ asset('storage/' . $trajet->conducteur->photo) }}" class="w-full h-full object-cover">
+                            @else
+                                {{ substr($trajet->conducteur->prenom, 0, 1) }}{{ substr($trajet->conducteur->nom, 0, 1) }}
+                            @endif
+                        </div>
+                        <div class="flex flex-col items-start">
+                            <p class="text-sm font-bold text-noir group-hover:text-vert-principale transition-colors leading-tight">
+                                {{ $trajet->conducteur->prenom }} {{ substr($trajet->conducteur->nom, 0, 1) }}.
+                            </p>
+                            <span class="text-[10px] text-gray-400 group-hover:underline group-hover:text-[#2E7D32] transition-colors">
+                                Voir le profil
+                            </span>
+                        </div>
+                    </a>
 
-            {{-- BADGES --}}
-            @if($mode === 'perso')
-                <div class="flex gap-2 mt-2">
-                    @if($isTrajetVide)
-                        <span class="bg-gray-400 text-white text-[10px] font-bold px-2 py-1 rounded">Aucun passager</span>
-                    @else
-                        <span class="bg-{{ Auth::id() == $trajet->id_utilisateur ? '[#2E7D32]' : '[#F59E0B]' }} text-white text-[10px] font-bold px-2 py-1 rounded">
-                            {{ Auth::id() == $trajet->id_utilisateur ? 'Conducteur (Moi)' : 'Passager' }}
-                        </span>
-                        <span class="text-gray-500 text-xs flex items-center gap-1">
-                            <i class="fa-solid fa-user-group"></i> {{ $trajet->place_disponible }} places
-                        </span>
+                    {{-- Badge PASSAGER (A DROITE) --}}
+                    @if($mode === 'perso')
+                        <div class="flex items-center gap-2">
+                             {{-- Petit label optionnel pour clarifier encore plus, sinon supprimer le span ci-dessous --}}
+                             <span class="text-[10px] text-gray-400 hidden sm:inline">Votre statut :</span>
+                             <span class="bg-[#F59E0B] text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm">Passager</span>
+                        </div>
                     @endif
                 </div>
             @endif
 
-            {{-- LISTE PASSAGERS --}}
+            {{-- 4. BADGES CONDUCTEUR & PLACES (S'affiche uniquement pour le conducteur) --}}
+            @if($mode === 'perso' && Auth::id() === $trajet->id_utilisateur)
+                <div class="flex flex-wrap items-center justify-start gap-2 mt-2 w-full pt-2 border-t border-gray-100">
+                    <span class="bg-[#2E7D32] text-white text-[10px] font-bold px-2 py-1 rounded">
+                        Conducteur (Moi)
+                    </span>
+                    <span class="text-gray-500 text-xs flex items-center gap-1 font-medium">
+                        <i class="fa-solid fa-user-group text-gray-400"></i> {{ $trajet->place_disponible }} place(s) restante(s)
+                    </span>
+                </div>
+            @endif
+
+            {{-- 5. LISTE PASSAGERS (Si conducteur) --}}
             @if(Auth::check() && Auth::id() === $trajet->id_utilisateur && $trajet->passagers->count() > 0)
                 <div class="mt-4 pt-3 border-t border-gray-100">
                     <p class="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wide"><i class="fa-solid fa-users text-[#2E7D32] mr-1"></i> Vos Passagers :</p>
@@ -95,15 +106,27 @@
         {{-- BOUTONS D'ACTION --}}
         <div class="mt-4 md:mt-0 flex flex-col gap-2 w-full md:w-[160px]">
             @if($mode === 'search')
-                @if(Auth::id() !== $trajet->id_utilisateur)
-                    <button onclick="openModal('modal-reserver', '{{ route('reserver', $trajet->id) }}')" 
-                            class="cursor-pointer bg-[#2E7D32] hover:bg-[#1b5e20] text-white font-bold py-2 px-6 rounded-lg transition text-center shadow-sm">
-                        Choisir
-                    </button>
-                @else
-                    <span class="text-center text-xs text-gray-400 italic py-2">Votre trajet</span>
-                @endif
+                
+                @auth
+                    @if(Auth::id() !== $trajet->id_utilisateur)
+                        <button onclick="openModal('modal-reserver', '{{ route('reserver', $trajet->id) }}')" 
+                                class="cursor-pointer bg-[#2E7D32] hover:bg-[#1b5e20] text-white font-bold py-2 px-6 rounded-lg transition text-center shadow-sm">
+                            Choisir
+                        </button>
+                    @else
+                        <span class="text-center text-xs text-gray-400 italic py-2">Votre trajet</span>
+                    @endif
+                @endauth
+
+                @guest
+                    <a href="{{ route('login', ['return_to' => url()->full()]) }}" 
+                       class="cursor-pointer bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-600 font-bold py-2 px-4 rounded-lg transition text-sm text-center flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-lock text-xs"></i> Se connecter pour choisir
+                    </a>
+                @endguest
+
             @else
+                {{-- MODE PERSO (HISTORIQUE) --}}
                 <button onclick="toggleTrajetMap('{{ $trajet->id }}', '{{ addslashes($trajet->lieu_depart) }}', '{{ addslashes($trajet->lieu_arrivee) }}')"
                         class="cursor-pointer w-full border border-[#2E7D32] text-[#2E7D32] hover:bg-[#2E7D32] hover:text-white font-bold py-2 px-4 rounded-lg transition text-sm text-center">
                     Voir la carte

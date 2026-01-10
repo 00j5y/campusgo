@@ -197,7 +197,7 @@ class TrajetController extends Controller
             ->orderBy('heure_depart', 'desc')
             ->get();
 
-        return view('historique-trajet', compact('trajetsAvenir', 'trajetsPasses'));
+        return view('trajets.historique-trajet', compact('trajetsAvenir', 'trajetsPasses'));
     }
 
     public function destroy($id)
