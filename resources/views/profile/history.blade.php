@@ -39,7 +39,7 @@
                     @empty
                         <tr>
                             <td colspan="3" class="px-6 py-10 text-center text-gray-400 italic">
-                                Aucune donnée enregistrée pour le moment. Déconnectez-vous et revenez !
+                                Aucune donnée enregistrée pour le moment.
                             </td>
                         </tr>
                     @endforelse

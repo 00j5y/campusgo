@@ -19,6 +19,8 @@ class Preference extends Model
         'accepte_musique',
         'accepte_discussion',
         'id_utilisateur',
+        'max_detour',
+        'max_attente',
     ];
 
     public function user()

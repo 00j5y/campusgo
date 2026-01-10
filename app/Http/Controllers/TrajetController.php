@@ -80,35 +80,32 @@ class TrajetController extends Controller
             ],
 
             'date_depart' => 'required|date|after_or_equal:today',
-            'heure_depart' => 'required',
+            
+            'heure_depart' => [
+                'required',
+                function ($attribute, $value, $fail) use ($request) {
+                    // On récupère la date choisie
+                    $dateDepart = $request->input('date_depart');
+                    
+                    if ($dateDepart) {
+                        // On crée une date complète
+                        $trajetDate = \Carbon\Carbon::parse($dateDepart . ' ' . $value);
+
+                        // On crée la limite de 5 minutes à partir de maintenant
+                        $limite = \Carbon\Carbon::now()->addMinutes(5)->startOfMinute();
+                                    
+                        // Si le trajet est passé
+                        if ($trajetDate->lessThan($limite)) {
+                            $fail('Le trajet doit débuter au moins 5 minutes après l\'heure actuelle.');
+                        }
+                    }
+                },
+            ],
             'places_disponibles' => "required|integer|min:1|max:{$limitePlaces}",
             'id_vehicule' => 'required|exists:vehicule,id', 
             'prix' => 'required|integer|min:0|max:100',
-        ], [
-            'lieu_depart.required' => 'Le lieu de départ est obligatoire.',
-            'lieu_depart.max' => 'Le lieu de départ ne doit pas dépasser 100 caractères.',
-            
-            'lieu_arrivee.required' => 'Le lieu d\'arrivée est obligatoire.',
-            
-            'date_depart.required' => 'La date de départ est requise.',
-            'date_depart.after_or_equal' => 'Le champ « Date » doit correspondre à une date suppérieur ou égale à celle d\'aujourd\'hui.',
-            
-            'heure_depart.required' => 'L\'heure de départ est requise.',
-            
-            'places_disponibles.required' => 'Merci d\'indiquer le nombre de places.',
-            'places_disponibles.min' => 'Il faut au moins 1 place disponible.',
-            'places_disponibles.max' => "Maximum {$limitePlaces} places autorisées.",
-            
-            'id_vehicule.required' => 'Vous devez sélectionner un véhicule.',
-            'id_vehicule.exists' => 'Le véhicule sélectionné est invalide.',
-
-            'prix.required' => 'Le prix est obligatoire (mettez 0 pour gratuit).',
-            'prix.integer' => 'Le prix doit être un nombre entier (pas de centimes).',
-            'prix.min' => 'Le prix ne peut pas être négatif.',
-            'prix.max' => 'Le prix ne peut pas dépasser 100€.',
-
-            
         ]);
+
         $heureArriveeCalcul = '00:00:00'; 
         if ($request->filled('duree_trajet')) {
             try {
@@ -137,11 +134,8 @@ class TrajetController extends Controller
             'prix' => $validatedData['prix'],
             'heure_arrivee' => $heureArriveeCalcul, 
         ]);
-        
-        //Redirection après publication
-        $request->session()->flash('success_message', 'Votre trajet a été publié avec succès!');
 
-        return redirect()->route('trajets.confirmation');
+        return redirect()->route('trajets.confirmation')->with('success', 'Votre trajet a été publié avec succès !');
     }
 
     //Confirmation de la création du trajet
@@ -149,7 +143,7 @@ class TrajetController extends Controller
         if(!Auth::check()){
             return redirect()->route('login');
         }
-        $message = session('success_message');
+        $message = session('success');
 
         //Evite d'acceder à la page si on n'a pas créé de trajet 
         if(!$message){
@@ -204,6 +198,19 @@ class TrajetController extends Controller
             ->get();
 
         return view('historique-trajet', compact('trajetsAvenir', 'trajetsPasses'));
+    }
+
+    public function destroy($id)
+    {
+        $trajet = \App\Models\Trajet::findOrFail($id);
+
+        if ($trajet->id_utilisateur != auth()->id()) { 
+            abort(403, 'Vous n\'êtes pas autorisé à supprimer ce trajet.');
+        }
+
+        $trajet->delete();
+
+        return back()->with('success', 'Votre trajet a bien été annulé.');
     }
 
 }
