@@ -13,11 +13,9 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    const CREATED_AT = 'date_creation';
-
     protected $table = 'utilisateur';
 
-    protected $primaryKey = 'id'; 
+    protected $primaryKey = 'id';
     public $incrementing = true;
 
     /**
@@ -59,7 +57,7 @@ class User extends Authenticatable
     {
         return $this->hasOne(Preference::class, 'id_utilisateur');
     }
-  
+
     public function reservations()
     {
         return $this->belongsToMany(Trajet::class, 'reserver', 'id_utilisateur', 'id_trajet');

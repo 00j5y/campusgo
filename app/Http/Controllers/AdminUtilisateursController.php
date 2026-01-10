@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User; 
+use App\Models\User;
 use App\Models\Trajet;
-use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Auth;
 
 class AdminUtilisateursController extends Controller
 {
@@ -19,7 +19,7 @@ class AdminUtilisateursController extends Controller
         // Récupérer les utilisateurs avec pages de 10
         $users = User::withCount('trajets')
             ->withAvg('avisRecus as note_moyenne', 'note')
-            ->orderBy('date_creation', 'desc')
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         // Statistiques pour le tableau de bord
@@ -81,4 +81,3 @@ class AdminUtilisateursController extends Controller
     }
 
 }
-

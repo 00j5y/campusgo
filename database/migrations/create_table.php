@@ -22,11 +22,9 @@ return new class extends Migration
             $table->string('email', 100)->unique();
             $table->string('num_tel', 10)->nullable();
             $table->string('mdp');
-            $table->timestamp('date_creation')->nullable();
-            $table->timestamp('updated_at')->nullable();
-            $table->boolean('est_suspendu')->default(false);
             $table->string('photo')->nullable();
             $table->boolean('est_admin')->default(false);
+            $table->boolean('est_suspendu')->default(false);
             $table->timestamps();
         });
 
@@ -45,8 +43,8 @@ return new class extends Migration
         Schema::create('historique_connexions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_utilisateur')
-                  ->constrained('utilisateur')
-                  ->onDelete('cascade');
+                ->constrained('utilisateur')
+                ->onDelete('cascade');
             $table->string('adresse_ip', 45)->nullable();
             $table->string('agent_utilisateur')->nullable();
             $table->timestamp('date_connexion')->useCurrent();
@@ -65,7 +63,7 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->timestamps();
         });
-        
+
         // Table Trajet
         Schema::create('trajet', function (Blueprint $table) {
             $table->id();
@@ -77,11 +75,11 @@ return new class extends Migration
             $table->integer('place_disponible');
             $table->integer('prix');
             $table->foreignId('id_vehicule')
-                  ->constrained('vehicule')
-                  ->onDelete('cascade');
+                ->constrained('vehicule')
+                ->onDelete('cascade');
             $table->foreignId('id_utilisateur')
-                  ->constrained('utilisateur')
-                  ->onDelete('cascade');
+                ->constrained('utilisateur')
+                ->onDelete('cascade');
             $table->timestamps();
         });
 
@@ -92,7 +90,7 @@ return new class extends Migration
             $table->boolean('accepte_fumeurs')->default(false);
             $table->boolean('accepte_musique')->default(true);
             $table->boolean('accepte_discussion')->default(true);
-            
+
             $table->boolean('telephone_public')->default(false);
 
             $table->foreignId('id_utilisateur')
