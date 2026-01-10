@@ -17,28 +17,13 @@
             <div class="lg:col-span-1 space-y-6">
                 <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 flex flex-col items-center text-center">
                     
-                    <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg bg-beige-principale flex items-center justify-center mb-4">
-                        @if($user->photo)
-                            <img src="{{ asset('storage/' . $user->photo) }}" alt="Avatar" class="w-full h-full object-cover">
-                        @else
-                            <img src="{{ asset('images/accueil/icones/personne-convivialite-vert.png') }}" class="w-16 h-16 object-contain">
-                        @endif
-                    </div>
+                    <x-user-avatar :user="$user" class="w-32 h-32 mb-4" textSize="text-4xl" />
                     
                     <h1 class="text-2xl font-bold text-noir">{{ $user->prenom }} {{ $user->nom }}</h1>
                     
                     <p class="text-sm text-gris1 mt-1">
                         Membre depuis {{ $user->created_at ? "le " . $user->created_at->format('d/m/Y') : 'toujours' }}
                     </p>
-                    
-                    <div class="mt-6 flex flex-wrap justify-center gap-2">
-                        <span class="inline-flex items-center gap-1 bg-vert-principale/10 px-3 py-1 rounded-full text-vert-principale text-xs font-bold uppercase tracking-wide">
-                            Étudiant
-                        </span>
-                        <span class="inline-flex items-center gap-1 bg-blue-50 px-3 py-1 rounded-full text-blue-600 text-xs font-bold uppercase tracking-wide">
-                            Vérifié
-                        </span>
-                    </div>
 
                     @if($user->preference?->telephone_public && $user->num_tel)
                         <div class="mt-6 w-full p-3 bg-gray-50 rounded-xl border border-gray-100">
@@ -60,11 +45,36 @@
 
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                     <h3 class="font-bold text-noir mb-4">Évaluations</h3>
-                    <div class="flex items-end gap-2 mb-2">
-                        <span class="text-4xl font-bold text-noir">4.8</span>
-                        <div class="flex text-yellow-400 mb-1.5 text-lg">★★★★★</div>
+                    
+                <div class="flex items-baseline gap-1 mb-4">
+                    
+                    @if($nombreAvis > 0)
+                        <span class="text-4xl font-bold text-noir">
+                            {{ $moyenne }}
+                        </span>
+                        <span class="text-xl text-gray-400 font-light">/5</span>
+                    @else
+                        <span class="text-xl text-gray-400 font-light">0/5</span>
+                    @endif
+                    
+                    {{-- Étoiles (on garde un petit ml-2 pour l'espacement) --}}
+                    <div class="flex text-yellow-400 ml-2 self-center">
+                        @for($i = 1; $i <= 5; $i++)
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 {{ ($nombreAvis > 0 && $i <= round($moyenne)) ? 'fill-current' : 'text-gray-200' }}" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                        @endfor
                     </div>
-                    <p class="text-sm text-gris1">(12 avis reçus)</p>
+                </div>
+
+                    {{-- Affichage du nombre d'avis --}}
+                    <p class="text-sm text-gris1 font-medium bg-gray-50 inline-block px-3 py-1 rounded-full border border-gray-100">
+                        @if($nombreAvis > 0)
+                            Basé sur {{ $nombreAvis }} avis reçu{{ $nombreAvis > 1 ? 's' : '' }}
+                        @else
+                            Aucun avis reçu pour le moment
+                        @endif
+                    </p>
                 </div>
             </div>
 
@@ -76,7 +86,7 @@
                         
                         <div class="flex flex-col items-center p-4 rounded-xl border {{ $user->preference?->accepte_animaux ? 'border-vert-principale/30 bg-vert-principale/5' : 'border-gray-100 bg-gray-50 opacity-50' }}">
                             <div class="mb-2 {{ $user->preference?->accepte_animaux ? 'text-vert-principale' : 'text-gray-400' }}">
-                                <img src="{{ asset('images/accueil/icones/patte.png') }}" class="w-8 h-8 object-contain">
+                                <img src="{{ asset('images/profil/patte.png') }}" class="w-8 h-8 object-contain">
                             </div>
                             <span class="text-sm font-medium {{ $user->preference?->accepte_animaux ? 'text-noir' : 'text-gray-400 decoration-slice' }}">
                                 {{ $user->preference?->accepte_animaux ? 'Animaux acceptés' : 'Pas d\'animaux' }}
@@ -85,7 +95,7 @@
 
                         <div class="flex flex-col items-center p-4 rounded-xl border {{ $user->preference?->accepte_fumeurs ? 'border-vert-principale/30 bg-vert-principale/5' : 'border-gray-100 bg-gray-50 opacity-50' }}">
                             <div class="mb-2 {{ $user->preference?->accepte_fumeurs ? 'text-vert-principale' : 'text-gray-400' }}">
-                                <img src="{{ asset('images/accueil/icones/cigarette.png') }}" class="w-8 h-8 object-contain">
+                                <img src="{{ asset('images/profil/cigarette.png') }}" class="w-8 h-8 object-contain">
                             </div>
                             <span class="text-sm font-medium {{ $user->preference?->accepte_fumeurs ? 'text-noir' : 'text-gray-400' }}">
                                 {{ $user->preference?->accepte_fumeurs ? 'Fumeur accepté' : 'Non fumeur' }}
@@ -94,7 +104,7 @@
 
                         <div class="flex flex-col items-center p-4 rounded-xl border {{ $user->preference?->accepte_musique ? 'border-vert-principale/30 bg-vert-principale/5' : 'border-gray-100 bg-gray-50 opacity-50' }}">
                             <div class="mb-2 {{ $user->preference?->accepte_musique ? 'text-vert-principale' : 'text-gray-400' }}">
-                                <img src="{{ asset('images/accueil/icones/musique.png') }}" class="w-8 h-8 object-contain">
+                                <img src="{{ asset('images/profil/musique.png') }}" class="w-8 h-8 object-contain">
                             </div>
                             <span class="text-sm font-medium {{ $user->preference?->accepte_musique ? 'text-noir' : 'text-gray-400' }}">
                                 {{ $user->preference?->accepte_musique ? 'Musique OK' : 'Pas de musique' }}
@@ -110,7 +120,7 @@
                     @forelse($user->vehicules as $vehicule)
                         <div class="flex items-center gap-4 p-4 rounded-xl border border-gray-100 bg-gray-50">
                             <div class="p-3 bg-white rounded-full shadow-sm">
-                                <img src="{{ asset('images/accueil/icones/voiture.png') }}" class="w-8 h-8 object-contain">
+                                <img src="{{ asset('images/profil/voiture.png') }}" class="w-8 h-8 object-contain">
                             </div>
                             <div>
                                 <p class="font-bold text-noir text-lg">{{ $vehicule->marque }} {{ $vehicule->modele }}</p>
@@ -120,6 +130,41 @@
                     @empty
                         <p class="text-gris1 italic text-center py-4">Cet utilisateur n'a pas renseigné de véhicule.</p>
                     @endforelse
+                </div>
+
+
+                <div class="mt-6 pt-6 border-t border-gray-100">
+                    <h3 class="font-bold text-noir text-sm mb-4 uppercase tracking-wider">Logistique</h3>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        
+                        {{-- Détour --}}
+                        <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-vert-principale shadow-sm">
+                                <img src="{{ asset('images/profil/publique/detour.png') }}" class="w-5 h-5 object-contain">
+                            </div>
+                            <div>
+                                <p class="text-xs text-gris1 font-medium">Détour max accepté</p>
+                                <p class="font-bold text-noir">
+                                    {{ $user->preference?->max_detour ?? 5 }} minutes
+                                </p>
+                            </div>
+                        </div>
+
+                        {{-- Attente --}}
+                        <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-vert-principale shadow-sm">
+                                <img src="{{ asset('images/profil/publique/retard.png') }}" class="w-5 h-5 object-contain">
+                            </div>
+                            <div>
+                                <p class="text-xs text-gris1 font-medium">Attente retardataire</p>
+                                <p class="font-bold text-noir">
+                                    {{ $user->preference?->max_attente ?? 5 }} minutes
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>

@@ -14,30 +14,7 @@
         <p class="mt-2 text-gris1">Remplissez les informations ci-dessous pour publier votre trajet</p>
     </header>
 
-    @if ($errors->any())
-        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-8 rounded-r-md shadow-sm">
-            <div class="flex">
-                <div class="flex-shrink-0">
-                    <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                    </svg>
-                </div>
-                <div class="ml-3">
-                    <h3 class="text-sm font-medium text-red-800">
-                        Il y a {{ $errors->count() }} erreur(s) dans votre formulaire :
-                    </h3>
-                    <div class="mt-2 text-sm text-red-700">
-                        <ul class="list-disc pl-5 space-y-1">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
-
+    {{-- FORMULAIRE --}}
     <form id="form-creation" method="POST" action="{{ route('trajets.store') }}">
         @csrf
 
@@ -61,7 +38,6 @@
                 <div id="dernier-trajet-data"
                      js-depart="{{ $dernierTrajet->lieu_depart}}"
                      js-arrivee="{{ $dernierTrajet->lieu_arrivee}}"
-                     {{-- Ajout de js-date pour que le JS puisse lire la date --}}
                      js-date="{{ $dernierTrajet->date_depart }}" 
                      js-heure="{{ \Carbon\Carbon::parse($dernierTrajet->heure_depart)->format('H:i') }}"
                      js-places="{{ $dernierTrajet->place_disponible}}"
@@ -85,10 +61,13 @@
                         <div class="flex items-center text-xs text-gris1 mt-2">
                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             <span class="mr-4"> {{ \Carbon\Carbon::parse($dernierTrajet->heure_depart)->format('H:i') }} </span>
-                            
-                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-5a3 3 0 00-3-3H9a3 3 0 00-3 3v5H1V7a3 3 0 013-3h16a3 3 0 013 3v13H17zM12 11a4 4 0 100-8 4 4 0 000 8z"></path></svg>
+
+                            <img src="{{ asset('images/accueil/icones/personne-convivialite-vert.png') }}" 
+                                alt="Places disponibles" 
+                                class="w-4 h-4 mr-1">
+                                
                             <span>{{ $dernierTrajet->place_disponible }}</span>
-                        </div> 
+                        </div>
                     </div>
 
                     <button type="button" class="bg-vert-principale text-white px-4 py-2 rounded-md font-medium hover:bg-vert-principal-h transition shadow-sm flex items-center shrink-0 cursor-pointer" id="btn-utiliser">
@@ -109,8 +88,8 @@
             </h2>
             <p class="text-sm text-gris1 mb-6">Toutes les informations sont nécessaires pour publier votre trajet</p>
 
-            <input type="hidden" id="coords_depart" name="coords_depart">
-            <input type="hidden" id="coords_arrivee" name="coords_arrivee">
+            <input type="hidden" id="coords_depart" name="coords_depart" value="{{ old('coords_depart') }}">
+            <input type="hidden" id="coords_arrivee" name="coords_arrivee" value="{{ old('coords_arrivee') }}">
 
             <div class="space-y-6">
                 
@@ -122,11 +101,13 @@
                     </label>
                     <input type="text" name="lieu_depart" id="lieu_depart" autocomplete="off" value="{{ old('lieu_depart') }}" placeholder="Entrez votre adresse de départ" class="w-full border border-gray-300 rounded-md shadow-sm p-3 focus:ring-1 focus:ring-vert-principale focus:border-vert-principale transition" required>
                     <ul id="liste-depart" class="absolute w-full bg-white border mt-1 max-h-60 overflow-auto shadow-lg hidden z-50 rounded-lg left-0"></ul>
+                    
                     <p id="error-lieu-depart" class="text-red-500 text-xs mt-1 hidden"></p> 
+                    
                     @error('lieu_depart')
-                <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
-                @enderror
-            </div>
+                        <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
 
                 {{--BOUTON INVERSER--}}
                 <div class="flex justify-center -my-2 relative z-10">
@@ -145,10 +126,14 @@
                     </label>
                     <input type="text" name="lieu_arrivee" id="lieu_arrivee" autocomplete="off" value="{{ old('lieu_arrivee') }}" placeholder="Entrez votre adresse d'arrivée" class="w-full border rounded-md shadow-sm p-3 border-gray-300 focus:ring-1 focus:ring-vert-principale focus:border-vert-principale transition" required>
                     <ul id="liste-arrivee" class="absolute w-full bg-white border mt-1 max-h-60 overflow-auto shadow-lg hidden z-50 rounded-lg left-0"></ul>
+                    
                     <p id="error-lieu-arrivee" class="text-red-500 text-xs mt-1 hidden"></p>
 
+                    @error('lieu_arrivee')
+                        <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                    @enderror
                     @error('lieu_arrivee_min')
-                        <p class="text-red-500 text-xs italic mt-1">Le lieu de départ et le lieu d'arrivée ne peuvent pas être identiques.</p>
+                         <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -164,7 +149,7 @@
                             </div>
                         </div>
                         @error('date_depart')
-                            <p class="text-red-500 text-xs italic mt-1">La date doit être égale ou supérieure à aujourd'hui.</p>
+                            <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -176,6 +161,9 @@
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             </div>
                         </div>
+                         @error('heure_depart')
+                            <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
                 <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -183,7 +171,6 @@
                 {{--NOMBRE DE PLACES--}}
                 <div>
                     <label for="places_disponibles" class="block text-sm font-medium text-noir mb-1 flex items-center">
-                        {{-- Ton icône Places --}}
                         <svg class="w-4 h-4 mr-1 text-vert-principale" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-5a3 3 0 00-3-3H9a3 3 0 00-3 3v5H1V7a3 3 0 013-3h16a3 3 0 013 3v13H17zM12 11a4 4 0 100-8 4 4 0 000 8z"></path></svg>
                         Nombre de Places Disponibles
                     </label>
@@ -197,12 +184,14 @@
                         <option value="6" {{ old('places_disponibles') == '6' ? 'selected' : '' }}>6 places</option>
                         <option value="7" {{ old('places_disponibles') == '7' ? 'selected' : '' }}>7 places</option>
                     </select>
+                    @error('places_disponibles')
+                        <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- PRIX --}}
                 <div>
                     <label for="prix" class="block text-sm font-medium text-noir mb-1 flex items-center">
-                        {{-- Icône Euro (Même style que ton icône places) --}}
                         <svg class="w-4 h-4 mr-1 text-vert-principale" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 15.536c-1.171 1.952-3.07 1.952-4.242 0-1.172-1.953-1.172-5.119 0-7.072 1.171-1.952 3.07-1.952 4.242 0M8 10.5h4m-4 3h4"></path>
                         </svg>
@@ -223,6 +212,9 @@
                     >
                 </div>
                 <p class="text-xs text-gray-500 mt-1">Indiquez 0 pour un trajet gratuit.</p>
+                @error('prix')
+                    <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
         </div>
@@ -251,10 +243,13 @@
                     @else
                         <div class="relative">
                             <select name="id_vehicule" id="vehicule_id" class="w-full bg-gray-50 border border-gray-200 appearance-none bg-none" required>
-                                <option value="" disabled selected>Sélectionnez votre véhicule</option>
+                                <option value="" disabled {{ $vehicules->count() == 1 ? '' : 'selected' }}>Sélectionnez votre véhicule</option>
+                                
                                 @foreach ($vehicules as $vehicule)
                                     <option value="{{ $vehicule->id }}" 
-                                        {{ session('new_vehicule_id') == $vehicule->id ? 'selected' : (old('id_vehicule') == $vehicule->id ? 'selected' : '') }}>
+                                        {{-- La condition magique : Si nouveau OU Si old input OU Si c'est le seul véhicule --}}
+                                        {{ (session('new_vehicule_id') == $vehicule->id) || (old('id_vehicule') == $vehicule->id) || ($vehicules->count() == 1) ? 'selected' : '' }}>
+                                        
                                         {{ $vehicule->marque }} {{ $vehicule->modele }} ({{ $vehicule->immatriculation }})
                                     </option>
                                 @endforeach

@@ -127,7 +127,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let timeout = null;
 
         input.addEventListener('input', function () {
-            // >>> AJOUT : Nettoyage erreur dès la frappe
             clearInputError(input, errorId);
 
             if (isProgrammatic || input.readOnly) return;

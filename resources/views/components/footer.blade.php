@@ -21,10 +21,10 @@
             <div class="lg:col-span-3">
                 <h3 class="text-noir font-semibold text-lg mb-6">Liens Utiles</h3>
                 <ul class="space-y-4">
-                    <li><a href="{{ url('/') }}" class="text-gris1 hover:text-vert-principale transition-colors">Accueil</a></li>
-                    <li><a href="#" class="text-gris1 hover:text-vert-principale transition-colors">Rechercher</a></li>
-                    <li><a href="#" class="text-gris1 hover:text-vert-principale transition-colors">Mes Trajets</a></li>
-                    <li><a href="#" class="text-gris1 hover:text-vert-principale transition-colors">Profil</a></li>
+                    <li><a href="{{ route('accueil') }}" class="text-gris1 hover:text-vert-principale transition-colors">Accueil</a></li>
+                    <li><a href="{{ route('rechercher') }}" class="text-gris1 hover:text-vert-principale transition-colors">Rechercher</a></li>
+                    <li><a href="{{ route('historique-trajet') }}" class="text-gris1 hover:text-vert-principale transition-colors">Mes Trajets</a></li>
+                    <li><a href="{{ route('profile.show') }}" class="text-gris1 hover:text-vert-principale transition-colors">Profil</a></li>
                     <li><a href="{{ route('trajets.create') }}" class="text-gris1 hover:text-vert-principale transition-colors">Proposer un Trajet</a></li>
                 </ul>
             </div>

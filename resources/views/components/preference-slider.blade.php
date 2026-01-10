@@ -3,7 +3,7 @@
 <div class="p-4 rounded-xl border border-gray-100 bg-gray-50/50 mt-4">
     <div class="flex items-center gap-4 mb-3">
         <div class="mt-1 shrink-0 text-vert-principale">
-            <img src="{{ asset('images/accueil/icones/discussion.png') }}" alt="Discussion" class="size-6 object-contain">
+            <img src="{{ asset('images/profil/discussion.png') }}" alt="Discussion" class="size-6 object-contain">
         </div>
         <div>
             <h4 class="font-semibold text-noir">Envie de discuter ?</h4>
