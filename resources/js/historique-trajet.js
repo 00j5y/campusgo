@@ -26,21 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    //ANNULATION
-    window.closeModal = function (id) {
-        const el = document.getElementById(id);
-        if (el) el.classList.add('hidden');
-    };
-
-    window.openAnnulerModal = function (url) {
-    const form = document.getElementById('form-annuler');
-    const modal = document.getElementById('modal-annuler');
-
-    if (form && modal) {
-        form.action = url; 
-        modal.classList.remove('hidden');
-    }
-    };
 
 
     //CARTES DES TRAJETS

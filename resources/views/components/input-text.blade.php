@@ -4,7 +4,8 @@
     'type' => 'text', 
     'value' => '', 
     'placeholder' => '', 
-    'readonly' => false
+    'readonly' => false,
+    'bag' => 'default'
 ])
 
 <div class="w-full">
@@ -22,7 +23,9 @@
         {{ $attributes->merge(['class' => 'w-full rounded-md px-2 border border-beige-second focus:outline-none focus:border-beige-principale focus:ring-2 focus:ring-beige-principale shadow-sm ' . ($readonly ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : '')]) }}
     >
 
-    @error($name) 
-        <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> 
+    @error($name, $bag) 
+        <span class="text-red-500 text-xs mt-1 block">
+            <i class="fa-solid fa-triangle-exclamation mr-1"></i> {{ $message }}
+        </span> 
     @enderror
 </div>

@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="https://npmcdn.com/flatpickr/dist/themes/airbnb.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-<main class="bg-white min-h-screen py-12 relative">
+<main class="bg-gray-50 min-h-screen py-12 relative">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         
         {{--EN-TÊTE & NOTIFICATIONS--}}
@@ -16,17 +16,6 @@
             <h1 class="text-3xl font-semibold text-gris1 mb-2">Salut {{ $prenom }} ! Où voulez vous partir aujourd'hui ?</h1>
             <p class="text-gris1">Trouvez un covoiturage en quelques clics.</p>
         </div>
-
-        @if(session('success'))
-            <div class="max-w-4xl mx-auto mb-6 bg-green-100 border border-green-400 text-vert-principale px-4 py-3 rounded relative">
-                <i class="fa-solid fa-check-circle mr-2"></i> {{ session('success') }}
-            </div>
-        @endif
-        @if(session('error'))
-            <div class="max-w-4xl mx-auto mb-6 bg-red-100 border border-rouge text-rouge px-4 py-3 rounded relative">
-                <i class="fa-solid fa-circle-exclamation mr-2"></i> {{ session('error') }}
-            </div>
-        @endif
 
         {{--FORMULAIRE DE RECHERCHE--}}
         <div class="bg-white rounded-3xl shadow-xl p-8 max-w-4xl mx-auto mb-12 relative z-10">
@@ -180,48 +169,40 @@
 </main>
 
 
-{{-- Modale Réservation --}}
-<div id="modal-reserver" class="fixed inset-0 hidden z-50" aria-labelledby="modal-title-reserver" role="dialog" aria-modal="true">
-    <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" onclick="closeModal('modal-reserver')"></div>
-    <div class="fixed inset-0 z-10 w-screen overflow-y-auto flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full text-center transform transition-all scale-100">
-            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
-                <i class="fa-solid fa-check text-2xl text-vert-principale"></i>
-            </div>
-            <h3 class="text-xl font-bold mb-2 text-gray-800">Confirmer la réservation</h3>
-            <p class="text-gray-500 text-sm mb-6">Voulez-vous réserver ce trajet ?</p>
-            
-            <form id="form-reserver" action="" method="POST" class="flex gap-3 justify-center w-full">
-                @csrf 
-                <button type="button" onclick="closeModal('modal-reserver')" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-3 rounded-xl font-bold transition">Retour</button>
-                <button type="submit" class="flex-1 bg-vert-principale hover:bg-[#1b5e20] text-white px-4 py-3 rounded-xl font-bold transition shadow-lg">Réserver</button>
-            </form>
-        </div>
-    </div>
-</div>
+<x-popup 
+    id="modal-reserver"
+    title="Confirmer la réservation"
+    message="Voulez-vous réserver ce trajet ?"
+    type="success"
+    confirmText="Réserver"
+    cancelText="Retour"
+    icon="fa-check"
+/>
 
-{{-- Modale Annulation --}}
-<div id="modal-annuler" class="fixed inset-0 hidden z-50" aria-labelledby="modal-title-annuler" role="dialog" aria-modal="true">
-    <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" onclick="closeModal('modal-annuler')"></div>
-    <div class="fixed inset-0 z-10 w-screen overflow-y-auto flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full text-center transform transition-all scale-100">
-            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-4">
-                <i class="fa-solid fa-triangle-exclamation text-2xl text-red-600"></i>
-            </div>
-            <h3 class="text-xl font-bold mb-2 text-gray-800">Annuler le trajet ?</h3>
-            <p class="text-gray-500 text-sm mb-6">Êtes-vous sûr de vouloir continuer cette action ?</p>
-            
-            <form id="form-annuler" action="" method="POST" class="flex gap-3 justify-center w-full">
-                @csrf 
-                <button type="button" onclick="closeModal('modal-annuler')" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-3 rounded-xl font-bold transition">Retour</button>
-                <button type="submit" class="flex-1 bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-xl font-bold transition shadow-lg">Confirmer</button>
-            </form>
-        </div>
-    </div>
-</div>
+<x-popup 
+    id="modal-delete-trip"
+    title="Supprimer le trajet ?"
+    message="Êtes-vous sûr de vouloir supprimer ce trajet ? Cette action est irréversible."
+    type="danger" 
+    confirmText="Oui, supprimer"
+    method="DELETE"
+/>
 
+<x-popup 
+    id="modal-cancel-reservation"
+    title="Annuler la réservation ?"
+    message="Voulez-vous vraiment annuler votre place sur ce trajet ?"
+    type="danger" 
+    confirmText="Oui, annuler"
+/>
+
+{{-- Mapbox --}}
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.9.4/mapbox-gl.js"></script>
+
+{{-- Flatpickr (Calendrier) --}}
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/fr.js"></script>
+
 @vite(['resources/js/recherche.js'])
+
 @endsection

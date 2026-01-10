@@ -55,9 +55,15 @@
             </div>
 
                 <div class="flex items-center justify-end gap-4 pt-4 border-t border-gray-100">
-                    <a href="{{ route('profile.show') }}" class="text-gris1 hover:text-noir font-medium px-4 py-2">
+                    @if(request('source') == 'trajet')
+                    <a href="{{ route('trajets.create') }}" class="text-gris1 hover:text-noir font-medium px-4 py-2">
                         Annuler
                     </a>
+                    @else
+                        <a href="{{ route('profile.show') }}" class="text-gris1 hover:text-noir font-medium px-4 py-2">
+                        Annuler
+                    </a>
+                    @endif
                     <button type="submit" class="bg-vert-principale hover:bg-vert-principal-h text-white px-6 py-2.5 rounded-lg font-medium shadow-sm transition-colors">
                         Enregistrer le véhicule
                     </button>

@@ -1,7 +1,5 @@
 @extends('layouts.app')
-
 @section('title', 'Sécurité - Campus\'GO')
-
 @section('content')
 <div class="bg-gray-50 min-h-screen py-12">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -18,8 +16,6 @@
 
         <div class="max-w-2xl mx-auto">
             
-            <x-flash-message />
-
             <form method="post" action="{{ route('password.update') }}" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
                 @csrf
                 @method('put')
@@ -39,6 +35,7 @@
                         label="Mot de passe actuel" 
                         type="password" 
                         autocomplete="current-password" 
+                        bag="updatePassword"
                     />
 
                     <x-input-text 
@@ -46,13 +43,15 @@
                         label="Nouveau mot de passe" 
                         type="password" 
                         autocomplete="new-password" 
+                        bag="updatePassword"
                     />
 
                     <x-input-text 
                         name="password_confirmation" 
                         label="Confirmer le nouveau mot de passe" 
                         type="password" 
-                        autocomplete="new-password" 
+                        autocomplete="new-password"
+                        bag="updatePassword"
                     />
                 </div>
 

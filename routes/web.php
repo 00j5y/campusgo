@@ -9,31 +9,30 @@ use App\Http\Controllers\AdminUtilisateursController;
 use App\Http\Controllers\AdminTrajetsController;
 use App\Http\Controllers\RechercheController;
 
-
 // Page d'accueil
 Route::get('/', [HomeController::class, 'accueil'])->name('accueil');
 
-// Page de recherche de trajets
 Route::get('/rechercher', [RechercheController::class, 'index'])->name('rechercher');
 
-// Route pour RÉSERVER un trajet 
 Route::post('/reserver/{id}', [RechercheController::class, 'reserver'])->name('reserver');
 
-// Route pour ANNULER un trajet 
 Route::post('/annuler/{id}', [RechercheController::class, 'annuler'])->name('annuler');
 
-//Route pour voir ses trajets
 Route::get('/mes-trajets', [TrajetController::class, 'historique'])
     ->middleware('auth') 
     ->name('historique-trajet');
 
-// Routes pour la proposition de trajets
-Route::get('proposer-trajet', [HomeController::class, 'create'])->name('trajets.create');
+Route::get('/proposer-trajet', [TrajetController::class, 'create'])
+    ->middleware('auth')
+    ->name('trajets.create');
 
-//Proposer-un-Trajet
-Route::get('/proposer-trajet', [TrajetController::class, 'create'])->name('trajets.create');
-Route::post('/proposer-trajets', [TrajetController::class, 'store'])->name('trajets.store');
-Route::get('/trajets-confirmation',[TrajetController::class, 'confirmation'])->name('trajets.confirmation');
+Route::post('/proposer-trajets', [TrajetController::class, 'store'])
+    ->middleware('auth')
+    ->name('trajets.store');
+
+Route::get('/trajets-confirmation',[TrajetController::class, 'confirmation'])
+    ->middleware('auth')
+    ->name('trajets.confirmation');
 
 // Erreur 404
 Route::fallback(function () {
@@ -45,6 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/mon-profil/modifier', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/mon-profil', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/mon-profil', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::delete('/profile/photo', [ProfileController::class, 'destroyPhoto'])->name('profile.photo.destroy');
 
 require __DIR__.'/auth.php';
 
@@ -74,9 +74,12 @@ require __DIR__.'/auth.php';
     Route::patch('/profile/preference/discussion', [ProfileController::class, 'updateDiscussion'])->name('preference.discussion');
 
     Route::get('/mes-avis', [App\Http\Controllers\ReviewController::class, 'index'])->name('reviews.index');
-    Route::get('/laisser-un-avis/{id_trajet}', [App\Http\Controllers\ReviewController::class, 'create'])->name('reviews.create')->middleware('auth');
+    Route::get('/laisser-un-avis/{id_trajet}/{id_candidat?}', [App\Http\Controllers\ReviewController::class, 'create'])->name('reviews.create');    
     Route::post('/avis', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
     Route::delete('/avis/{id}', [App\Http\Controllers\ReviewController::class, 'destroy'])->name('reviews.destroy');
+
+    Route::delete('/trajets/{id}', [TrajetController::class, 'destroy'])->name('trajets.destroy');
+
 });
 
 require __DIR__.'/auth.php';
