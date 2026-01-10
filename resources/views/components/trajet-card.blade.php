@@ -40,7 +40,6 @@
 
             {{-- 3. CONDUCTEUR --}}
             @if($trajet->conducteur && Auth::id() !== $trajet->id_utilisateur)
-                {{-- MODIFICATION ICI : 'justify-between' sépare le conducteur (gauche) du badge (droite) --}}
                 <div class="mt-2 pt-2 border-t border-gray-100 flex justify-between items-center">
                     
                     {{-- Profil Conducteur (A GAUCHE) --}}
