@@ -37,3 +37,25 @@ document.addEventListener('DOMContentLoaded', () => {
         window.requestAnimationFrame(animer);
     });
 });
+
+
+window.openModal = function(modalId, actionUrl = null) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+    
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+
+    if (actionUrl) {
+        const form = modal.querySelector('form');
+        if (form) form.action = actionUrl;
+    }
+};
+
+window.closeModal = function(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+    
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+};

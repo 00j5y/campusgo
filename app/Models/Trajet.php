@@ -61,10 +61,11 @@ class Trajet extends Model
                    ->exists();
     }
 
-    // Donne l'utilisateur/conducteur associé au trajet
-    public function user()
+    public function passagers()
     {
-        return $this->belongsTo(User::class, 'id_utilisateur');
+        return $this->belongsToMany(User::class, 'reserver', 'id_trajet', 'id_utilisateur')
+                    ->withTimestamps();
     }
+
 
 }

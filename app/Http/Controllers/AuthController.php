@@ -27,8 +27,10 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
             
+            $prenom = Auth::user()->prenom;
 
-            return redirect()->intended(route('accueil'));
+            return redirect()->intended(route('accueil'))
+                ->with('success', "Ravi de vous revoir, $prenom !");
         }
 
         return back()->withErrors([
@@ -56,7 +58,8 @@ class AuthController extends Controller
 
             Auth::login($user);
 
-            return redirect()->route('profile.show');
+            return redirect()->route('profile.show')
+                ->with('success', 'Bienvenue sur CampusGo ! Votre compte a été créé.');
         }
 
     // Affichage de la page d'inscription
@@ -73,6 +76,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/')
+            ->with('success', 'Vous avez été déconnecté. À bientôt !');
     }
 }

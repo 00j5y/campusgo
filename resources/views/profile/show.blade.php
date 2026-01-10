@@ -5,8 +5,6 @@
 @section('content')
 <div class="bg-gray-50 min-h-screen py-12">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-
-        <x-flash-message />
         
         <div class="mb-10">
             <h1 class="text-3xl font-bold text-noir">Mon Profil</h1>
@@ -18,13 +16,7 @@
             <div class="lg:col-span-1">
                 <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 flex flex-col items-center text-center">
                     
-                    <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-beige-principale flex items-center justify-center mb-4">
-                        @if($user->photo)
-                            <img src="{{ asset('storage/' . $user->photo) }}" alt="Avatar" class="w-full h-full object-cover">
-                        @else
-                            <img src="{{ asset('images/accueil/icones/personne-convivialite-vert.png') }}" alt="Avatar par défaut" class="w-10 h-10 object-contain">
-                        @endif
-                    </div>
+                    <x-user-avatar :user="$user" class="w-24 h-24 mb-4" textSize="text-3xl" />
                     
                     <h2 class="text-xl font-bold text-noir">{{ $user->prenom }} {{ $user->nom }}</h2>
                     <p class="text-sm text-gris1 mt-1">
@@ -35,7 +27,9 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-vert-principale" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
-                        <span class="text-vert-principale font-medium text-sm">12 trajets effectués</span> 
+                        <span class="text-vert-principale font-medium text-sm">
+                            {{ $user->trajets_effectues }} trajets effectués
+                        </span> 
                     </div>
                 </div>
             </div>
@@ -46,7 +40,7 @@
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="font-bold text-xl text-noir flex items-center gap-2">
                             <span class="w-8 h-8 rounded-full bg-beige-principale flex items-center justify-center text-noir">
-                                <img src="{{ asset('images/accueil/icones/user.png') }}" class="size-4">
+                                <img src="{{ asset('images/profil/user.png') }}" class="size-4">
                             </span>
                             Informations Personnelles
                         </h2>
@@ -70,7 +64,7 @@
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-xl font-bold text-noir flex items-center gap-2">
                             <span class="w-10 h-10 rounded-full bg-beige-principale flex items-center justify-center">
-                                <img src="{{ asset('images/accueil/icones/voiture.png') }}" class="size-6">
+                                <img src="{{ asset('images/profil/voiture.png') }}" class="size-6">
                             </span>
                             Mon Véhicule
                         </h2>
@@ -80,22 +74,44 @@
 
                     <div class="space-y-4">
                         @forelse($user->vehicules as $vehicule)
+                            {{-- Début de la carte véhicule --}}
                             <div class="bg-gray-50 rounded-xl p-5 border border-gray-100 grid grid-cols-1 sm:grid-cols-2 gap-4 relative group hover:border-vert-principale/50 transition-colors">
+                                
                                 <div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                                    <form action="{{ route('vehicule.destroy', $vehicule->id) }}" method="POST" onsubmit="return confirm('Voulez-vous vraiment supprimer ce véhicule ?');">
-                                        @csrf @method('DELETE')
-                                        <button type="submit" class="text-red-400 hover:text-red-600 p-1.5 bg-white rounded-full shadow-sm hover:shadow-md transition-all" title="Supprimer le véhicule">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                                        </button>
-                                    </form>
+                                    <button 
+                                        type="button" 
+                                        onclick="openModal('modal-delete-vehicule', '{{ route('vehicule.destroy', $vehicule->id) }}')"
+                                        class="text-red-400 hover:text-red-600 p-1.5 bg-white rounded-full shadow-sm hover:shadow-md transition-all cursor-pointer" 
+                                        title="Supprimer le véhicule">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
                                 </div>
-                                <div><p class="text-xs text-gris1 uppercase tracking-wide">Marque et Modèle</p><p class="font-semibold text-noir mt-1">{{ $vehicule->marque }} {{ $vehicule->modele }}</p></div>
-                                <div><p class="text-xs text-gris1 uppercase tracking-wide">Immatriculation</p><p class="font-semibold text-noir mt-1">{{ $vehicule->immatriculation }}</p></div>
-                                <div><p class="text-xs text-gris1 uppercase tracking-wide">Couleur</p><p class="font-semibold text-noir mt-1">{{ $vehicule->couleur }}</p></div>
-                                <div><p class="text-xs text-gris1 uppercase tracking-wide">Nombre de places</p><p class="font-semibold text-noir mt-1">{{ $vehicule->nombre_place }} places</p></div>
-                            </div> 
+
+                                <div>
+                                    <p class="text-xs text-gris1 uppercase tracking-wide">Marque et Modèle</p>
+                                    <p class="font-semibold text-noir mt-1">{{ $vehicule->marque }} {{ $vehicule->modele }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gris1 uppercase tracking-wide">Immatriculation</p>
+                                    <p class="font-semibold text-noir mt-1">{{ $vehicule->immatriculation }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gris1 uppercase tracking-wide">Couleur</p>
+                                    <p class="font-semibold text-noir mt-1">{{ $vehicule->couleur }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gris1 uppercase tracking-wide">Nombre de places</p>
+                                    <p class="font-semibold text-noir mt-1">{{ $vehicule->nombre_place }} places</p>
+                                </div>
+                                
+                            </div>
+
                         @empty
-                            <div class="bg-gray-50 rounded-xl p-8 border border-dashed border-gray-300 text-center"><p class="text-gris1 italic">Aucun véhicule enregistré pour le moment.</p></div>
+                            <div class="bg-gray-50 rounded-xl p-8 border border-dashed border-gray-300 text-center">
+                                <p class="text-gris1 italic">Aucun véhicule enregistré pour le moment.</p>
+                            </div>
                         @endforelse
                     </div>
                     <div class="mt-4">
@@ -109,7 +125,7 @@
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
                     <h2 class="text-xl font-bold text-noir mb-6 flex items-center gap-2">
                         <span class="w-10 h-10 rounded-full bg-beige-principale flex items-center justify-center text-noir">
-                            <img src="{{ asset('images/accueil/icones/preference.png') }}" class="size-4">
+                            <img src="{{ asset('images/profil/preference.png') }}" class="size-4">
                         </span>
                         Préférences de Covoiturage
                     </h2>
@@ -189,7 +205,7 @@
                     </div>
 
                     <nav class="flex flex-col">
-                        <a href="#" class="px-6 py-4 text-gris1 hover:bg-vert-principale/5 hover:text-vert-principale transition-colors flex items-center justify-between group border-b border-gray-50">
+                        <a href="{{ route('historique-trajet') }}" class="px-6 py-4 text-gris1 hover:bg-vert-principale/5 hover:text-vert-principale transition-colors flex items-center justify-between group border-b border-gray-50">
                             <span class="flex items-center gap-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 group-hover:text-vert-principale" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0121 18.382V7.618a1 1 0 01-1.447-.894L15 7m0 13V7m0 0L9.553 4.553A1 1 0 005 5.382v10.236a1 1 0 001.447.894L9 17" />
@@ -226,4 +242,13 @@
         </div>
     </div>
 </div>
+
+<x-popup 
+    id="modal-delete-vehicule"
+    title="Supprimer ce véhicule ?"
+    message="Êtes-vous sûr de vouloir supprimer ce véhicule ? Cette action est irréversible."
+    type="danger"
+    confirmText="Oui, supprimer"
+    method="DELETE"
+/>
 @endsection
