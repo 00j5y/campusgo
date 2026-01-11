@@ -11,7 +11,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        
+        // Ajout du middleware CheckSuspendu pour vérifier si un utilisateur est suspendu à chaque changement de page
+        $middleware->web(append: [
+            \App\Http\Middleware\CheckSuspendu::class,
+        ]);
+
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

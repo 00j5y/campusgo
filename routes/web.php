@@ -5,6 +5,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TrajetController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminUtilisateursController;
+use App\Http\Controllers\AdminTrajetsController;
 use App\Http\Controllers\RechercheController;
 
 // Page d'accueil
@@ -43,6 +45,16 @@ Route::middleware('auth')->group(function () {
     Route::patch('/mon-profil', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/mon-profil', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::delete('/profile/photo', [ProfileController::class, 'destroyPhoto'])->name('profile.photo.destroy');
+
+require __DIR__.'/auth.php';
+
+    Route::middleware(['auth'])->get('/admin-utilisateurs', [AdminUtilisateursController::class, 'index'])->name('admin.utilisateurs');
+    Route::middleware(['auth'])->get('/admin-trajets', [AdminTrajetsController::class, 'index'])->name('admin.trajets');
+
+    Route::delete('/admin/utilisateurs/{id}', [AdminUtilisateursController::class, 'destroy'])->name('admin.utilisateurs.delete');
+    Route::delete('/admin/trajets/{id}', [AdminTrajetsController::class, 'destroy'])->name('admin.trajets.delete');
+    
+    Route::post('/admin/utilisateurs/{id}/suspend', [AdminUtilisateursController::class, 'toggleSuspend'])->name('admin.utilisateurs.suspend');
 
     Route::get('/vehicule/ajouter', [App\Http\Controllers\VehiculeController::class, 'create'])->name('vehicule.create');
     Route::patch('/profil/preference/toggle', [ProfileController::class, 'togglePreference'])->name('preference.toggle');

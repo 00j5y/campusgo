@@ -15,7 +15,7 @@ class User extends Authenticatable
 
     protected $table = 'utilisateur';
 
-    protected $primaryKey = 'id'; 
+    protected $primaryKey = 'id';
     public $incrementing = true;
 
     /**
@@ -57,7 +57,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(Preference::class, 'id_utilisateur');
     }
-  
+
+
     //en tant que passager
     public function reservations()
     {
@@ -84,4 +85,10 @@ class User extends Authenticatable
 
         return $nbConducteur + $nbPassager;
     }
+
+    public function avisRecus()
+    {
+        return $this->hasMany(Avis::class, 'id_destinataire');
+    }
+
 }
