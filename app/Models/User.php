@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use App\Models\Vehicule;
 use App\Models\Preference;
 use App\Models\Trajet;
+use App\Models\Avis;
 
 class User extends Authenticatable
 {
@@ -31,6 +32,7 @@ class User extends Authenticatable
         'photo',
         'num_tel',
         'est_admin',
+        'est_suspendu',
         'created_at',
         'updated_at'
     ];
@@ -39,6 +41,11 @@ class User extends Authenticatable
         'mdp',
         'remember_token',
     ];
+
+    public function getAuthPasswordName()
+    {
+        return 'mdp';
+    }
 
     public function getAuthPassword()
     {
