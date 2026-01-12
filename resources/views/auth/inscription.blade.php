@@ -24,12 +24,14 @@
                 <div class="w-1/2">
                     <label class="block text-sm font-medium text-noir mb-1">Prénom</label>
                     <input type="text" name="firstname" value="{{ old('firstname') }}" required
+                           placeholder="Marie"
                            class="w-full px-4 py-3 rounded-md bg-gray-50 border border-gray-200 focus:border-vert-principale focus:ring-vert-principale outline-none text-sm">
                     @error('firstname') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
                 <div class="w-1/2">
                     <label class="block text-sm font-medium text-noir mb-1">Nom</label>
                     <input type="text" name="lastname" value="{{ old('lastname') }}" required
+                           placeholder="Dupont"
                            class="w-full px-4 py-3 rounded-md bg-gray-50 border border-gray-200 focus:border-vert-principale focus:ring-vert-principale outline-none text-sm">
                     @error('lastname') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
@@ -38,21 +40,24 @@
             <div>
                 <label class="block text-sm font-medium text-noir mb-1">Email IUT</label>
                 <input type="email" name="email" value="{{ old('email') }}" required
+                       placeholder="prenom.nom@u-picardie.fr"
                        class="w-full px-4 py-3 rounded-md bg-gray-50 border border-gray-200 focus:border-vert-principale focus:ring-vert-principale outline-none text-sm">
                 <p class="text-xs text-gray-500 mt-1">Email universitaire obligatoire.</p>
                 @error('email') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
             </div>
-            
+
             <div>
                 <label class="block text-sm font-medium text-noir mb-1">Mot de passe</label>
                 <input type="password" name="password" required
+                       placeholder="••••••••"
                        class="w-full px-4 py-3 rounded-md bg-gray-50 border border-gray-200 focus:border-vert-principale focus:ring-vert-principale outline-none text-sm">
                 @error('password') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
             </div>
-            
+
             <div>
                 <label class="block text-sm font-medium text-noir mb-1">Confirmer le mot de passe</label>
                 <input type="password" name="password_confirmation" required
+                       placeholder="••••••••"
                        class="w-full px-4 py-3 rounded-md bg-gray-50 border border-gray-200 focus:border-vert-principale focus:ring-vert-principale outline-none text-sm">
             </div>
 
