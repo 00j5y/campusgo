@@ -92,7 +92,7 @@
         </div>
     </div>
 
-    <div x-show="isOpen" 
+    <div x-show="isOpen"
          x-transition:enter="transition ease-out duration-100"
          x-transition:enter-start="transform opacity-0 scale-95"
          x-transition:enter-end="transform opacity-100 scale-100"
@@ -100,7 +100,7 @@
          x-transition:leave-start="transform opacity-100 scale-100"
          x-transition:leave-end="transform opacity-0 scale-95"
          class="lg:hidden bg-white border-t border-gray-200" id="mobile-menu">
-        
+
         <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <a href="{{ url('/') }}" class="text-gris1 hover:text-vert-principale hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium flex items-center">
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
@@ -114,7 +114,7 @@
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                 Mes Trajets
             </a>
-            <a href="#" class="text-gris1 hover:text-vert-principale hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium flex items-center">
+            <a href="{{ route('profile.show') }}" class="text-gris1 hover:text-vert-principale hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium flex items-center">
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                 Profil
             </a>
