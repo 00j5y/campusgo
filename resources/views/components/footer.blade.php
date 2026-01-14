@@ -1,8 +1,8 @@
 <footer class="bg-beige-second/50 pt-16 pb-8 border-t border-beige-second/30">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 mb-16">
-            
+
             <div class="lg:col-span-5">
                 <div class="flex shrink-0 items-center cursor-pointer">
                     <img class="h-12 w-auto" src="{{ asset('favicon.ico') }}" alt="Campus Go Logo">
@@ -31,7 +31,7 @@
 
             <div class="lg:col-span-4">
                 <h3 class="text-noir font-semibold text-lg mb-6">Contact</h3>
-                
+
                 <a href="mailto:contact@campusgo.fr" class="flex items-center gap-3 text-gris1 hover:text-vert-principale transition-colors mb-6">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -57,7 +57,7 @@
 
         <div class="border-t border-gris2/30 pt-8 text-center">
             <p class="text-gris1 text-sm">
-                2025 Campus'Go - IUT d'Amiens. Tous droits réservés.
+                2026 Campus'Go - IUT d'Amiens. Tous droits réservés.<br>Projet étudiant réalisé dans le cadre du BUT Informatique.
             </p>
         </div>
     </div>
