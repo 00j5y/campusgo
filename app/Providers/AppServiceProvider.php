@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Carbon::setLocale('fr');
-        if (env('APP_ENV') !== 'local') {
+        if($this->app->environment('production')) {
             URL::forceScheme('https');
         }
     }
